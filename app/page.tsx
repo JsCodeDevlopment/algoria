@@ -334,7 +334,7 @@ export default async function HomePage() {
               tag="Web"
               bullets={[
                 'Otimização sob medida Vitals — carregar menos, hidratar com critério, dividir bundles onde o utilizador estrangula primeiro.',
-                'SEO técnico honesto — indexação, metadados, renderização pragmática sem gambiarras de curto prazo.',
+                'SEO técnico honesto — indexação, canonical, hreflang, dados estruturados e migrações em cenários reais (guia longo dedicado no hub).',
                 'Superfícies perigosas bem explicadas — XSS em formulários, rich editors e payloads que regressam em silêncio.',
               ]}
             />
@@ -385,6 +385,14 @@ export default async function HomePage() {
               </div>
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Crawlers, frescura editorial controlada e conteúdo que engenharia pode defender em review — lado a lado, sem magia só de marketing.
+              </p>
+              <p className="mt-4 text-sm leading-relaxed">
+                <Link
+                  href="/engenharia-trabalho/frontend-seo-tecnico-cenarios-producao"
+                  className="font-semibold text-primary underline-offset-4 hover:underline"
+                >
+                  Guia extensivo: SEO técnico — cenários de produção (SPA, e-commerce, multi-idioma, staging…)
+                </Link>
               </p>
             </div>
           </div>

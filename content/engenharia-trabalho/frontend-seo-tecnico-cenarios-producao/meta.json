@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-seo-tecnico-cenarios-producao",
+  "title": "SEO técnico no front — cenários reais e fronteiras honestas",
+  "summary": "Renderização, indexação, canonical, dados estruturados, hreflang, migrações e armadilhas de SPA: o que a equipa pode garantir em sprint e o que não depende só de código.",
+  "estimatedMinutes": 52,
+  "pillar": "frontend"
+}
