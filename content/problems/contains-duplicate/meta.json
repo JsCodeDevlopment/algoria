@@ -1,0 +1,33 @@
+{
+  "slug": "contains-duplicate",
+  "title": "Contains Duplicate",
+  "difficulty": "easy",
+  "categories": [
+    "arrays",
+    "hash-tables"
+  ],
+  "prerequisites": [
+    "big-o",
+    "hash-tables"
+  ],
+  "tags": [
+    "blind-75",
+    "phase1-bootstrap"
+  ],
+  "estimatedMinutes": 10,
+  "recommendedOrder": 2,
+  "examples": [
+    {
+      "input": "nums = [1, 2, 3, 1]",
+      "output": "true"
+    },
+    {
+      "input": "nums = [1, 2, 3]",
+      "output": "false"
+    }
+  ],
+  "constraints": [
+    "até tens de mil elementos",
+    "nums[i] em inteiros grandes"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "slug": "sliding-hash",
+  "name": "Janela deslizante + última posição",
+  "kind": "optimal",
+  "language": "typescript",
+  "entryFunction": "lengthOfLongestSubstring",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(min(n, |Σ|)) para o mapa de caracteres ↔ índices",
+    "rationale": "Cada posição só entra uma vez como `right` e `left` nunca regressa absurdamente porque salta apenas depois repetido."
+  }
+}

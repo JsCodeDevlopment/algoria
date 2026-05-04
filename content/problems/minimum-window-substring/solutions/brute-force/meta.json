@@ -1,0 +1,12 @@
+{
+  "slug": "brute-force",
+  "name": "Todas origens+fins possíveis",
+  "kind": "brute-force",
+  "language": "typescript",
+  "entryFunction": "minWindow",
+  "complexity": {
+    "time": "O(|s|³) no pior caso (experimentar janelas e recontar letras sempre)",
+    "space": "O(|Σ|) para os mapas temporários usados ao testar cada janela",
+    "rationale": "Traduzimos a definição quase literalmente: experimentar começos/fins possíveis e confirmar sempre o inventário do `t`."
+  }
+}

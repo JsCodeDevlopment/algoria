@@ -1,0 +1,20 @@
+{
+  "slug": "daily-temperatures",
+  "title": "Daily Temperatures",
+  "difficulty": "medium",
+  "categories": ["arrays", "stacks"],
+  "prerequisites": ["stacks-intro", "big-o"],
+  "tags": ["leetcode-739"],
+  "estimatedMinutes": 22,
+  "recommendedOrder": 14,
+  "examples": [
+    {
+      "input": "temperatures = [73,74,75,71,69,72,76,73]",
+      "output": "[1,1,4,2,1,1,0,0]"
+    }
+  ],
+  "constraints": [
+    "1 ≤ temperatures.length ≤ 10⁵",
+    "30 ≤ temperatures[i] ≤ 100"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-csr-ssr-streaming",
+  "title": "CSR, SSR e streaming: escolher sem mitos",
+  "summary": "Porque SPAs clássicas sofrem nas Core Web Vitals, o que SSR ganha de verdade e como streaming com fatias de HTML melhora o equilíbrio entre ver conteúdo cedo e ficar interativo.",
+  "estimatedMinutes": 22,
+  "pillar": "frontend"
+}

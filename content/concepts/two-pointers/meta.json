@@ -1,0 +1,8 @@
+{
+  "slug": "two-pointers",
+  "title": "Two pointers",
+  "category": "fundamentals",
+  "estimatedMinutes": 12,
+  "prerequisites": ["big-o"],
+  "summary": "Técnica de dois índices que atravessa arrays ou strings mantendo invariantes sobre janelas monótonas ou simetria à volta do centro."
+}

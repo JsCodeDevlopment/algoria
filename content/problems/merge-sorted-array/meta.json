@@ -1,0 +1,19 @@
+{
+  "slug": "merge-sorted-array",
+  "title": "Merge Sorted Array",
+  "difficulty": "easy",
+  "categories": [
+    "arrays",
+    "two-pointers"
+  ],
+  "prerequisites": [
+    "two-pointers"
+  ],
+  "tags": [
+    "phase1-bootstrap"
+  ],
+  "estimatedMinutes": 14,
+  "recommendedOrder": 7,
+  "examples": [],
+  "constraints": []
+}

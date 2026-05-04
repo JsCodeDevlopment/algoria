@@ -1,0 +1,8 @@
+{
+  "slug": "closures-currying-fundamentals",
+  "title": "Closures e currying em JavaScript",
+  "category": "fundamentals",
+  "estimatedMinutes": 14,
+  "prerequisites": ["big-o"],
+  "summary": "Ambiente léxico, funções que carregam estado privado, currying como cadeia de funções unárias e APIs fluentes — com pé na terra para não over-engineering."
+}

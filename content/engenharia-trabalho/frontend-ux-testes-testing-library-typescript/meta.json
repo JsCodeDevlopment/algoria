@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-ux-testes-testing-library-typescript",
+  "title": "UX e testes em React: comportamento visível, não detalhes internos",
+  "summary": "Como alinhar experiência de utilizador com testes que perguntam \"o que estás no ecrã?\": React Testing Library, TypeScript como contrato e padrões de estado fáceis de provar.",
+  "estimatedMinutes": 24,
+  "pillar": "frontend"
+}

@@ -1,0 +1,12 @@
+{
+  "slug": "hash-map",
+  "name": "Hash Map (uma passagem)",
+  "kind": "optimal",
+  "language": "typescript",
+  "entryFunction": "twoSum",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "rationale": "Percorremos o array **uma única vez**. Para cada elemento, fazemos uma consulta `O(1)` e uma inserção `O(1)` no hash map. No pior caso o hash map guarda `n - 1` pares chave-valor antes de encontrarmos a solução, daí `O(n)` espaço."
+  }
+}

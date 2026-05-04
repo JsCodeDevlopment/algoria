@@ -1,0 +1,24 @@
+{
+  "slug": "squares-of-a-sorted-array",
+  "title": "Squares of a Sorted Array",
+  "difficulty": "easy",
+  "categories": [
+    "arrays",
+    "two-pointers"
+  ],
+  "prerequisites": [
+    "two-pointers"
+  ],
+  "tags": [
+    "phase1-bootstrap"
+  ],
+  "estimatedMinutes": 12,
+  "recommendedOrder": 8,
+  "examples": [
+    {
+      "input": "nums=[-4,-1,0,3,10]",
+      "output": "[0,1,9,16,100]"
+    }
+  ],
+  "constraints": []
+}

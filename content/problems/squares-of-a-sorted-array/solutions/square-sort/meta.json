@@ -1,0 +1,11 @@
+{
+  "slug": "square-sort",
+  "name": "Mapeia + ordena",
+  "kind": "brute-force",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n log n)",
+    "space": "O(log n)",
+    "rationale": "Ordenação após cópias."
+  }
+}

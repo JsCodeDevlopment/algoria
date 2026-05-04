@@ -1,0 +1,11 @@
+{
+  "slug": "brute-pairs",
+  "name": "Todos os dias de compra",
+  "kind": "brute-force",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n²)",
+    "space": "O(1)",
+    "rationale": "Compra em i vende depois sempre."
+  }
+}

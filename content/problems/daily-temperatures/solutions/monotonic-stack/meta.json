@@ -1,0 +1,12 @@
+{
+  "slug": "monotonic-stack",
+  "name": "Pilha de dias à espera de calor",
+  "kind": "optimal",
+  "language": "typescript",
+  "entryFunction": "dailyTemperatures",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n) para índices adiados",
+    "rationale": "Cada índice entra e sai da pilha no máximo uma vez porque temperaturas comparam apenas enquanto crescem."
+  }
+}

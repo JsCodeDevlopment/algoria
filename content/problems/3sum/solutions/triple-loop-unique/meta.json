@@ -1,0 +1,12 @@
+{
+  "slug": "triple-loop-unique",
+  "name": "Três níveis simples",
+  "kind": "brute-force",
+  "language": "typescript",
+  "entryFunction": "threeSum",
+  "complexity": {
+    "time": "O(n³)",
+    "space": "O(n) para memo de assinaturas",
+    "rationale": "Experimentámos todas as triples válidas índices crescentemente e dedupe string."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "brute-force",
+  "name": "Brute-force (pares)",
+  "kind": "brute-force",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n²)",
+    "space": "O(1)",
+    "rationale": "Comparação directa todos os índices `i < j`; sem espaço extra."
+  }
+}

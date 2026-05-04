@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Authored content is read raw as a string; never lint it as project code.
+    "content/**",
   ]),
 ]);
 

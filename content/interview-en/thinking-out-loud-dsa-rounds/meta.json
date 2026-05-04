@@ -1,0 +1,7 @@
+{
+  "slug": "thinking-out-loud-dsa-rounds",
+  "title": "Thinking out loud in DSA rounds",
+  "summary": "Sentence starters and a repeatable narration skeleton: clarify, brute-force sketch, optimize, implement, test, and complexity.",
+  "estimatedMinutes": 16,
+  "track": "communication"
+}

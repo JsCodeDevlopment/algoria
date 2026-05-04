@@ -1,0 +1,11 @@
+{
+  "slug": "hash-frequency",
+  "name": "Contagem decremental",
+  "kind": "optimal",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n+m)",
+    "space": "O(min(n,m))",
+    "rationale": "Map conta aparições antes de decrementar segundo array."
+  }
+}

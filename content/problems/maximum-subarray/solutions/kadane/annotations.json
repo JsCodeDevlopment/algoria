@@ -1,0 +1,67 @@
+{
+  "annotations": [
+    {
+      "line": 1,
+      "level1": "Declara a função **maxSubArray** — o ponto de entrada que o juiz / o player mostra como “porta oficial” para este exercício.",
+      "level2": "Define o **contrato** de dados: tipos dos parâmetros e o que regressa. Quem usa esta rotina só precisa de saber isso — **não** precisa de conhecer o algoritmo interior. Em entrevistas, escrever assinatura clara evita debates confusos com o avaliador.",
+      "level3": "**Trade-off:** poderias marcar arrays como somente-leitura (`readonly`) quando não modificas entrada. Também poderias usar tipos mais específicos (tuplos de tamanho fixo) em vez de arrays genéricos — melhora segurança, mas aumenta texto. Para LeetCode, o mínimo costuma bastar.",
+      "concepts": []
+    },
+    {
+      "line": 2,
+      "level1": "Executa esta instrução dentro do problema **Maximum Subarray**: `let best = nums[0];`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 3,
+      "level1": "Executa esta instrução dentro do problema **Maximum Subarray**: `let current = nums[0];`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 4,
+      "level1": "Inicia um laço `for` — repete o corpo enquanto o índice percorre o intervalo definido na cabeça do `for`.",
+      "level2": "A cabeça do `for` tem três zona: **inicialização**, **condição de continuação** e **passo** (ex.: `i++`). Juntas ditam quantas vezes o corpo corre. Se a condição falha logo na primeira vez, o corpo pode nem sequer executar.",
+      "level3": "**Complexidade habitual:** cada incremento válido faz avançar o trabalho. Se dentro do corpo só fazes operações (O(1)), este `for` costuma contribuir (O(n)) multiplicando o tamanho do intervalo.\n\n**Alternativa elegante:** por vezes um `while` com dois ponteiros substitui pares de `for` aninhados em inputs ordenados — mas aqui obedecemos ao texto que vês.",
+      "concepts": []
+    },
+    {
+      "line": 5,
+      "level1": "Operação “mínimo” ou “máximo” elementar aplicada aos argumentos fornecidos.",
+      "level2": "Em problemas físicos (Maximum Subarray) aparece sempre que precisamos de dois limites que competem pela mesma invariante.",
+      "level3": "Versões monótonas (pilhas ordenadas mantendo candidatos óptimos sequencialmente) substituem pares repetidos (Math) em cenários grandes — são extensões do mesmo pensamento.",
+      "concepts": []
+    },
+    {
+      "line": 6,
+      "level1": "Operação “mínimo” ou “máximo” elementar aplicada aos argumentos fornecidos.",
+      "level2": "Em problemas físicos (Maximum Subarray) aparece sempre que precisamos de dois limites que competem pela mesma invariante.",
+      "level3": "Versões monótonas (pilhas ordenadas mantendo candidatos óptimos sequencialmente) substituem pares repetidos (Math) em cenários grandes — são extensões do mesmo pensamento.",
+      "concepts": []
+    },
+    {
+      "line": 7,
+      "level1": "Fecha chavetas — volta o fluxo de execução para o nível imediatamente mais exterior.",
+      "level2": "Em JavaScript / TypeScript, **chavetas** transformam várias linhas numa só unidade quando ligadas a `if`, `for`, etc. Sem elas só a linha seguinte pertence ao `if` — causa bugs clássicos em código one-liner mal indentado.",
+      "level3": "**Armadilha:** “dangling else” — um `else` ambíguo pode ligar-se ao `if` errado em cadeias longas. Usa indentação honesta e, se necessário, chavetas explícitas mesmo para um único comando. Aqui o bloco está delimitado visualmente para o player contar linhas certas.",
+      "concepts": []
+    },
+    {
+      "line": 8,
+      "level1": "Devolve resultado à função que nos chamou — o fluxo local termina já aqui.",
+      "level2": "Todo caminho dentro da função deve eventualmente regressar algo compatível com a assinatura. Quando regressas dentro de loops aninhados, sais de todos eles ao mesmo tempo — comportamento forte para “primeira resposta suficientemente boa encontrada”.",
+      "level3": "Em problemas garantidos sempre soluções, um `return []` final é apenas acalmador do TypeScript. Em produção, pondera usar `never`/excepções ou tipos `| null` para deixar explícito “não existe solução”.",
+      "concepts": []
+    },
+    {
+      "line": 9,
+      "level1": "Fecha chavetas — volta o fluxo de execução para o nível imediatamente mais exterior.",
+      "level2": "Em JavaScript / TypeScript, **chavetas** transformam várias linhas numa só unidade quando ligadas a `if`, `for`, etc. Sem elas só a linha seguinte pertence ao `if` — causa bugs clássicos em código one-liner mal indentado.",
+      "level3": "**Armadilha:** “dangling else” — um `else` ambíguo pode ligar-se ao `if` errado em cadeias longas. Usa indentação honesta e, se necessário, chavetas explícitas mesmo para um único comando. Aqui o bloco está delimitado visualmente para o player contar linhas certas.",
+      "concepts": []
+    }
+  ]
+}

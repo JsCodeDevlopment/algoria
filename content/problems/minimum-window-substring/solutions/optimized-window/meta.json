@@ -1,0 +1,12 @@
+{
+  "slug": "optimized-window",
+  "name": "Janela válida incremental",
+  "kind": "optimal",
+  "language": "typescript",
+  "entryFunction": "minWindow",
+  "complexity": {
+    "time": "O(|s|+|t|)",
+    "space": "O(|Σ|) para mapas apenas",
+    "rationale": "Expandimos apenas hi apenas encolhemos apenas lo quando invariante apenas satisfeita porque apenas contagem apenas tipos preenchidas."
+  }
+}

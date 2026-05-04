@@ -1,0 +1,12 @@
+{
+  "slug": "two-pointers-sort",
+  "name": "Ordenar + dois ponteiros",
+  "kind": "optimal",
+  "language": "typescript",
+  "entryFunction": "threeSum",
+  "complexity": {
+    "time": "O(n²)",
+    "space": "O(1) extra além do output e ordenação in-place amortizada",
+    "rationale": "Fixamos um elemento e resolvemos 2Sum ordenado com ponteiros nas extremidades restantes."
+  }
+}

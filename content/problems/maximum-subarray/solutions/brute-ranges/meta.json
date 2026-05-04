@@ -1,0 +1,11 @@
+{
+  "slug": "brute-ranges",
+  "name": "Intervalos explícitos",
+  "kind": "brute-force",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n²)",
+    "space": "O(1)",
+    "rationale": "Força duplo índice com somas incrementais intermedias."
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "nested-removal",
+  "name": "Procura repetida + flags",
+  "kind": "brute-force",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(nm)",
+    "space": "O(m)",
+    "rationale": "Flag booleana marca slots consumidos."
+  }
+}

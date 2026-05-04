@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-web-vitals-bundles-hidratacao",
+  "title": "Web Vitals, bundles e hidratação sem ansiedade",
+  "summary": "Lê Core Web Vitals como sintomas de decisões de carregamento; aprende a cortar JavaScript crítico e a hidratar só o que o utilizador precisa primeiro.",
+  "estimatedMinutes": 26,
+  "pillar": "frontend"
+}

@@ -1,0 +1,7 @@
+{
+  "slug": "devops-observabilidade-minima-viavel",
+  "title": "Observabilidade mínima viável antes da primeira crise",
+  "summary": "Logs estruturados, métricas que respondem a perguntas de negócio e rastreio distribuído na dose certa — sem comprar uma suite inteira no dia um.",
+  "estimatedMinutes": 22,
+  "pillar": "devops"
+}

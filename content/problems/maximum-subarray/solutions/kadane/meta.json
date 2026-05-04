@@ -1,0 +1,11 @@
+{
+  "slug": "kadane",
+  "name": "Kadane incremental",
+  "kind": "optimal",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(1)",
+    "rationale": "`current = max(nums[i], current + nums[i])` garante invariante óptimo com subarry contíguos."
+  }
+}

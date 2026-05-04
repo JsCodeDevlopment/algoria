@@ -1,0 +1,30 @@
+{
+  "slug": "3sum",
+  "title": "3Sum",
+  "difficulty": "medium",
+  "categories": ["arrays", "two-pointers", "sorting"],
+  "prerequisites": ["two-pointers", "big-o"],
+  "tags": ["leetcode-15"],
+  "estimatedMinutes": 28,
+  "recommendedOrder": 12,
+  "examples": [
+    {
+      "input": "nums = [-1,0,1,2,-1,-4]",
+      "output": "[[-1,-1,2],[-1,0,1]]",
+      "explanation": "Há dois trios diferentes que somam 0 (ordem dentro do output pode mudar)."
+    },
+    {
+      "input": "nums = [0,1,1]",
+      "output": "[]"
+    },
+    {
+      "input": "nums = [0,0,0]",
+      "output": "[[0,0,0]]"
+    }
+  ],
+  "constraints": [
+    "3 ≤ nums.length ≤ 3000",
+    "-10⁵ ≤ nums[i] ≤ 10⁵",
+    "Não repetir trios iguais (mesmos três valores, independentemente da ordem)"
+  ]
+}

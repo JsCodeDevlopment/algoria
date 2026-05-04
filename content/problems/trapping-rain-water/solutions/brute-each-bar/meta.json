@@ -1,0 +1,12 @@
+{
+  "slug": "brute-each-bar",
+  "name": "Alturas máximas laterais sempre explícitos",
+  "kind": "brute-force",
+  "language": "typescript",
+  "entryFunction": "trap",
+  "complexity": {
+    "time": "O(n²)",
+    "space": "O(1) extra além das variáveis temporárias locais",
+    "rationale": "Para cada coluna interior fazemos dois varrimentos lineares apenas para apanhar dois máximos laterais porque comparações repetidas porque sem pré-cálculos."
+  }
+}

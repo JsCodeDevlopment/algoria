@@ -1,0 +1,8 @@
+{
+  "slug": "queues-intro",
+  "title": "Queues (filas)",
+  "category": "fundamentals",
+  "estimatedMinutes": 10,
+  "prerequisites": ["big-o"],
+  "summary": "FIFO: ideal para níveis-BFS ou ordem estritamente cronológica de eventos discretos."
+}

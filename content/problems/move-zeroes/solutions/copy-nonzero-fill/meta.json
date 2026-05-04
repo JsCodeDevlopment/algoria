@@ -1,0 +1,11 @@
+{
+  "slug": "copy-nonzero-fill",
+  "name": "Cópia auxiliar estável",
+  "kind": "brute-force",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "rationale": "Duplicamos filtros antes de recolagem."
+  }
+}

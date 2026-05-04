@@ -1,0 +1,7 @@
+{
+  "slug": "backend-apis-cache-quotas-resiliencia",
+  "title": "APIs públicas: cache, quotas e resiliência calmamente",
+  "summary": "Camadas de cache que não mentem ao cliente, rate limiting com mensagens úteis e padrões para timeouts, retries e circuit breaker sem cascata.",
+  "estimatedMinutes": 23,
+  "pillar": "backend"
+}

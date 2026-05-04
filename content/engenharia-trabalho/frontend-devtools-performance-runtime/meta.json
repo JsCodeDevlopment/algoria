@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-devtools-performance-runtime",
+  "title": "DevTools Performance: long tasks, scroll e listas gigantes",
+  "summary": "Usa a aba Performance como detective: frames, thread principal, long tasks e quando virtualizar listas faz sentido de negócio.",
+  "estimatedMinutes": 20,
+  "pillar": "frontend"
+}

@@ -1,0 +1,11 @@
+{
+  "slug": "hash-set",
+  "name": "Conjunto incremental",
+  "kind": "optimal",
+  "language": "typescript",
+  "complexity": {
+    "time": "O(n)",
+    "space": "O(n)",
+    "rationale": "`Set.has` amortizado permite saltar segunda camada inteira quando detectamos repetições cedo."
+  }
+}

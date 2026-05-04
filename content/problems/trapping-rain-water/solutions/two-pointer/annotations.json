@@ -1,0 +1,143 @@
+{
+  "annotations": [
+    {
+      "line": 1,
+      "level1": "Declara a função **trap** — o ponto de entrada que o juiz / o player mostra como “porta oficial” para este exercício.",
+      "level2": "Define o **contrato** de dados: tipos dos parâmetros e o que regressa. Quem usa esta rotina só precisa de saber isso — **não** precisa de conhecer o algoritmo interior. Em entrevistas, escrever assinatura clara evita debates confusos com o avaliador.",
+      "level3": "**Trade-off:** poderias marcar arrays como somente-leitura (`readonly`) quando não modificas entrada. Também poderias usar tipos mais específicos (tuplos de tamanho fixo) em vez de arrays genéricos — melhora segurança, mas aumenta texto. Para LeetCode, o mínimo costuma bastar.",
+      "concepts": []
+    },
+    {
+      "line": 2,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `let left = 0;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": [
+        "two-pointers"
+      ]
+    },
+    {
+      "line": 3,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `let right = height.length - 1;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 4,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `let leftMax = 0;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 5,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `let rightMax = 0;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 6,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `let water = 0;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 7,
+      "level1": "Começa um laço **condicional** — o corpo repete até a expressão dentro dos parêntesis se tornar falsa.",
+      "level2": "Diferente de `for`, o `while` concentra a lógica de progresso dentro do próprio corpo (incrementos, avanços de ponteiros, etc.). Tens sempre de garantir que **algo muda** a cada volta, senão ficas bloqueado em ciclo infinito.",
+      "level3": "**Verificação mental:** será que para qualquer entrada válida existe caminho até a condição falhar?\nEm algorítmos lineares tipo ponteiros, costuma bastar observar que os índices aproximam-se monotonicamente.",
+      "concepts": [
+        "two-pointers"
+      ]
+    },
+    {
+      "line": 8,
+      "level1": "Se a muralha atual esquerda está mais baixa do que a marcação actual extremo direito, sempre mexemos lado esquerdo primeiro.",
+      "level2": "A condição é uma expressão booleana. Em TS/JS usa `===` / `!==` em vez de `==` quando trabalhas com números — evita conversões mágicas e surpresas com `truthy/falsy` no meio.",
+      "level3": "**Curto‑circuito:** `&&` e `||` deixam de avaliar quando o resultado já é conhecido. Em condições com chamadas cara a lado, ordena primeiro testes mais baratos.\n\n**Extensão ao problema (Armazenar água da chuva)**: este ramo faz parte da história própria deste challenge — volta ao enunciado e pergunta “quando é que isto acontece na definição do problema?”.",
+      "concepts": []
+    },
+    {
+      "line": 9,
+      "level1": "Actualizamos o recorde antes de registar novo volume porque precisamos do muro forte mais recente sempre que olhamos esquerda.",
+      "level2": "Em problemas físicos (Armazenar água da chuva) aparece sempre que precisamos de dois limites que competem pela mesma invariante.",
+      "level3": "Versões monótonas (pilhas ordenadas mantendo candidatos óptimos sequencialmente) substituem pares repetidos (Math) em cenários grandes — são extensões do mesmo pensamento.",
+      "concepts": []
+    },
+    {
+      "line": 10,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `water += leftMax - height[left]!;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 11,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `left++;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 12,
+      "level1": "`else`: espelhos processamento quando o lado menor desta vez coincide com o lado direito (ou igualdade permite escolha simétrica).",
+      "level2": "Lembra-te: o `else` liga-se ao `if` mais próximo **ainda aberto** sintaticamente — indentação honesta evita equívocos humanos ao ler.",
+      "level3": "Em algoritmos com simetria (dois ponteiros, duas escolhas idênticas) costuma haver um “ramo espelho” — compara mentalmente os dois lados para ver o padrão repetido.",
+      "concepts": []
+    },
+    {
+      "line": 13,
+      "level1": "Analogamente actualizamos o recorde sempre que aparece maior barreira vinda da direção direita já processada antes.",
+      "level2": "Em problemas físicos (Armazenar água da chuva) aparece sempre que precisamos de dois limites que competem pela mesma invariante.",
+      "level3": "Versões monótonas (pilhas ordenadas mantendo candidatos óptimos sequencialmente) substituem pares repetidos (Math) em cenários grandes — são extensões do mesmo pensamento.",
+      "concepts": []
+    },
+    {
+      "line": 14,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `water += rightMax - height[right]!;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 15,
+      "level1": "Executa esta instrução dentro do problema **Armazenar água da chuva**: `right--;`.",
+      "level2": "Lê a linha sempre quebrando em parcelas:\n\n- **Que nomes aparecem?** são índices, acumuladores, referências aos inputs?\n- **Que dados mutam ?** aparece modificação estruturas partilhadas?\n\nSe ficares perdido desenha o estado mental dos arrays/maps **antes vs depois** desta única linha.",
+      "level3": "**Exercício de mestre:** reescreveria só esta parte com nomes diferentes? Se sim mantém comportamento igual — só melhora legibilidade.\n\n**Complexidade:** pergunta se esta linha entra dentro de ciclo maior; multiplica trabalho apenas quando combinada.",
+      "concepts": []
+    },
+    {
+      "line": 16,
+      "level1": "Fecha chavetas — volta o fluxo de execução para o nível imediatamente mais exterior.",
+      "level2": "Em JavaScript / TypeScript, **chavetas** transformam várias linhas numa só unidade quando ligadas a `if`, `for`, etc. Sem elas só a linha seguinte pertence ao `if` — causa bugs clássicos em código one-liner mal indentado.",
+      "level3": "**Armadilha:** “dangling else” — um `else` ambíguo pode ligar-se ao `if` errado em cadeias longas. Usa indentação honesta e, se necessário, chavetas explícitas mesmo para um único comando. Aqui o bloco está delimitado visualmente para o player contar linhas certas.",
+      "concepts": []
+    },
+    {
+      "line": 17,
+      "level1": "Fecha chavetas — volta o fluxo de execução para o nível imediatamente mais exterior.",
+      "level2": "Em JavaScript / TypeScript, **chavetas** transformam várias linhas numa só unidade quando ligadas a `if`, `for`, etc. Sem elas só a linha seguinte pertence ao `if` — causa bugs clássicos em código one-liner mal indentado.",
+      "level3": "**Armadilha:** “dangling else” — um `else` ambíguo pode ligar-se ao `if` errado em cadeias longas. Usa indentação honesta e, se necessário, chavetas explícitas mesmo para um único comando. Aqui o bloco está delimitado visualmente para o player contar linhas certas.",
+      "concepts": [
+        "big-o"
+      ]
+    },
+    {
+      "line": 18,
+      "level1": "Devolve resultado à função que nos chamou — o fluxo local termina já aqui.",
+      "level2": "Todo caminho dentro da função deve eventualmente regressar algo compatível com a assinatura. Quando regressas dentro de loops aninhados, sais de todos eles ao mesmo tempo — comportamento forte para “primeira resposta suficientemente boa encontrada”.",
+      "level3": "Em problemas garantidos sempre soluções, um `return []` final é apenas acalmador do TypeScript. Em produção, pondera usar `never`/excepções ou tipos `| null` para deixar explícito “não existe solução”.",
+      "concepts": []
+    },
+    {
+      "line": 19,
+      "level1": "Fecha chavetas — volta o fluxo de execução para o nível imediatamente mais exterior.",
+      "level2": "Em JavaScript / TypeScript, **chavetas** transformam várias linhas numa só unidade quando ligadas a `if`, `for`, etc. Sem elas só a linha seguinte pertence ao `if` — causa bugs clássicos em código one-liner mal indentado.",
+      "level3": "**Armadilha:** “dangling else” — um `else` ambíguo pode ligar-se ao `if` errado em cadeias longas. Usa indentação honesta e, se necessário, chavetas explícitas mesmo para um único comando. Aqui o bloco está delimitado visualmente para o player contar linhas certas.",
+      "concepts": []
+    }
+  ]
+}

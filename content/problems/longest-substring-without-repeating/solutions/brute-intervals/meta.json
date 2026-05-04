@@ -1,0 +1,12 @@
+{
+  "slug": "brute-intervals",
+  "name": "Experimentar todos os começos",
+  "kind": "brute-force",
+  "language": "typescript",
+  "entryFunction": "lengthOfLongestSubstring",
+  "complexity": {
+    "time": "O(n³) no pior caso (nested loops mais verificação set interna amortizada rápido mas aninhamento domina intuitivamente)",
+    "space": "O(min(n, Σ)) porque set cresce com caracteres únicos trecho atual",
+    "rationale": "Para cada início empurramos o fim até repetir porque simples pedagogicamente."
+  }
+}
