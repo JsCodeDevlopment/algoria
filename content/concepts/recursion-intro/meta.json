@@ -2,6 +2,7 @@
   "slug": "recursion-intro",
   "title": "Recursão (intro)",
   "category": "fundamentals",
+  "difficulty": "medium",
   "estimatedMinutes": 12,
   "prerequisites": ["big-o"],
   "summary": "Chamadas repetidas até um caso trivial: stack implícito, base case e recombo de resultados incrementais ou divide-and-conquer."

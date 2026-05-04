@@ -2,6 +2,7 @@
   "slug": "linked-list-intro",
   "title": "Listas ligadas (intro)",
   "category": "linked-list",
+  "difficulty": "medium",
   "estimatedMinutes": 12,
   "prerequisites": ["big-o"],
   "summary": "Nós com `next` opcional permitem reorganização espacial em O(1) após achar prédecessor desde que tragas apenas ponteiros."

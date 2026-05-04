@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
 import { getAllConceptSlugs, getConcept } from '@/lib/content/loader';
 
@@ -58,6 +59,7 @@ export default async function ConceptPage({
       ) : null}
 
       <div className="flex items-center gap-2 flex-wrap mb-3">
+        <DifficultyBadge difficulty={concept.meta.difficulty} />
         <Badge variant="outline" className="capitalize">
           {concept.meta.category.replace('-', ' ')}
         </Badge>

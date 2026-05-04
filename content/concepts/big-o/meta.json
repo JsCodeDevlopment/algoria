@@ -2,6 +2,7 @@
   "slug": "big-o",
   "title": "Big O — a notação que mede algoritmos",
   "category": "fundamentals",
+  "difficulty": "easy",
   "estimatedMinutes": 12,
   "prerequisites": [],
   "summary": "Big O é a forma standard de descrever quão rápido (ou lento) um algoritmo cresce à medida que o input aumenta. Sem isto, é impossível comparar duas soluções."

@@ -118,6 +118,8 @@ export const ConceptMeta = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
   category: z.union([Category, z.literal('fundamentals')]),
+  /** Nível editorial do mini-guia (filtro e badge na lista de conceitos). */
+  difficulty: Difficulty.default('medium'),
   estimatedMinutes: z.number().int().positive().default(10),
   prerequisites: z.array(z.string()).default([]),
   summary: z.string().min(1),

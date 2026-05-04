@@ -8,7 +8,14 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
-import { AnnotationsFile, EngineeringWorkMeta, InterviewEnglishMeta, ProblemMeta, SolutionMeta } from '../lib/content/schemas';
+import {
+  AnnotationsFile,
+  ConceptMeta,
+  EngineeringWorkMeta,
+  InterviewEnglishMeta,
+  ProblemMeta,
+  SolutionMeta,
+} from '../lib/content/schemas';
 import { FUNDAMENTOS_FASE_1_PACK } from '../lib/courses/fundamentos-fase1-seed';
 
 const ROOT = path.join(process.cwd(), 'content');
@@ -143,6 +150,34 @@ async function validate(): Promise<{ errors: string[]; warnings: string[] }> {
   }
 
   const conceptSlugs = await listDirs(CONCEPTS).catch(() => [] as string[]);
+  for (const cslug of conceptSlugs) {
+    const cdir = path.join(CONCEPTS, cslug);
+    const metaPath = path.join(cdir, 'meta.json');
+    const bodyPath = path.join(cdir, 'body.md');
+    if (!(await fileExists(metaPath))) {
+      errors.push(`[concepts/${cslug}] falta meta.json`);
+      continue;
+    }
+    const conceptParsed = ConceptMeta.safeParse(await readJson(metaPath));
+    if (!conceptParsed.success) {
+      errors.push(`[concepts/${cslug}] meta.json inválido: ${conceptParsed.error.message}`);
+      continue;
+    }
+    const cmeta = conceptParsed.data;
+    if (cmeta.slug !== cslug) {
+      errors.push(`[concepts/${cslug}] meta.slug deve ser igual ao nome da pasta (é "${cmeta.slug}")`);
+    }
+    for (const pre of cmeta.prerequisites) {
+      const preMeta = path.join(CONCEPTS, pre, 'meta.json');
+      if (!(await fileExists(preMeta))) {
+        errors.push(`[concepts/${cslug}] prerequisite desconhecido: concepts/${pre}/`);
+      }
+    }
+    if (!(await fileExists(bodyPath))) {
+      errors.push(`[concepts/${cslug}] falta body.md`);
+    }
+  }
+
   const expectedPhase1 = [
     'big-o',
     'hash-tables',

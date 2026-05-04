@@ -2,6 +2,7 @@
   "slug": "trees-intro",
   "title": "Árvores — dados hierárquicos",
   "category": "trees",
+  "difficulty": "medium",
   "estimatedMinutes": 14,
   "prerequisites": ["linked-list-intro", "big-o"],
   "summary": "De filas lineares a estruturas em camadas: raiz, folhas, altura, profundidade e árvores binárias como primeiro modelo rigoroso."
