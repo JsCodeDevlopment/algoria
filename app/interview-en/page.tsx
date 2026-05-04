@@ -57,8 +57,10 @@ export default async function InterviewEnglishIndexPage() {
                 <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">Nova área · conteúdo 100% EN</p>
                 <h1 className="text-2xl font-black uppercase tracking-tight md:text-3xl">Technical English for interviews</h1>
                 <p className="text-sm leading-relaxed text-muted-foreground">
-                  Toda a matéria das páginas abaixo está em inglês: vocabulário típico de entrevistas, scripts para pensar em voz alta,
-                  respostas behavioral e linguagem para system design. Usa isto como repetição activa antes de rounds reais.
+                  Toda a matéria das páginas abaixo está em inglês, orientada para quem já programa e está entre B1/B2 —
+                  foco em soar claro sob pressão: vocabulário de entrevistas, pensar em voz alta em DSA,
+                  comportamental (STAR), design de sistemas e e-mails típicos da pipeline de hiring.
+                  Usa repetição activa antes de rounds reais.
                 </p>
               </div>
             </div>

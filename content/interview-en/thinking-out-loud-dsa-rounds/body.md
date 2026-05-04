@@ -1,116 +1,217 @@
-## Narration roadmap
+## Audience note (B1 devs interviewing in English)
 
-Stable skeleton beats improvised rambling:
+If your English feels “slower than your brain”, interviews still work when you:
 
-1. **Restate & clarify** (constraints + ambiguity probes).  
-2. **Tiny brute sanity check** (even inefficient baseline earns credibility).  
-3. **Optimize** (explain leveraged insight—often structure exploitation).  
-4. **Implement** (incrementally verbalized milestones).  
-5. **Dry‑walk examples / corner checks**.  
-6. **Complexity & introspection** (trade-offs + alternate avenues).
+1. Speak in **short turns**—not perfect essays.  
+2. Use **sentence starters you memorise**.  
+3. Repair mistakes calmly (“Let me revise that—I meant …”).
 
-Keep interviewer tethered—explicit checkpoints beat surprises mid‑compile.
+This page keeps **sentence starters simple** plus **advanced variants** once you accelerate.
 
 ---
 
-## Phase A — Clarify without sounding blocked
+## Roadmap recap (sticky mental spine)
 
-Polished probes:
+Stable skeleton beats rambling improvisation:
 
-- “May we mutate input or allocate proportional auxiliary structures?”  
-- “Should algorithm prioritize minimizing latency upfront throughput assuming…” *(substitute concrete nouns)*  
-- “Duplicates stable ordering tie‑break rules unspecified—I'll assume standard equivalence unless you prefer…”  
+| Step | Goal (plain English) | Time budget (typical forty-five minute round) |
+| --- | --- | --- |
+| 1 Clarify | remove ambiguity · confirm edge cases · write examples | roughly two-four minutes |
+| 2 Outline brute | naive baseline—even slow proves structure understanding | roughly two minutes |
+| 3 Optimise | explain insight & trade-offs | roughly five-eight minutes |
+| 4 Implement | narrate checkpoints—not every keystroke | remainder bulk |
+| 5 Test verbally | empties · duplicates · max values | two-four minutes wrap |
+| 6 Complexity closing | summarise + optional alternative | ninety seconds |
 
-Transition cue:
-
-- “Assuming constraints remain `<insert>` I'll sketch brute baseline next.”
-
----
-
-## Phase B — Brute sketch (fast credibility)
-
-Templates:
-
-- “Naively I'd enumerate **all `<pairs | subsequences | partitions>`** yielding **`O(n²)` or worse**—fine mental anchor.”  
-- “Primary downside is `<redundant recomputation | scanning entire tail repeatedly>`.”  
-
-Explicitness sells honesty:
-
-- “This won't pass large limits but proves correctness intuition.”
+If clock panics skip poetry—**signals** matter more than accent.
 
 ---
 
-## Phase C — Optimize pivot phrases
+## Phase A — Clarify sounding confident (even if English is rusty)
 
-Signal structural reasoning:
+Simple openers:
 
-- “If lookup dominates comparisons, hash map collapses inner linear scans.”  
-- “Ordering constraint hints monotonic behavior → candidate **two-pointer / stack / deque** pattern.”  
-- “Recursive overlap exposes memoizable dimensions `<state tuple>`.”  
+- “Can I mutate the input?”  
+- “Should I optimise for speed or minimum memory?”  
+- “Could you confirm we return the index—not the value?”  
 
-Risk acknowledgment:
+Polished extensions:
 
-- “Space climbs because we snapshot `<dimension>`—acceptable given `<constraint>`.”
+- “May we allocate auxiliary structures proportional to input size?”  
+- “If duplicates repeat, what's the canonical tie‑break expectation?”  
 
----
+Clarifying **buying-thinking-time** bridging:
 
-## Phase D — Implementation narration
+ Simple: “Give me fifteen seconds—I want to organise my thoughts.”
 
-Micro‑steps instead of narrating every keystroke:
+ Polished: “I'll jot structure mentally before proposing algorithm class.”  
 
-1. “I'll scaffold `<helper>` capturing invariant `<phrase>`.”  
-2. “Loop advances `<pointer>` while invariant preserved—violations trigger `<mutation>`.”  
-3. “Early exit when `<goal>` satisfied reduces redundant churn.”  
+If interviewer rushes politely:
 
-When stuck briefly:
+“Could you repeat the last constraint—audio lag briefly?”  
 
-- “Pausing—checking boundary `<zero-length | negative | overflow>`.”  
-
-Shows discipline—not panic.
+**(Headphones glitch happens—repair without apologising endlessly.)**
 
 ---
 
-## Phase E — Testing aloud
+## Phase B — Brute-force credibility (tiny but mandatory)
 
-Preferred sequence:
+Signals honesty + structure:
 
-1. **Happy minimal** example interviewer supplied (sync mentally).  
-2. **Degenerate**: empty / singleton / all identical elements.  
-3. **Stress shaping**: maximum limits touching overflow / equality collisions.
+Simple:
 
-Say:
+> “Slow way: check everything—looks like quadratic time.”
 
-- “Sanity on degenerate ensures loop guards don't skip initialization paths.”
+Formal:
 
----
+> “Naive enumeration considers each candidate pair—baseline **`O(n²)`** acknowledging impractical scalability.”  
 
-## Phase F — Complexity wrap‑up
+Add safety:
 
-Closing triple:
-
-- Time dominance sentence  
-- Space justification referencing auxiliary structures  
-- Potential alternate approach **one sentence** (“Divide & conquer possible but recursion overhead heavier here.”)
+> “It still clarifies correctness before micro-optimisations.”  
 
 ---
 
-## Anti‑patterns to prune
+## Phase C — Optimisation pivot verbs
 
-| Weak habit | Strong replacement |
+Structural triggers you can pronounce slowly:
+
+Two-pointer / hashing / sorting prerequisite / greedy check / recursion + memoisation / mono stack / bitmask / DP state
+
+Starter lines:
+
+Simple:
+
+> “I think a hash map fixes the inner search.”  
+
+Polished:
+
+> “Inner linear scan collapses via hash amortization—overall linear expected.”  
+
+When uncertain—**expose uncertainty cleanly**:
+
+“I’m leaning toward greedy but I’ll verify failure pattern first.” (**Better than pretending certainty**)  
+
+---
+
+## Phase D — Implementation narration (checkpoint style)
+
+Prefer **milestones**:
+
+1. “I'll define helper keeping invariant XYZ.”  
+2. “Outer loop progresses index while invariant maintained.”  
+3. “Breaking early when condition satisfied avoids redundant merges.”  
+
+Stuck aloud (shows discipline—not panic):
+
+- “Paused—checking off-by-one boundaries.”  
+- “Validating invariant after hypothetical mutation…”  
+- “Simulating mentally with sample array—two-pointer indexes currently …”  
+
+Resist silent typing bursts > fifteen seconds (**interviewer guesses you stalled**).
+
+---
+
+## Phase E — Verbal testing (order matters)
+
+Suggested sequence:
+
+1. Given / happy sample  
+2. Empty array / singleton  
+3. All duplicates  
+4. Max / min extremes  
+5. Potential overflow if numeric magnitudes gigantic  
+
+Sentence:
+
+“Degenerate guards ensure initializer paths solid.” (**Optional polished layer**)  
+
+Simple alt:
+
+“This edge case catches my loop never running.”  
+
+---
+
+## Phase F — Complexity & reflection
+
+Triple close:
+
+Simple:
+
+> “Time linear because single pass.”  
+> “Extra map uses linear space.”  
+
+Add optional alternative:
+
+Divide & conquer possible but recursion overhead heavier here—or sorting prerequisite dominates.
+
+Invite collaboration:
+
+“What trade-off emphasis matters more depth-wise for your stack?” (**Signals partnership**)  
+
+---
+
+## Interviewer interruptions—scripts
+
+Simple:
+
+- “Okay—I’ll pivot.”  
+- “Sure—I’ll optimise that branch.”  
+
+Polished:
+
+- “Good catch—I'll adjust assumption and propagate constraint.”  
+
+If they hint wrong direction:
+
+“I’ll incorporate that—we may discard earlier partial memo idea.”  
+
+---
+
+## Repairing English slips (repair > perfection)
+
+Neutral corrections:
+
+“Let me rephrase—“  
+
+“I misspoke—I meant logarithmic heap operations, not linear.”  
+
+“Tracking wrong variable—rename mentally to `slow`/`fast`…”  
+
+Avoid spiral apologies:
+
+ Replace “Sorry sorry…” with factual correction (**confidence preserved**).
+
+English-not-first-language micro-line (honest calm):
+
+“My English isn't perfect—I'll prioritise correctness and clarity.”  
+*(Most hiring managers respect explicitness—then judge substance.)*
+
+---
+
+## Anti-pattern table—swap habits
+
+| Weak habit | Replacement |
 | --- | --- |
-| silent typing bursts | micro‑summaries every logical chunk |
-| apology spiral (“sorry”) | neutral correction language (“adjusting earlier assumption”) |
-| jargon spray without anchors | invariant sentence anchoring abstract term |
-| skipping brute entirely | micro brute framing before leap |
+| long silence | verbal micro-update every ~15s logical chunk |
+| filler spam (“like”, “you know”) | short pause beats noise |
+| saying “easy” aloud | humble phrasing—“familiar pattern” |
+| blaming language barrier constantly | acknowledge once · continue technical content |
 
 ---
 
-## Micro drills
+## Pacing drills (timed)
 
-Set five‑minute timer:
+Five-minute sprint:
 
-1. Explain yesterday's solved problem aloud **without IDE**.  
-2. Re‑explain emphasizing **only complexity justification** alternate angle.  
-3. Repeat stripping fillers—target calm pacing **≈130 spoken words/min**.
+| Minute | Drill |
+| --- | --- |
+| 1 | Constraints list aloud |
+| 2 | Brute two sentences |
+| 3 | Optimised pattern naming |
+| 4 | Complexity reasoning |
+| 5 | Replay removing fillers |
 
-Iteration beats passive reading—voice fatigue mirrors interview stamina.
+Record audio—replay at 1.25× to hear rushed syllables clipping.
+
+Weekly iteration builds **speech stamina**, separate from purely coding stamina.

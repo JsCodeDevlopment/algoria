@@ -1,120 +1,174 @@
-## STAR isn’t a paragraph factory
+## Goal (STAR for international candidates)
 
-Interviewers scan for:
+Interviewers abroad often listen for:
 
-- **specific ownership**  
-- **measurable outcome**  
-- **reflection / calibration**
+- clear **ownership** (“I drove”, “I proposed”, **not only** “the team”)  
+- at least **one measurable or directional outcome** (**latency**, **crash rate**, **delivery date**, adoption)  
+- **reflection**: what you calibrated next time (**process**, not vibes)
 
-Keep answers ~ sixty‑ninety seconds unless prompted deeper.
+STAR is scaffolding—**sixty ninety seconds first answer**, expandable if interviewer probes.
 
-STAR mapping:
+English tip for **B1**: write stories in bullets first in your native language, then rehearse English **sentence-by-sentence** until muscle memory catches up.
 
-| Letter | Purpose |
+---
+
+## STAR map (minimal English you can memorize)
+
+| Letter | What to say |
 | --- | --- |
-| Situation | Minimal scene-setting—single clause |
-| Task | Your responsibility—not entire team backlog dump |
-| Action | Decisions **you** drove with verbs |
-| Result | Quantify + learning |
+| **Situation** | one or two clauses: context + pressure |
+| **Task** | your responsibility—not org chart dump |
+| **Action** | three concrete verbs: analyzed / proposed / communicated / documented / shipped |
+| **Result** | measurable or qualitative-but-specific |
+| Reflection (bonus) | one honest calibration sentence |
 
-Avoid drowning Situation—two sentences maximum before pivoting to Task.
+Ownership verbs (mix them):
 
----
+ prioritized · escalated · instrumented · triaged · aligned stakeholders · facilitated trade-off workshop · authored RFC draft · authored tests · patched incident · coached junior · negotiated scope
 
-## Question: Tell me about a conflict
-
-**STAR skeleton**
-
-- **S**: cross‑functional deadline squeeze  
-- **T**: reconcile conflicting technical assumptions blocking release  
-- **A**: surfaced risks early, proposed phased rollout + instrumentation gates  
-- **R**: prevented outage class bug; reduced rollback likelihood (tie metric if allowed—even qualitative scoring acceptable)
-
-Sample polished answer:
-
-> In a tight release window (**Situation**) I owned aligning backend pagination assumptions with the mobile client (**Task**). The teams disagreed whether partial hydration could skip validation—risking silent corruption (**mini tension**). I mapped concrete failure modes, proposed a shadow validation phase logging discrepancies without blocking users (**Action**). We caught inconsistent records early; shipped two days later with zero rollback (**Result**). I'd tighten automated contract tests earlier next time (**reflection**).
-
-Keywords interviewers like: **risk surfaced**, **trade‑off articulated**, **measurable gate**.
+Avoid vague “helped”: say **instrumented dashboards** vs **paired on debugging**.
 
 ---
 
-## Question: Tell me about a mistake
+## Question archetype — conflict / disagreement
 
-Goal: show **accountability + correction loop**, not theatrical self‑bashing.
+STAR skeleton cues:
 
-Structure:
+Situation deadline / competing priorities  
 
-1. concise mistake description  
-2. impact acknowledgment  
-3. corrective measures / preventive automation  
-4. cultural lesson  
+Task unify technical direction safely  
 
-Example beats abstraction:
+Actions risk framing · decision doc · phased rollout  
 
-> I merged an optimistic caching tweak without adequate cache‑invalidation coverage (**mistake**). Staging looked fine but prod traffic patterns triggered stale reads for ~15 minutes (**impact**—quantify if permitted). I rolled forward with targeted purge plus added invariant monitors alerting divergence ratios (**corrective**). Now mandatory checklist blocks merges touching cache layers without fuzz replay (**systemic guard**).
+Result outage avoided · predictable release  
+
+**Sample (concise)**
+
+> Sprint deadline compressed mobile + backend divergence on pagination (**S**).  
+> **I owned** aligning contract assumptions—not finger-pointing teams (**T**).  
+> I listed failure modes silently corrupting hydrated records, pitched shadow validation capturing mismatches pre-release (**A**).  
+> Divergent records surfaced early zero rollbacks (**R**); next time tighter contract fuzz tests (**reflection**).
+
+Interviewer-loved keywords: surfaced risk · phased mitigation · observable gate  
 
 ---
 
-## Question: Leadership without authority
+## Question archetype — mistake / failure
 
-Highlight **influence mechanics**:
+Structure (never theatrical self-destruction):
 
-- framing choices with explicit trade‑offs  
-- documenting decisions for passive stakeholders  
-- creating consensus artifacts (RFC snippets, ADRs)
+1. factual mistake (**plain**)  
+2. impact scaled (**minutes / users affected / money if allowed**)  
+3. corrective containment + preventive automation  
+4. cultural guard added  
 
 Snippet:
 
-> When priorities oscillated mid‑quarter I distilled three architectural options with latency/cost envelopes (**transparency**). That gave EM + PM a decision surface instead of circular debates (**influence**). Delivery stabilized after picking hybrid asynchronous ingestion (**outcome**).
+> I shipped caching tweak lacking invalidation matrix coverage (**mistake**).  
+> Prod showed stale reads ~fifteen minutes subset traffic (**impact** quantified succinctly).  
+> Forward fix targeted purge plus divergence ratio monitors alerting asymmetrically (**corr**).  
+> PR template checklist now blocks untouched cache merges sans replay harness (**prevent**).
 
 ---
 
-## Question: Time you improved performance or reliability
+## Question archetype — leadership without authority
 
-Bring **before → after** metrics—even directional percentages matter.
+Influence verbs:
 
-Talk track:
+ synthesized options · circulated trade-off memo · convened short decision sync · surfaced metrics blind spots  
 
-1. baseline symptom  
-2. profiling / hypothesis  
-3. change implemented  
-4. verification path  
-5. residual risks  
+Snippet:
 
-Example:
+> Mid-quarter roadmap oscillations paralyzed ingestion redesign (**S**).  
+> **My task:** compress architecture alternatives into comparative envelopes—not enforce authority (**T**).  
+> I drafted three ingestion models with throughput / ops cost deltas plus failure isolation notes circulated async before synchronous vote (**A**).  
+> Leadership picked hybrid asynchronous pipeline stabilizing backlog predictability (**R**).
 
-> P95 checkout calls lagged due to redundant serialization passes (**symptom**). Profiling showed duplicate JSON transforms—not algorithmic complexity (**hypothesis**). Consolidated pipeline cut duplicate work and added defensive tracing spans (**change**). P95 dropped ~27% over week rolling window post‑deploy (**metric**). Still monitoring tail spikes under promotion traffic bursts (**honesty**).
-
----
-
-## Question: Working with ambiguity
-
-Show iterative narrowing:
-
-> Requirements arrived qualitative (“make onboarding faster”). I defined measurable proxy—activation milestone completion within seven days (**clarify metric**). Interviewed five fresh users, mapped friction waterfall, shipped staged experiments (**progressive narrowing**). Activation rose modestly; qualitative feedback flagged surprise terminology—iterated copy (**learning loop**).
+Avoid hero myth—highlight **artifacts enabling decisions**.
 
 ---
 
-## Behavioral polish checklist
+## Question archetype — performance / reliability
 
-Before interviews rehearse:
+Talk track numbering:
 
-| Check | OK when |
+ symptom → hypothesis tooling → validated change → metric delta → lingering risk honesty  
+
+Sentence pattern:
+
+“We observed **`p95`** … profiling revealed … refactor … **`p95`** declined ~ **`X`** … still watching tail spikes under promotional bursts (**honesty**).”  
+
+If metrics confidential: directional language still helps (“measurable tail latency shrink—exact figure NDA-covered”).
+
+---
+
+## Question archetype — ambiguity (“requirements fuzzy”)
+
+Show narrowing loop:
+
+ ambiguous qual goal → measurable proxy metric → qualitative discovery → iterative experiments → iterated copy/feature  
+
+Snippet:
+
+ qualitative onboarding brief (“faster onboarding”) became activation milestone **`D7`** completion proxy (**narrow**); user interviews surfaced terminology confusion iterated microcopy (**close loop**).
+
+---
+
+## Question archetype — receiving critical feedback / growth mindset
+
+STAR-friendly lines:
+
+“When senior reviewer flagged brittle module coupling (**S**) **I absorbed critique without defensiveness** (**mindset**) **prioritized refactoring sprint partitioning responsibilities** (**A**) readability scores & incident noise dropped (**R**).”  
+
+Reflection calibration:
+
+Earlier I'd shipped smaller vertical slices garnering asynchronous review earlier (**learning**).
+
+---
+
+## Question archetype — tight deadline slip (communication integrity)
+
+Pieces:
+
+ proactive notice · revised estimate transparency · minimized blast radius mitigation · residual learning  
+
+Simple English:
+
+“We slipped—I escalated earlier next time partitioning unknown earlier.” (**Honest succinct**)
+
+Polished fuse:
+
+“As soon as estimating uncertainty breached threshold I surfaced timeline risk attaching revised confidence intervals plus minimal viable scope alternative.”  
+
+---
+
+## Micro English upgrades (tiny grammar that sounds professional)
+
+ Swap | For |
+ --- | --- |
+| “I did meetings” | “I facilitated a fifteen-minute decision sync” |
+| “It was bad” | “It increased operational risk materially” |
+| “We talked” | “We aligned asynchronously then confirmed synchronously” |
+| vague “successful” | “reduced rollout failure probability / restored SLO adherence” |
+
+---
+
+## Behavioral rehearsal checklist
+
+| Check | Pass when |
 | --- | --- |
-| Ownership verbs | “I proposed”, “I drove”, not “we magically” |
-| Numbers | at least one quantitative anchor |
-| Reflection | final sentence shows calibration |
-| Length discipline | initial answer < ninety seconds |
-| No villain narrative | blame processes—not named individuals |
+| Ownership verbs | ≥ three clearly first-person decisive verbs |
+| Quant anchor | concrete number OR explicit qualitative specificity |
+| No villain blaming | criticize systems—not individuals named |
+| Time respect | sixty ninety seconds uninterrupted arc |
+| Reflection close | calibration sentence plausible |
 
 ---
 
-## Rapid practice prompts
+## Rapid prompts (say aloud weekly)
 
-Answer aloud:
+Answer without notes—voice record:
 
-1. Deadline slip partially your oversight—how communicated?  
-2. Disagreed with senior engineer—resolution arc?  
-3. Inherited brittle module—stabilization arc?
+ deadline slip communicated upward · dissent with senior concluded healthily · stabilized legacy brittle module  
 
-Record audio—playback catches filler creep faster than mirroring alone.
+Playback hunt filler density—target pauses replacing “umm” spikes.

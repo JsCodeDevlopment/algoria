@@ -1,7 +1,7 @@
 {
   "slug": "system-design-phrases-and-framing",
   "title": "System design phrases that buy you time",
-  "summary": "How to open a design discussion, negotiate scope, check assumptions, and summarize trade-offs without sounding vague.",
-  "estimatedMinutes": 17,
+  "summary": "Open clarifying questions, scope negotiation, narration while sketching, caching and scaling wording, pitfalls—paired with slower B1-friendly clause patterns.",
+  "estimatedMinutes": 36,
   "track": "system-design"
 }

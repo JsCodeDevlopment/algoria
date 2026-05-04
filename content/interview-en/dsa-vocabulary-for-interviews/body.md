@@ -1,125 +1,260 @@
-## Why this page exists
+## Learning goals (especially if you are B1 / intermediate)
 
-Interview English is not “fancy words”. It is **precise, short terminology** you can produce **under stress** while your brain is busy reasoning.
+By the end of this page you should:
 
-Below: bundles you can **shadow-drill** (read aloud) until they sound boring—which means automatic.
+1. **Name patterns in short English sentences** (“I’ll keep a sliding window…” / “I'll use memoization…”).
+2. Understand **complexity phrases** recruiters expect—without memorizing proofs.
+3. Have a **minimal “say it simply” phrase** plus a **polished variant** per idea.
+
+Interview English rewards **accuracy + pacing**, not rare words. If grammar is tiring, prioritize **chunks** (multi-word phrases said as one rhythm).
+
+---
+
+## How to practise (10 minutes/day)
+
+Pick **five** phrases from below and repeat them aloud **ten times**:
+
+- Whisper → normal volume → louder (like you are explaining to a teammate on a call).
+
+Then record **sixty seconds** explaining one LeetCode problem you already solved—but **English only**:
+
+- Aim for seven to ten **chunks**, not fluent storytelling.
+
+---
+
+## “Say it simply” vs “Interview polish” (pattern cheatsheet)
+
+Same idea—two depths. Practice both; use **simple English under stress**.
+
+| Idea | Simple (B1-friendly) | Polished interviewer English |
+| --- | --- | --- |
+| I need to check membership fast | “I’ll store visited values in a set.” | “Membership tests must be amortized **`O(1)` expected**, so I’ll back the lookup with hash-based structure.” |
+| I walk the structure once | “I’ll loop through the array one time.” | “I maintain a linear scan preserving an invariant enforced at each step.” |
+| Wrong answer wastes time | “I might explore bad paths first—need pruning.” | “Search space explodes unless we prune branches violating constraints.” |
+| I reuse earlier work | “I’ll save results so I don’t repeat work.” | “Overlapping subproblems justify memoizing state transitions.” |
 
 ---
 
 ## Arrays & strings
 
-| You might say | Meaning / when |
+### Core verbs you will actually say
+
+traverse / scan · iterate · index into · mutate in place · copy into auxiliary buffer · concatenate · split tokens · coerce types · reconcile lengths · saturate bounds
+
+### Terms & when they appear
+
+| You might say | Meaning / interview moment |
 | --- | --- |
-| contiguous subarray / substring | elements adjacent in memory/order |
-| prefix sum | cumulative sums to answer range queries fast |
-| sliding window | maintain metadata about a moving `[left..right]` range |
-| in-place | mutate the input array instead of allocating a big extra structure |
-| two pointers / opposing pointers | walk from both ends toward the middle |
-| read-only input | you cannot sort or reorganize if constraint says so |
-| amortized cost | occasional expensive steps averaged over many cheap steps |
+| contiguous subarray / substring | contiguous = no gaps in original order |
+| prefix sum | precompute cumulative sums → range queries cheap |
+| difference array | update ranges **`O(1)`**, finalize with prefix scan |
+| sliding window (`left`, `right`) | invariant about current window contents |
+| in-place reversal / rotation | **`O(1)`** extra beyond input (maybe a temp variable only) |
+| two pointers converging | from both ends → middle |
+| two pointers chasing | slow/fast runners (detect cycles mentally) |
 
-**Tiny narration snippets**
+### Narration snippets (copy rhythm more than wording)
 
-- “I’ll scan once left‑to‑right and **maintain an invariant** that…”  
-- “If duplicates matter, I’ll treat indices as **first-class state**, not just values.”
+- “I’ll traverse once and **keep counters / indices** stable while the window slides.”  
+- “If substring uniqueness matters I’ll anchor uniqueness with **`O(alphabet)`** frequency vector or map.”  
+- “Before optimizing I’ll articulate **constraints on mutation** — read-only forbids reshuffling.”  
 
 ---
 
-## Hashing & counts
+## Hashing & frequency
 
-| You might say | Meaning / when |
-| --- | --- |
-| frequency map | counts occurrences keyed by element |
-| complement lookup | store seen values to test `-target-x` style identities |
-| collision handling | tie‑break keys carefully when grouping equivalent objects |
-| trade memory for time | `O(n)` extra space to reduce time complexity |
+| Concept | Simple | Polished gloss |
+| --- | --- | --- |
+| map / dictionary | “key → value table” | “associative container supporting expected constant lookup under general hashing assumptions” |
+| multiset behaviour | “I count duplicates, not uniqueness only.” | “Values share keys but multiplicity carries signal.” |
+| canonical key | “Messy tuples become stable identifiers.” | “Normalize inputs via canonical encoding to stabilize collision surfaces.” |
 
-Phrases:
+Phrases that sound senior without fancy grammar:
 
-- “Hash map lets me **test membership** and pull **`O(1)` expected**, so outer loops dominate.”  
-- “Canonical representation means mapping messy inputs into stable keys.”
+- “The expensive part dominated comparisons—hashing reshapes bottleneck.”  
+- “We trade **`O(n)`** memory against **`O(n²)`** time.”  
+
+Watch-out phrase (explains interviewer doubt):
+
+- “If equality semantics are nuanced I’ll clarify hashability assumptions before proposing map.”
 
 ---
 
-## Stacks & queues
+## Linked lists / pointers (even if typed “reference” mentally)
 
-| You might say | Meaning / when |
+Say:
+
+- sentinel / dummy head (**avoids branching on empty head**)  
+- break links vs relink (**careful reorder under constraint**)  
+- advance pointer **`k` steps safely** (**guard null**)  
+
+Sentence:
+
+> “I'll keep a **`prev`** / **`curr`** pairing so rewiring doesn't orphan the remainder.”  
+
+---
+
+## Stacks & queues / monotonic ideas
+
+| Phrase cluster | Signals |
 | --- | --- |
-| monotonic stack | pop while violating ordering rule |
-| deferred processing | delay resolving elements until the triggering condition occurs |
-| queue-level parallelism | ordering of independent producers/consumers (design chats later) |
+| monotonic stack | values strictly increasing/decreasing invariant before push tolerance |
+| next greater element archetype | delayed resolution until hotter neighbor appears |
+| deque for window minima | amortized linear because each element enqueued/dequeued once |
+| breadth-first layering | frontier expansion—depth counted in waves |
+
+Explain monotonic casually:
+
+> “Whenever ordering breaks I'll pop until property restored—classic **`O(n)`** amortization story.”  
+
+---
+
+## Heaps / priority queues
+
+| Word | Typical usage |
+| --- | --- |
+| min-heap / max-heap | pick extremum **`O(log n)`** |
+| lazy deletion | postpone cleanup / rely on versioning |
+| relaxed ordering | tolerate stale entries if tie-break handled |
+
+Starter:
+
+> “I only care about extremes each step—natural heap cue.”  
 
 ---
 
 ## Trees & graphs
 
-| Tree | Graph generalizations |
-| --- | --- |
-| subtree rooted at `node` | connected component touching cycles differently |
-| parent pointer climb | implicit edge reversal tricks |
-| height vs depth | height measured downward from perspective |
+### Tree shorthand
 
-Verbal anchors:
+ subtree · LCAs (lowest common ancestor) · height vs depth · balanced vs skewed  
 
-- “DFS explores aggressively deep before widening.”  
-- “BFS expands layer‑by‑layer—perfect when shortest‑hop counts matter.”
+### DFS vs BFS (must be automatic speech)
 
-Directed graphs introduce additional wording:
+Simple:
 
-- topological ordering feasible **only if** DAG  
-- strongly connected components vs weak connectivity  
+> “DFS goes deep—stack flavour. BFS goes wide—queue flavour.”
 
----
+Polished:
 
-## Recursion & DP vocabulary
+> “DFS suits exhaustive structural exploration earlier; BFS yields shortest hops in **unweighted** graphs.”  
 
-| Term | Interview‑friendly gloss |
-| --- | --- |
-| overlapping subproblems | same recursion subtree repeats waste |
-| optimal substructure | best overall builds from best smaller prefixes |
-| state definition | tuple capturing decisions (`idx`, `sumLeft`, mask…) |
-| transition | recurrence linking neighboring states |
-| memoization | top‑down cache guard |
-| tabulation | bottom‑up filling |
+### Graph qualifiers
 
-Say plainly:
+Directed vs undirected · weighted edges · cyclic vs acyclic (**DAG precondition for topo**)  
 
-- “My recurrence respects constraints **because leaving dimension X implicit blew boundaries.**”
+Strongly connected vs weak · adjacency **list/matrix trade-off** (**memory vs **`O(1)`** lookup**)  
+
+Topo sort trigger sentence:
+
+> “If dependencies exist we need ordering respecting edges—implies DAG else contradiction.”  
 
 ---
 
-## Complexity language that lands well
+## Union-Find / DSU wording
 
-Pair facts + rationale instead of dumping formulas.
+ Disjoint sets · unify operation · amortized **`α(n)`** inverse Ackermann—only mention if interviewer invites depth (“path compression + union by rank”).
 
-Templates:
+Otherwise simple:
 
-1. **Time**: “Each element enters/leaves the window at most once → **`O(n)` single pass**.”  
-2. **Space**: “Apart from output requirements, auxiliary structures hold **`O(k)` keys**, bounded by alphabet uniqueness.”  
-3. **Worst vs amortized**: “Worst case degenerates when hash collisions spike—but interviewer-grade reasoning sticks with **`O(n)` expected** unless prompted deeper.”
-
-Use cautious qualifiers:
-
-- “Under reasonable hashing assumptions…”  
-- “If sorting dominates comparisons…”  
+> “I'll merge components whenever edge connects disjoint groups.”  
 
 ---
 
-## Polishing pitfalls
+## Trie / prefix structures
 
-Avoid robotic jargon stacking (“optimize synergy leveraged stakeholder hashing”—never).
+ Trie / prefix tree · branching on character · early termination when unmatched prefix exhausted.
 
-Prefer crisp combos:
+Simple:
 
-- **Invariant + data structure + traversal shape**.
-
-Practice aloud replacing fillers (**“basically”, “kind of”, “you know”**) with **micro‑pauses**—signals deliberation.
+> “Shared prefixes collapse branching—helps autocomplete style checks.”  
 
 ---
 
-## Drill homework
+## Binary search (array + “search on answer”)
 
-1. Pick three catalogue problems you solved silently—redo explanations aloud clocked ≤ ninety seconds each hitting invariant + complexity.  
-2. Record thirty seconds describing brute upgrade paths (“nested loops feasible baseline”) **without naming syntax quirks**.
+Key phrases:
 
-Repeat weekly—the vocabulary compounds faster than memorizing isolated glossaries.
+- monotonic predicate · feasibility check mid · shrink search space halves  
+
+Separate array BS from BS on answer:
+
+> “Classic binary search on sorted array contrasts with **`parametric search`** on minimal feasible capacity.”  
+
+---
+
+## Greedy & proof language (lightweight)
+
+Greedy disclaimers recruiters love:
+
+ “Local optimum won’t doom global iff **exchange argument**…” (only advanced).  
+
+B1 version:
+
+ > “Greedy risky unless we verify—I'll try counterexample mentally before trusting.”  
+
+---
+
+## Dynamic programming wording
+
+ overlapping subproblems · optimal substructure · state (**tuple of constrained dimensions**)  
+
+ transition / recurrence  
+
+ top-down (**memo DFS**)  
+
+ bottom-up (**tabulation**)  
+
+Rolling array nuance:
+
+> “Dimension collapses because recurrence only cares previous row reducing space from **`O(n·m)` → `O(min)`.”  
+
+---
+
+## Complexity talk (minimal safe templates)
+
+Blend **facts + WHY**:
+
+1. “Each pointer advances at most **`n`** times → **`O(n)`** aggregated.”  
+2. “Heap operations multiply by **`log n`** pushes—not hidden if loop factor explicit.”  
+3. “Worst hash degenerates—not default assumption unless interviewer probes.”  
+
+Cautious hedging (shows maturity):
+
+ “Under reasonably random hashing…” · “Ignoring log factors from coordinate compression…”  
+
+---
+
+## Sounding robotic? Fix with structure
+
+Interviewers tolerate accent; they penalize **vagueness**.
+
+Winning micro-pattern:
+
+ **`Invariant`** + **`data structure`** + **`traversal`** + **`complexity`**.
+
+Example fifteen seconds:
+
+> “Invariant says window unique—map counts keys—right pointer expands until violation—cleanup from left—“  
+
+---
+
+## Drill homework (tiered)
+
+**Tier A (five minutes)**
+
+List five problems you solved; speak only **purpose of each DS** aloud.
+
+**Tier B (twelve minutes)**
+
+Explain one medium problem aloud:
+
+- minute one constraints  
+- minute two brute idea  
+- minute three optimised idea + complexity  
+
+**Tier C**
+
+Strip filler words (**“actually”**, **“literally”**, **“like”**) from recording—silence substitutes filler.
+
+Weekly repetition beats isolated glossaries—the phrases become **motor memory**.

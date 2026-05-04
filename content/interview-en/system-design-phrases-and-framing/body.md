@@ -1,133 +1,184 @@
-## Opening moves
+## What this teaches (B1 engineer friendly)
 
-Goal first minutes: align **scope**, **scale assumptions**, and **success metrics**.
+System design rounds reward **structuring unknowns**:
 
-Strong openers:
+- clarify **scope** (**users**, **traffic**, latency vs cost posture)  
+- describe **flows** before picking buzzword databases  
+- name **trade-offs** explicitly (**consistency**, **delivery semantics**, caching staleness)
 
-- “Before sketching components—could we clarify approximate daily active users and typical read/write asymmetry?”  
-- “I'll assume `<latency SLA>` matters more than `<cost minimization>` unless you want to invert priorities.”  
-- “I'll iterate high‑level data flow first, then deepen hotspots—tell me if you'd rather jump to storage modeling.”  
+If English is tiring: speak **slow + short clauses**. Complexity beats accent.
 
-Shows structured facilitation—not hesitation.
+Simple opener template:
 
----
-
-## Scoping language
-
-Negotiate depth politely:
-
-- “For timeboxing I'll treat `<feature>` as post‑MVP unless you elevate it.”  
-- “I'll postpone multi‑region failover nuances until baseline single‑region stable path exists.”  
-
-Signals awareness of **progressive disclosure**.
+“What should be **fast**, what can be **eventual**, and what must stay **consistent**?”
 
 ---
 
-## Functional vs non‑functional anchoring
+## Opening moves (negotiate framing first)
 
-Explicitly label dimensions:
+Goals early:
 
-| Dimension | Example probe phrase |
-| --- | --- |
-| Latency | interactive vs batch tolerant expectations |
-| Durability | acceptable loss window during outage |
-| Consistency | strong vs eventual acceptable |
-| Availability | CAP tension acknowledgment |
+1. Understand **functional** requirements (reads/writes/workflows)  
 
-Sentence glue:
+2. Pin **non-functional** priorities (**latency SLA**, durability, budgets)  
 
-- “If eventual consistency is acceptable here, we can offload `<hot path>` via asynchronous fan‑out.”  
+Starter questions (easy):
 
-Demonstrates trade‑off literacy.
+- “Roughly how many users / requests per second?”  
+- “Is strong consistency mandatory or eventual OK sometimes?”  
+
+Deeper probes:
+
+“Typical **read-heavy** asymmetry versus write spikes shaping architecture?”  
+
+If clueless politely:
+
+“If numbers unavailable I'll assume **`X`** as placeholder—tell me revise.” (**Shows methodological discipline**)
+
+Assume & label (say it out loud):
+
+“I’ll assume **`p99`** read latency matters most unless you want to optimise for cost first.”
+
+Shows leadership—not avoidance.
 
 ---
 
-## Drawing while speaking
+## Scoping negotiation (signals senior poise even at B2 English)
 
-Parallel verbal tracker:
+Deferrals (examples):
 
-- “Box A streams events into durable log—consumers rebuild projections asynchronously.”  
-- “Read path bypasses writer contention via replicated cache—but staleness bounded by `<TTL / versioning>`.”  
+- “I’ll treat multi-region failover **later** and start with a stable single-region path.”  
+- “I’ll postpone deep sharding math until we justify it with volume.”
 
-Avoid silent sketching longer than ~twenty seconds—micro‑summaries keep interviewer synced.
+Interviewers admire **explicit deferral**.
+
+---
+
+## Label dimensions (non-functional grid)
+
+Anchor explicitly:
+
+ Latency tiers · Availability posture · Durability (**data loss unacceptable window**) · Consistency spectrum · Cost envelopes · Operational complexity (**operating another datastore**)  
+
+Sentence glue tying dimensions:
+
+“If eventual staleness tolerated we fan-out asynchronously loosening tight write coupling.”
+
+---
+
+## Narration while sketching (~ speak every fifteen seconds silently drawing)
+
+ Parallel tracks:
+
+Boxes + arrows verbally annotated:
+
+“A writes durable log asynchronously consumers hydrate projections (**CQRS flavour optional mention only if interviewer accelerates**)”  
+
+Avoid silent scribbling—they may think you stalled.
+
+English minimal:
+
+“This box caches reads—might be stale up to TTL.”  
+
+Polished:
+
+“Serving layer trades freshness for offload—bounded staleness SLA explicit.”  
 
 ---
 
 ## Data modeling checkpoints
 
-Use classification words:
+Speak classification cleanly:
 
-- hot vs cold storage tiers  
-- relational normalized vs denormalized aggregates  
-- shard key implications  
-- idempotent writes vs at‑least‑once delivery duplicates  
+relational normalized vs aggregate denormalized tables · append-only logs · hot vs cold storage tiering  
 
-Example:
+Shard wording:
 
-- “Order history append‑only suits event log; analytics aggregates land in column store refreshed hourly.”
+Sharding keys influence locality—skewed keys create hotspots undoing parallelism.
+
+Conflict patterns:
+
+ Duplicate events due at-least-once delivery ⇒ idempotent downstream handlers.
+
+Keep idempotency pronunciation slow: eye-DEM-potent.
 
 ---
 
-## Scaling prompts you can reuse
+## Caching stratified language
 
-| Scenario | Phrase |
+browser cache  
+
+CDN  
+
+reverse proxy caching  
+
+application in-memory (**local vs replicated**)  
+
+distributed cache (**eviction TTL stampede avoidance topics advanced**)  
+
+Short safe:
+
+“If reads repeat we peel load via cache—accept stale bounded window.”  
+
+---
+
+## Scaling shorthand table
+
+ Scenario | Typical phrase skeleton |
+ --- | --- |
+ read heavy | “Cache + possibly read replicas offload primary writer.” |
+ write spikes | “Queue buffers bursts smoothing persistence.” |
+ fan-out heavy | “Selective subscriptions vs polling trade freshness.” |
+ geographical spread | “Edge caching + regionalized data minimizes RTT—but complicates coherence.” |
+
+Always tie mitigation back **constraint**:
+
+“Fan-out useless if uniqueness guarantee immediate.” (**Shows you avoid cargo-cult scaling**).
+
+---
+
+## Reliability vocabulary (moderate pacing)
+
+Graceful degradation · bulkhead (**isolate failure domains**) · timeouts + jittered backoff · circuit breaker intuition · chaos exercise mindset (**validate assumptions**)  
+
+Operational sentence sample:
+
+“When taxonomy subsystem degrades we serve cached classifications flagging uncertainty—prefer partial metadata than blackout.” (**Business-flavoured pragmatic trade**)
+
+---
+
+## Summaries with forward collaboration hook
+
+Triple-layer recap (**components / flows**)
+
+1. dominant risks / bottlenecks  
+2. next exploratory step if you had more time  
+
+Closer example:
+
+“If we had phase two I'd load‑test **`this dimension`** before committing to the storage swap.” (**Collaborative hook** — invites interviewer steering.)
+
+---
+
+## Danger phrases & upgrades
+
+| Weak | Improvement |
 | --- | --- |
-| Read heavy | “Introduce caching layer + CDN offload static assets.” |
-| Write spikes | “Buffer writes via queue absorbing bursts—workers smooth persistence.” |
-| Fan‑out growth | “Consider selective fan‑out versus pull models depending freshness SLA.” |
+| “just scale horizontally” | Preconditions: **stateless** tiers + partition strategy |
+| “microservices solve it” | Bounded contexts + **operational readiness** |
+| vague “eventually consistent everywhere” | Name **domains** where strong consistency stays mandatory |
 
-Always tie back to **constraint**: cheap fan‑out worthless if subscribers demand instant uniqueness guarantees.
-
----
-
-## Failure & resilience vocabulary
-
-Sound proactive—not catastrophic:
-
-- graceful degradation  
-- bulkhead isolation  
-- timeouts + jittered retries  
-- idempotent handlers  
-- chaos validation mindset  
-
-Example sentence:
-
-- “If downstream taxonomy service degrades we serve cached classification labels marking uncertainty flag—better stale metadata than total outage.”
+Demonstrate precondition listing—they trust structured caution.
 
 ---
 
-## Closing structure summary
+## B1 rehearsal drill (seven-minute timer)
 
-Three-layer recap:
-
-1. core components & flows  
-2. dominant bottlenecks / risks  
-3. next investigations if timeline expanded  
-
-Say:
-
-- “Phase two I'd prototype load tests focusing on `<dimension>` before committing storage engine swap.”
-
-Leaves collaborative forward hook.
-
----
-
-## Trap phrases to avoid
-
-| Weak | Stronger |
+| Slice | Drill |
 | --- | --- |
-| “We can just scale horizontally.” | Preconditions: stateless tiers, shard strategy, data locality costs |
-| “Microservices solve it.” | articulate bounded contexts + operational overhead |
-| “We'll use blockchain.” | *(almost never spontaneous joke—stay serious unless prompted)* |
+| 0–1 min | Verbal clarifying questions (two minimum) |
+| 2–3 min | Name five boxes with one sentence each (**client → CDN → LB → API → DB**) plus one queue optional |
+| 4–5 min | Failure scenario + mitigation (**timeout / retry / degraded read**) |
+| 6–7 min | Wrap + “next step if we had phase two…” |
 
-Interview credibility correlates with explicit **precondition listing**.
-
----
-
-## Micro drills
-
-1. Pick familiar product feature—two‑minute verbal architecture walk capturing openings above.  
-2. Replay trimming hedging words (“maybe”, “probably”) → swap with conditional framing (“If assumption X holds, path Y; violating X shifts toward Z”).  
-3. Sketch blank page boxes naming **only five components**—forces prioritization discipline mirroring interview clocks.
-
-Repeat until pacing feels conversational—not recited.
+Iterate weekly—you will tighten clause chunking without memorising jargon lists.
