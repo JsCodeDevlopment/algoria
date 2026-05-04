@@ -1,5 +1,7 @@
 import type { MetadataRoute } from 'next';
 
+import { getSiteOrigin } from '@/lib/seo/site';
+
 const AI_CRAWLERS = [
   'GPTBot',
   'ChatGPT-User',
@@ -13,8 +15,7 @@ const AI_CRAWLERS = [
   'Diffbot',
 ];
 
-const RAW_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN?.trim() || 'algoria.app';
-const BASE_URL = `https://${RAW_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '')}`;
+const BASE_URL = getSiteOrigin();
 
 export default function robots(): MetadataRoute.Robots {
   const isProduction = process.env.NEXT_PUBLIC_ENVIRONMENT === 'production' && process.env.NODE_ENV === 'production';

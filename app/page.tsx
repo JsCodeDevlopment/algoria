@@ -1,5 +1,7 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import {
   ArrowRight,
   BookOpen,
@@ -31,11 +33,27 @@ import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { sortCatalogProblems } from '@/lib/catalog/problem-filters';
 import { getAllConcepts, getAllProblems } from '@/lib/content/loader';
 
-export const metadata: Metadata = {
-  title: 'Algoria — catálogo, code player e curso guiado para algoritmos',
+export const metadata: Metadata = buildPublicMetadata({
+  titleAbsolute:
+    'Algoria — catálogo interativo, code player linha-a-linha e curso guiado para algoritmos e entrevistas',
   description:
     'Entende problemas clássicos ao ler código linha-a-linha, prepara-te para testes técnicos de vagas com o mesmo método de leitura e regista roadmap de engenharia aplicada à produção — front-end, backend e DevOps.',
-};
+  pathname: '/',
+  keywords: [
+    'Algoria',
+    'algoritmos',
+    'estruturas de dados',
+    'LeetCode',
+    'preparação entrevistas tech',
+    'code review educativo',
+    'big O',
+    'curso algoritmos',
+    'fundamentos programação',
+    'live coding',
+    'system design',
+    'engenharia de software',
+  ],
+});
 
 export default async function HomePage() {
   const [problems, concepts] = await Promise.all([getAllProblems(), getAllConcepts()]);

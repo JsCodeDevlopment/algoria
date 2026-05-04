@@ -1,7 +1,11 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { CourseProgramsIndex } from '@/components/course/course-programs-index';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
+import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
 interface Params {
   slug: string;
@@ -14,16 +18,33 @@ export async function generateStaticParams(): Promise<Params[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const pack = await getCoursePackHydrated(slug);
   if (!pack) return {};
-  return { title: pack.title };
+  return buildPublicMetadata({
+    title: pack.title,
+    description: pack.subtitle,
+    pathname: `/curso/${slug}`,
+    keywords: [pack.title, 'curso guiado algoritmos', 'certificado módulo', 'Algoria curso', ...pack.modules.map((m) => m.certificateTitle)],
+    openGraphType: 'article',
+  });
 }
 
 export default async function CourseDetailPage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const pack = await getCoursePackHydrated(slug);
   if (!pack) notFound();
-  return <CourseProgramsIndex pack={pack} />;
+  return (
+    <>
+      <JsonLdScript
+        data={learningResourceJsonLd({
+          name: pack.title,
+          description: pack.subtitle,
+          pathname: `/curso/${slug}`,
+        })}
+      />
+      <CourseProgramsIndex pack={pack} />
+    </>
+  );
 }

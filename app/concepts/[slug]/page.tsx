@@ -1,11 +1,15 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { getAllConceptSlugs, getConcept } from '@/lib/content/loader';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
+import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
 interface Params {
   slug: string;
@@ -16,11 +20,26 @@ export async function generateStaticParams(): Promise<Params[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const c = await getConcept(slug);
   if (!c) return {};
-  return { title: c.meta.title, description: c.meta.summary };
+  const difficultyPt =
+    c.meta.difficulty === 'easy' ? 'nível fácil' : c.meta.difficulty === 'medium' ? 'nível médio' : 'nível difícil';
+  return buildPublicMetadata({
+    title: c.meta.title,
+    description: c.meta.summary,
+    pathname: `/concepts/${slug}`,
+    keywords: [
+      c.meta.title,
+      c.meta.category.replace('-', ' '),
+      difficultyPt,
+      'conceitos algoritmos',
+      'fundamentos',
+      'Algoria',
+    ],
+    openGraphType: 'article',
+  });
 }
 
 export default async function ConceptPage({
@@ -37,6 +56,13 @@ export default async function ConceptPage({
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
+      <JsonLdScript
+        data={learningResourceJsonLd({
+          name: concept.meta.title,
+          description: concept.meta.summary,
+          pathname: `/concepts/${slug}`,
+        })}
+      />
       <ConceptVisitTracker slug={slug} />
 
       <Link href="/concepts" className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 inline-block mb-6">

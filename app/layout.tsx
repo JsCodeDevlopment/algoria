@@ -4,9 +4,11 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
 import { AlgoriaPostHogProvider } from '@/components/analytics/posthog-provider';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
+import { getMetadataBase, getSiteOrigin } from '@/lib/seo/site';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
@@ -27,7 +29,7 @@ export const metadata: Metadata = {
     'data structures',
     'aprender algoritmos',
   ],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: getMetadataBase(),
   openGraph: {
     title: 'Algoria — aprende algoritmos lendo código',
     description:
@@ -38,9 +40,33 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const origin = getSiteOrigin();
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'EducationalOrganization',
+        '@id': `${origin}/#organization`,
+        name: 'Algoria',
+        url: origin,
+        description:
+          'Plataforma para aprender algoritmos e estruturas de dados com leitura guiada de código, preparação para entrevistas e guias de engenharia aplicada.',
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${origin}/#website`,
+        url: origin,
+        name: 'Algoria',
+        inLanguage: 'pt-BR',
+        publisher: { '@id': `${origin}/#organization` },
+      },
+    ],
+  };
+
   return (
     <html lang="pt-BR" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`} suppressHydrationWarning>
       <body className="flex min-h-full flex-col">
+        <JsonLdScript data={structuredData} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AlgoriaPostHogProvider>
             <SiteHeader />

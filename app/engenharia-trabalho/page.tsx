@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import { Briefcase, Clock, MonitorSmartphone, Server, CloudCog } from 'lucide-react';
 
@@ -6,12 +7,23 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { ENGINEERING_WORK_PILLARS, type EngineeringWorkPillar } from '@/lib/content/schemas';
 import { getAllEngineeringWorkGuides } from '@/lib/content/loader';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
-export const metadata = {
-  title: 'Engenharia no trabalho',
+export const metadata: Metadata = buildPublicMetadata({
+  title: 'Engenharia no trabalho — guias práticos',
   description:
-    'Guias didáticos em português: frontend e produto, backend e APIs, DevOps e operação — para aplicar em sprint sem decorar buzzwords.',
-};
+    'Guias em português sobre frontend e produto, backend e APIs, DevOps e operação — aplicáveis na sprint real, sem lista de buzzwords.',
+  pathname: '/engenharia-trabalho',
+  keywords: [
+    'engenharia software prática',
+    'frontend produção',
+    'APIs backend',
+    'DevOps dia a dia',
+    'observabilidade',
+    'segurança aplicações',
+    'Algoria guias',
+  ],
+});
 
 const PILLAR_ORDER = new Map<EngineeringWorkPillar, number>(ENGINEERING_WORK_PILLARS.map((p, i) => [p, i]));
 

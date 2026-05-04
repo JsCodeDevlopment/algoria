@@ -1,9 +1,13 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 
 import { CourseModuleRunner } from '@/components/course/course-module-runner';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
 import { FUNDAMENTOS_FASE_1_PACK } from '@/lib/courses/fundamentos-fase1-seed';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
+import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
 interface Params {
   slug: string;
@@ -25,12 +29,21 @@ export async function generateStaticParams(): Promise<Params[]> {
   return combos;
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug, moduleId } = await params;
   const pack = await getCoursePackHydrated(slug);
   const mod = pack?.modules.find((m) => m.id === moduleId);
-  if (!mod) return {};
-  return { title: mod.certificateTitle.replace(/^Certificado — /, '') };
+  if (!mod || !pack) return {};
+  const tabTitle = mod.certificateTitle.replace(/^Certificado — /, '');
+  const description =
+    [mod.conceptSummary, mod.certificateTagline].filter(Boolean).join(' · ') || pack.subtitle;
+  return buildPublicMetadata({
+    title: `${tabTitle} · ${pack.title}`,
+    description,
+    pathname: `/curso/${slug}/modulo/${moduleId}`,
+    keywords: [tabTitle, pack.title, mod.linkedConceptSlug, 'módulo curso Algoria', 'exercícios fundamentos'],
+    openGraphType: 'article',
+  });
 }
 
 export default async function CourseModulePage({ params }: { params: Promise<Params> }) {
@@ -43,8 +56,20 @@ export default async function CourseModulePage({ params }: { params: Promise<Par
   const prevCert =
     idx > 0 ? pack.modules[idx - 1]?.certificateTitle : undefined;
 
+  const tabTitle = moduleHydrated.certificateTitle.replace(/^Certificado — /, '');
+  const ldDescription =
+    [moduleHydrated.conceptSummary, moduleHydrated.certificateTagline].filter(Boolean).join(' · ') ||
+    pack.subtitle;
+
   return (
     <div className="pb-16">
+      <JsonLdScript
+        data={learningResourceJsonLd({
+          name: `${tabTitle} · ${pack.title}`,
+          description: ldDescription,
+          pathname: `/curso/${slug}/modulo/${moduleId}`,
+        })}
+      />
       <div className="mx-auto max-w-3xl px-6 pt-6 print:hidden">
         <Link href={`/curso/${encodeURIComponent(slug)}`} className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
           ← Índice do programa

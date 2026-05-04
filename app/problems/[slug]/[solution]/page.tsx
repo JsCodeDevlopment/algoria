@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -10,6 +11,7 @@ import { Separator } from '@/components/ui/separator';
 import { CodePlayer } from '@/components/code-player/code-player';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { SolutionLanguageSelect } from '@/components/solution/solution-language-select';
 import { SolutionVisitTracker } from '@/components/solution/solution-visit-tracker';
 import { getAllProblems, getConcept, getProblem } from '@/lib/content/loader';
@@ -22,6 +24,9 @@ import {
 } from '@/lib/content/language';
 import { highlightToLines } from '@/lib/content/shiki';
 import type { Language } from '@/lib/content/schemas';
+import { buildPublicMetadata, truncateMetaDescription } from '@/lib/seo/build-metadata';
+import { learningResourceJsonLd } from '@/lib/seo/structured-data';
+import { stripHtmlLoose } from '@/lib/seo/strip-html';
 
 interface Params {
   slug: string;
@@ -35,15 +40,34 @@ export async function generateStaticParams(): Promise<Params[]> {
   );
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug, solution } = await params;
   const problem = await getProblem(slug);
   const sol = problem?.solutions.find((s) => s.meta.slug === solution);
   if (!problem || !sol) return {};
-  return {
+  const intro = stripHtmlLoose(sol.introHtml);
+  const pitch =
+    intro.length > 0
+      ? intro
+      : `Solução ${sol.meta.kind === 'brute-force' ? 'brute-force' : sol.meta.kind === 'optimal' ? 'ótima' : 'alternativa'} de «${problem.meta.title}»: ${sol.meta.complexity.time} tempo, ${sol.meta.complexity.space} espaço — código com explicação linha-a-linha.`;
+  const description = truncateMetaDescription(pitch);
+  const kindPt =
+    sol.meta.kind === 'brute-force' ? 'brute-force' : sol.meta.kind === 'optimal' ? 'solução ótima' : 'alternativa';
+  return buildPublicMetadata({
     title: `${problem.meta.title} · ${sol.meta.name}`,
-    description: `Solução ${sol.meta.kind} de ${problem.meta.title}, com explicação linha-a-linha. ${sol.meta.complexity.time} tempo, ${sol.meta.complexity.space} espaço.`,
-  };
+    description,
+    pathname: `/problems/${slug}/${solution}`,
+    keywords: [
+      problem.meta.title,
+      sol.meta.name,
+      kindPt,
+      ...problem.meta.categories.map((c) => c.replace(/-/g, ' ')),
+      ...problem.meta.tags,
+      'complexidade algorítmica',
+      'code walkthrough',
+    ],
+    openGraphType: 'article',
+  });
 }
 
 export default async function SolutionPage({
@@ -98,8 +122,20 @@ export default async function SolutionPage({
   // Sibling solutions for the "compare" footer.
   const otherSolutions = problem.solutions.filter((s) => s.meta.slug !== solutionSlug);
 
+  const introPlain = stripHtmlLoose(solution.introHtml).trim();
+  const jsonLdDescription =
+    introPlain ||
+    `Solução com explicação linha-a-linha para «${problem.meta.title}» (${solution.meta.name}). Complexidade ${solution.meta.complexity.time} tempo, ${solution.meta.complexity.space} espaço.`;
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
+      <JsonLdScript
+        data={learningResourceJsonLd({
+          name: `${problem.meta.title}: ${solution.meta.name}`,
+          description: jsonLdDescription,
+          pathname: `/problems/${problem.meta.slug}/${solutionSlug}`,
+        })}
+      />
       <SolutionVisitTracker problemSlug={problem.meta.slug} solutionSlug={solutionSlug} />
 
       <Link

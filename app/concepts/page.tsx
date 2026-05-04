@@ -1,12 +1,25 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 import { ConceptsCatalogClient } from '@/components/concepts/concepts-catalog-client';
 import { getAllConcepts } from '@/lib/content/loader';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
-export const metadata = {
-  title: 'Conceitos',
-  description: 'Mini-cursos sobre Big O, hash tables, e outros fundamentos que vais usar em todos os problemas.',
-};
+export const metadata: Metadata = buildPublicMetadata({
+  title: 'Conceitos de algoritmos e estruturas de dados',
+  description:
+    'Mini-guias sobre Big O, tabelas hash, duas ponteiros, janela deslizante e mais — base para ler as soluções com contexto.',
+  pathname: '/concepts',
+  keywords: [
+    'Big O',
+    'complexidade algorítmica',
+    'hash table',
+    'two pointers',
+    'sliding window',
+    'fundamentos algoritmos',
+    'Algoria conceitos',
+  ],
+});
 
 export default async function ConceptsPage() {
   const concepts = await getAllConcepts();

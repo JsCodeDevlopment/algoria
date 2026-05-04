@@ -1,10 +1,14 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic } from '@/lib/content/loader';
 import type { InterviewEnglishTrack } from '@/lib/content/schemas';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
+import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
 interface Params {
   slug: string;
@@ -22,14 +26,26 @@ export async function generateStaticParams(): Promise<Params[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const topic = await getInterviewEnglishTopic(slug);
   if (!topic) return {};
-  return {
+  const track = TRACK_LABEL[topic.meta.track];
+  return buildPublicMetadata({
     title: `${topic.meta.title} · Interview English`,
     description: topic.meta.summary,
-  };
+    pathname: `/interview-en/${slug}`,
+    keywords: [
+      topic.meta.title,
+      track,
+      'technical English',
+      'coding interview',
+      'software interview',
+      'Algoria',
+    ],
+    openGraphLocale: 'en_US',
+    openGraphType: 'article',
+  });
 }
 
 export default async function InterviewEnglishTopicPage({ params }: { params: Promise<Params> }) {
@@ -39,6 +55,14 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
+      <JsonLdScript
+        data={learningResourceJsonLd({
+          name: topic.meta.title,
+          description: topic.meta.summary,
+          pathname: `/interview-en/${slug}`,
+          inLanguage: 'en',
+        })}
+      />
       <Link href="/interview-en" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
         ← Interview English hub
       </Link>

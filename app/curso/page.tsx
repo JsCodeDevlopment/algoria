@@ -1,11 +1,16 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
-export const metadata = {
-  title: 'Cursos guiados',
-  description: 'Percursos com progresso local, exercícios e certificado por módulo na Algoria.',
-};
+export const metadata: Metadata = buildPublicMetadata({
+  title: 'Cursos guiados com certificado por módulo',
+  description:
+    'Percursos com leitura curada, exercícios no browser e certificado modular ao concluir cada avaliação — progresso guardado localmente.',
+  pathname: '/curso',
+  keywords: ['curso algoritmos', 'fundamentos programação', 'certificado módulo', 'Algoria curso', 'trilha guiada'],
+});
 
 export default async function CoursesIndexPage() {
   const slugs = await listCourseSlugs();

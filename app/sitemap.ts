@@ -1,11 +1,12 @@
 import type { MetadataRoute } from 'next';
 
+import { listCourseSlugs, getCoursePackHydrated } from '@/lib/courses/hydrate-course-pack';
 import { getAllProblems, getAllConceptSlugs, getAllInterviewEnglishSlugs, getAllEngineeringWorkSlugs } from '@/lib/content/loader';
+import { getSiteOrigin } from '@/lib/seo/site';
 
 export const revalidate = 3600;
 
-const RAW_DOMAIN = process.env.NEXT_PUBLIC_APP_DOMAIN?.trim() || 'algoria.app';
-const BASE_URL = `https://${RAW_DOMAIN.replace(/^https?:\/\//, '').replace(/\/$/, '')}`;
+const BASE_URL = getSiteOrigin();
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const isProduction = process.env.NEXT_PUBLIC_ENVIRONMENT === 'production' && process.env.NODE_ENV === 'production';
@@ -19,14 +20,42 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/concepts`, lastModified: now, priority: 0.85, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/interview-en`, lastModified: now, priority: 0.82, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/engenharia-trabalho`, lastModified: now, priority: 0.81, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/curso`, lastModified: now, priority: 0.83, changeFrequency: 'weekly' },
   ];
 
-  const [problems, conceptSlugs, interviewEnSlugs, engTrabalhoSlugs] = await Promise.all([
+  const [problems, conceptSlugs, interviewEnSlugs, engTrabalhoSlugs, courseSlugs] = await Promise.all([
     getAllProblems(),
     getAllConceptSlugs(),
     getAllInterviewEnglishSlugs(),
     getAllEngineeringWorkSlugs(),
+    listCourseSlugs(),
   ]);
+
+  const coursePackEntries: MetadataRoute.Sitemap = [];
+  for (const cslug of courseSlugs) {
+    coursePackEntries.push({
+      url: `${BASE_URL}/curso/${encodeURIComponent(cslug)}`,
+      lastModified: now,
+      priority: 0.78,
+      changeFrequency: 'weekly',
+    });
+    const pack = await getCoursePackHydrated(cslug);
+    if (!pack) continue;
+    for (const m of pack.modules) {
+      coursePackEntries.push({
+        url: `${BASE_URL}/curso/${encodeURIComponent(cslug)}/modulo/${encodeURIComponent(m.id)}`,
+        lastModified: now,
+        priority: 0.72,
+        changeFrequency: 'weekly',
+      });
+      coursePackEntries.push({
+        url: `${BASE_URL}/curso/${encodeURIComponent(cslug)}/modulo/${encodeURIComponent(m.id)}/certificado`,
+        lastModified: now,
+        priority: 0.55,
+        changeFrequency: 'monthly',
+      });
+    }
+  }
 
   const problemEntries: MetadataRoute.Sitemap = problems.flatMap((p) => [
     {
@@ -64,5 +93,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'monthly',
   }));
 
-  return [...staticEntries, ...problemEntries, ...conceptEntries, ...interviewEnEntries, ...engTrabalhoEntries];
+  return [...staticEntries, ...coursePackEntries, ...problemEntries, ...conceptEntries, ...interviewEnEntries, ...engTrabalhoEntries];
 }

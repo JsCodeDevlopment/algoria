@@ -1,16 +1,21 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { ArrowRight, BookOpen } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { JsonLdScript } from '@/components/seo/json-ld';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { ProblemStudyCompletionBar } from '@/components/problem/problem-study-completion-bar';
 import { ProblemStudyTabs } from '@/components/problem/problem-study-tabs';
 import { ProblemVisitTracker } from '@/components/problem/problem-visit-tracker';
 import { getAllProblemSlugs, getProblem, getConcept } from '@/lib/content/loader';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
+import { learningResourceJsonLd } from '@/lib/seo/structured-data';
+import { stripHtmlLoose } from '@/lib/seo/strip-html';
 
 interface Params {
   slug: string;
@@ -21,14 +26,32 @@ export async function generateStaticParams(): Promise<Params[]> {
   return slugs.map((slug) => ({ slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }) {
+export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
   const { slug } = await params;
   const problem = await getProblem(slug);
   if (!problem) return {};
-  return {
+  const plain = stripHtmlLoose(problem.descriptionHtml);
+  const description =
+    plain.length > 0
+      ? plain
+      : `Enunciado e várias soluções comentadas linha-a-linha para «${problem.meta.title}» (${problem.meta.difficulty}).`;
+  const difficultyPt =
+    problem.meta.difficulty === 'easy' ? 'fácil' : problem.meta.difficulty === 'medium' ? 'médio' : 'difícil';
+  return buildPublicMetadata({
     title: problem.meta.title,
-    description: stripHtml(problem.descriptionHtml).slice(0, 160),
-  };
+    description,
+    pathname: `/problems/${slug}`,
+    keywords: [
+      problem.meta.title,
+      difficultyPt,
+      ...problem.meta.tags,
+      ...problem.meta.categories.map((c) => c.replace(/-/g, ' ')),
+      'algoritmo',
+      'estruturas de dados',
+      'soluções comentadas',
+    ],
+    openGraphType: 'article',
+  });
 }
 
 export default async function ProblemPage({ params }: { params: Promise<Params> }) {
@@ -152,6 +175,13 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
 
   return (
     <div className="mx-auto max-w-5xl px-6 py-12">
+      <JsonLdScript
+        data={learningResourceJsonLd({
+          name: problem.meta.title,
+          description: stripHtmlLoose(problem.descriptionHtml) || problem.meta.title,
+          pathname: `/problems/${slug}`,
+        })}
+      />
       <ProblemVisitTracker slug={slug} />
 
       <Link href="/problems" className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 mb-6 inline-block">
@@ -179,12 +209,8 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
 }
 
 function firstParagraph(html: string): string {
-  const plain = stripHtml(html);
+  const plain = stripHtmlLoose(html);
   return plain.length > 200 ? `${plain.slice(0, 200)}…` : plain;
-}
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
 export const dynamicParams = false;

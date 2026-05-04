@@ -1,4 +1,5 @@
 import type { Problem } from '@/lib/content/schemas';
+import { stripHtmlLoose } from '@/lib/seo/strip-html';
 
 export type ProblemsCatalogProblem = Pick<
   Problem['meta'],
@@ -9,7 +10,7 @@ export type ProblemsCatalogProblem = Pick<
 };
 
 export function problemToCatalogModel(p: Problem): ProblemsCatalogProblem {
-  const plain = stripHtml(p.descriptionHtml);
+  const plain = stripHtmlLoose(p.descriptionHtml);
   return {
     slug: p.meta.slug,
     title: p.meta.title,
@@ -25,8 +26,4 @@ export function problemToCatalogModel(p: Problem): ProblemsCatalogProblem {
 
 export function catalogModelsFromProblems(problems: Problem[]): ProblemsCatalogProblem[] {
   return problems.map(problemToCatalogModel);
-}
-
-function stripHtml(html: string): string {
-  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }

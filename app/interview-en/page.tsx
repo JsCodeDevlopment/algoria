@@ -1,16 +1,29 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Clock, Languages } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { INTERVIEW_EN_TRACKS, type InterviewEnglishTrack } from '@/lib/content/schemas';
 import { getAllInterviewEnglishTopics } from '@/lib/content/loader';
+import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
-export const metadata = {
-  title: 'Technical English for interviews',
+export const metadata: Metadata = buildPublicMetadata({
+  title: 'Technical English for interviews — hub Algoria',
   description:
-    'Hub em inglês para vocabulário de dados & algoritmos, comunicação em live coding, behavioral STAR e frases úteis em system design — focado em entrevistas.',
-};
+    'English-only hub: vocabulary for data structures & algorithms, live coding talk tracks, behavioral STAR answers and system design phrases for hiring loops.',
+  pathname: '/interview-en',
+  keywords: [
+    'technical English interviews',
+    'coding interview English',
+    'live coding phrases',
+    'STAR method behavioral',
+    'system design vocabulary',
+    'FAANG interview English',
+    'Algoria',
+  ],
+  openGraphLocale: 'en_US',
+});
 
 const TRACK_ORDER = new Map<InterviewEnglishTrack, number>(
   INTERVIEW_EN_TRACKS.map((t, i) => [t, i]),
