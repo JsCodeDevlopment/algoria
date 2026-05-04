@@ -17,6 +17,9 @@ import {
   DidacticMetricsView,
 } from './didactic-views';
 
+const rootsMap = new WeakMap<HTMLElement, Root>();
+const pendingUnmounts = new WeakMap<Root, number>();
+
 function decodePayloadUtf8(b64: string): string {
   const bin = atob(b64);
   const bytes = new Uint8Array(bin.length);
@@ -36,7 +39,17 @@ function renderIntoPlaceholder(el: HTMLDivElement): Root | null {
     return null;
   }
 
-  const root = createRoot(el);
+  let root = rootsMap.get(el);
+  if (!root) {
+    root = createRoot(el);
+    rootsMap.set(el, root);
+  } else {
+    const timeoutId = pendingUnmounts.get(root);
+    if (timeoutId !== undefined) {
+      clearTimeout(timeoutId);
+      pendingUnmounts.delete(root);
+    }
+  }
 
   switch (variant) {
     case 'metrics': {
@@ -83,25 +96,32 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
     const shell = shellRef.current;
     if (!shell) return;
 
-    const localRoots: Root[] = [];
+    const localEntries: { el: HTMLElement; root: Root }[] = [];
 
     shell.querySelectorAll('[data-algoria-didactic][data-algoria-payload]').forEach((node) => {
-      const root = renderIntoPlaceholder(node as HTMLDivElement);
-      if (root) localRoots.push(root);
+      const el = node as HTMLDivElement;
+      const root = renderIntoPlaceholder(el);
+      if (root) localEntries.push({ el, root });
     });
 
-    rootsRef.current = localRoots;
+    rootsRef.current = localEntries.map((e) => e.root);
 
     return () => {
-      localRoots.forEach((r) => {
-        try {
-          // Defer unmount to avoid unmounting during a render phase
-          setTimeout(() => r.unmount(), 0);
-        } catch (e) {
-          console.error('Error unmounting didactic root:', e);
-        }
+      localEntries.forEach(({ el, root }) => {
+        const timeoutId = window.setTimeout(() => {
+          try {
+            root.unmount();
+            if (rootsMap.get(el) === root) {
+              rootsMap.delete(el);
+            }
+          } catch (e) {
+            // ignore unmount errors on detached nodes
+          }
+          pendingUnmounts.delete(root);
+        }, 0);
+        pendingUnmounts.set(root, timeoutId);
       });
-      if (rootsRef.current === localRoots) {
+      if (rootsRef.current.every((r, i) => localEntries[i]?.root === r)) {
         rootsRef.current = [];
       }
     };
