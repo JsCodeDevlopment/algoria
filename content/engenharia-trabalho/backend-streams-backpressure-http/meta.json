@@ -1,0 +1,7 @@
+{
+  "slug": "backend-streams-backpressure-http",
+  "title": "Streams e backpressure — memória honesta em pipelines HTTP",
+  "summary": "Porque ler ficheiros ou CSV inteiro na RAM rebenta primeiro que pensas; como chunked encoding e fluxos aplicam pressão de volta ao produtor.",
+  "estimatedMinutes": 22,
+  "pillar": "backend"
+}

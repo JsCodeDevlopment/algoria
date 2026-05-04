@@ -1,0 +1,7 @@
+{
+  "slug": "backend-concorrencia-e-consistencia",
+  "title": "Concorrência em APIs — da corrida ao desenho defensivo",
+  "summary": "Race conditions, idempotência, transações e o que muda quando várias instâncias atendem o mesmo tráfego — sem fingir que já tens Paxos à primeira migração.",
+  "estimatedMinutes": 24,
+  "pillar": "backend"
+}

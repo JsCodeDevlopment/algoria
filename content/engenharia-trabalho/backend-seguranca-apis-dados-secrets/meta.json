@@ -1,0 +1,7 @@
+{
+  "slug": "backend-seguranca-apis-dados-secrets",
+  "title": "Segurança em backends — dados em repouso, em trânsito e humanos no pipeline",
+  "summary": "Injeção e serialização perigososa, segredos, TLS e revisões que impedem regressões de segurança quando pressão do backlog aparece.",
+  "estimatedMinutes": 26,
+  "pillar": "backend"
+}
