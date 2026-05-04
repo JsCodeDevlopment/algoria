@@ -6,7 +6,8 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
   <br/>
   <strong>Algoria</strong>
   <br/><br/>
-  <sub>Lê código com intenção · Entende o algoritmo</sub>
+  <sub>Lê código com intenção · Entende o algoritmo</sub><br/>
+  <img alt="Algoria Preview" title="Algoria" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="public/gallery/image1.png" />
 </h1>
 
 ## Funcionalidades
@@ -130,10 +131,10 @@ flowchart LR
 
 ## Atalhos do code player
 
-| Tecla | Ação |
-| --- | --- |
-| `←` / `→` | Linha anterior / seguinte |
-| `Espaço` | Play / pausa (autoplay) |
+| Tecla           | Ação                                                |
+| --------------- | --------------------------------------------------- |
+| `←` / `→`       | Linha anterior / seguinte                           |
+| `Espaço`        | Play / pausa (autoplay)                             |
 | `1` / `2` / `3` | Nível de explicação: Resumo / Detalhado / Deep dive |
 
 ## Adicionar um novo problema (resumo)
@@ -146,8 +147,8 @@ flowchart LR
 
 ## Desenvolvedor
 
-| Foto | Nome | Cargo |
-| --- | --- | --- |
+| Foto                                                                                                                                    | Nome                                                 | Cargo                                         |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------- |
 | <img src="https://avatars.githubusercontent.com/u/100796752?s=400&u=ae99bd456c6b274cd934d85a374a44340140e222&v=4" width="100" alt="" /> | [Jonatas Silva](https://github.com/JsCodeDevlopment) | Fullstack Software Engineer / Product Manager |
 
 ---
