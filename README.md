@@ -6,7 +6,8 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
   <br/>
   <strong>Algoria</strong>
   <br/><br/>
-  <sub>Lê código com intenção · Entende o algoritmo</sub><br/>
+  <sub>Lê código com intenção · Entende o algoritmo</sub>
+  <br/><br/>
   <img alt="Algoria Preview" title="Algoria" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="public/gallery/image1.png" />
 </h1>
 
