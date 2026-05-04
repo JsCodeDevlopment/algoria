@@ -83,17 +83,27 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
     const shell = shellRef.current;
     if (!shell) return;
 
-    rootsRef.current.forEach((r) => r.unmount());
-    rootsRef.current = [];
+    const localRoots: Root[] = [];
 
     shell.querySelectorAll('[data-algoria-didactic][data-algoria-payload]').forEach((node) => {
       const root = renderIntoPlaceholder(node as HTMLDivElement);
-      if (root) rootsRef.current.push(root);
+      if (root) localRoots.push(root);
     });
 
+    rootsRef.current = localRoots;
+
     return () => {
-      rootsRef.current.forEach((r) => r.unmount());
-      rootsRef.current = [];
+      localRoots.forEach((r) => {
+        try {
+          // Defer unmount to avoid unmounting during a render phase
+          setTimeout(() => r.unmount(), 0);
+        } catch (e) {
+          console.error('Error unmounting didactic root:', e);
+        }
+      });
+      if (rootsRef.current === localRoots) {
+        rootsRef.current = [];
+      }
     };
   }, [html]);
 
