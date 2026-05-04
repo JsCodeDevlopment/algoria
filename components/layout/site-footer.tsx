@@ -6,11 +6,11 @@ const explore = [
   { href: '/problems', label: 'Catálogo de problemas' },
   { href: '/concepts', label: 'Conceitos algorítmicos' },
   { href: '/interview-en', label: 'Inglês técnico · entrevistas (EN)' },
-  { href: '/engenharia-trabalho', label: 'Engenharia no trabalho' },
-  { href: '/curso/fundamentos-fase-1', label: 'Curso fundamentos' },
+  { href: '/engineering-work', label: 'Engenharia no trabalho' },
+  { href: '/course/fundamentos-fase-1', label: 'Curso fundamentos' },
 ];
 
-const roadmap = [{ href: '/#testes-vagas', label: 'Testes técnicos de vagas' }];
+const roadmap = [{ href: '/#technical-job-tests', label: 'Testes técnicos de vagas' }];
 
 export function SiteFooter() {
   return (

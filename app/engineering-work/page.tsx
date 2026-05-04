@@ -13,7 +13,7 @@ export const metadata: Metadata = buildPublicMetadata({
   title: 'Engenharia no trabalho — guias práticos',
   description:
     'Guias em português sobre frontend e produto, backend e APIs, DevOps e operação — aplicáveis na sprint real, sem lista de buzzwords.',
-  pathname: '/engenharia-trabalho',
+  pathname: '/engineering-work',
   keywords: [
     'engenharia software prática',
     'frontend produção',
@@ -45,7 +45,7 @@ const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
   devops: 'Entrega contínua, observabilidade e segurança operacional sem teatro.',
 };
 
-export default async function EngenhariaTrabalhoPage() {
+export default async function EngineeringWorkHubPage() {
   const guides = await getAllEngineeringWorkGuides();
   guides.sort((a, b) => {
     const pd = (PILLAR_ORDER.get(a.meta.pillar) ?? 99) - (PILLAR_ORDER.get(b.meta.pillar) ?? 99);
@@ -108,7 +108,7 @@ export default async function EngenhariaTrabalhoPage() {
                   {list.map((g) => (
                     <Link
                       key={g.meta.slug}
-                      href={`/engenharia-trabalho/${g.meta.slug}`}
+                      href={`/engineering-work/${g.meta.slug}`}
                       className="group relative border border-border p-px hover:z-10"
                     >
                       <Card className="h-full rounded-none border-none bg-background transition-all duration-200 group-hover:bg-muted/50">

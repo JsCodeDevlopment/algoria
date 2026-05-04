@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return buildPublicMetadata({
     title: pack.title,
     description: pack.subtitle,
-    pathname: `/curso/${slug}`,
+    pathname: `/course/${slug}`,
     keywords: [pack.title, 'curso guiado algoritmos', 'certificado módulo', 'Algoria curso', ...pack.modules.map((m) => m.certificateTitle)],
     openGraphType: 'article',
   });
@@ -41,7 +41,7 @@ export default async function CourseDetailPage({ params }: { params: Promise<Par
         data={learningResourceJsonLd({
           name: pack.title,
           description: pack.subtitle,
-          pathname: `/curso/${slug}`,
+          pathname: `/course/${slug}`,
         })}
       />
       <CourseProgramsIndex pack={pack} />

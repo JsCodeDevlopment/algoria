@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return buildPublicMetadata({
     title: `${tabTitle} · ${pack.title}`,
     description,
-    pathname: `/curso/${slug}/modulo/${moduleId}`,
+    pathname: `/course/${slug}/module/${moduleId}`,
     keywords: [tabTitle, pack.title, mod.linkedConceptSlug, 'módulo curso Algoria', 'exercícios fundamentos'],
     openGraphType: 'article',
   });
@@ -67,11 +67,11 @@ export default async function CourseModulePage({ params }: { params: Promise<Par
         data={learningResourceJsonLd({
           name: `${tabTitle} · ${pack.title}`,
           description: ldDescription,
-          pathname: `/curso/${slug}/modulo/${moduleId}`,
+          pathname: `/course/${slug}/module/${moduleId}`,
         })}
       />
       <div className="mx-auto max-w-3xl px-6 pt-6 print:hidden">
-        <Link href={`/curso/${encodeURIComponent(slug)}`} className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
+        <Link href={`/course/${encodeURIComponent(slug)}`} className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
           ← Índice do programa
         </Link>
       </div>

@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return buildPublicMetadata({
     title: `${mod.certificateTitle} · certificado`,
     description,
-    pathname: `/curso/${slug}/modulo/${moduleId}/certificado`,
+    pathname: `/course/${slug}/module/${moduleId}/certificate`,
     keywords: [mod.certificateTitle, pack.title, 'certificado curso', 'Algoria'],
     openGraphType: 'article',
   });
@@ -62,7 +62,7 @@ export default async function ModuleCertificatePage({ params }: { params: Promis
         data={learningResourceJsonLd({
           name: moduleHydrated.certificateTitle,
           description: ldDescription,
-          pathname: `/curso/${slug}/modulo/${moduleId}/certificado`,
+          pathname: `/course/${slug}/module/${moduleId}/certificate`,
         })}
       />
       <ModuleCertificateView courseSlug={slug} module={moduleHydrated} />

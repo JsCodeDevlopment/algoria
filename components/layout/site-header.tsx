@@ -10,9 +10,9 @@ const NAV = [
   { href: '/problems', label: 'Problemas' },
   { href: '/concepts', label: 'Conceitos' },
   { href: '/interview-en', label: 'Inglês entrevistas' },
-  { href: '/curso', label: 'Curso' },
-  { href: '/#testes-vagas', label: 'Testes técnicos' },
-  { href: '/engenharia-trabalho', label: 'Engenharia no trabalho' },
+  { href: '/course', label: 'Curso' },
+  { href: '/#technical-job-tests', label: 'Testes técnicos' },
+  { href: '/engineering-work', label: 'Engenharia no trabalho' },
 ] as const;
 
 function NavLinks({ vertical }: { vertical?: boolean }) {

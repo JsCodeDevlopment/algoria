@@ -106,7 +106,7 @@ export default async function HomePage() {
               </Link>
             </Button>
             <Button asChild variant="outline" size="xl" className="rounded-none border-2 px-8 font-bold uppercase tracking-wider">
-              <Link href="/curso/fundamentos-fase-1">Curso de fundamentos guiado</Link>
+              <Link href="/course/fundamentos-fase-1">Curso de fundamentos guiado</Link>
             </Button>
             <Button asChild variant="ghost" size="xl" className="rounded-none font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground">
               <Link href="/concepts">
@@ -166,7 +166,7 @@ export default async function HomePage() {
               'Exemplos com separador simples vs profundo e perguntas de fixação.',
               'Certificado por capítulo só no teu navegador após a prova.',
             ]}
-            ctaHref="/curso/fundamentos-fase-1"
+            ctaHref="/course/fundamentos-fase-1"
             ctaLabel="Abrir programa do curso"
           />
         </div>
@@ -257,7 +257,7 @@ export default async function HomePage() {
       </section>
 
       {/* ── Testes técnicos / vagas ── */}
-      <section id="testes-vagas" className="relative z-10 scroll-mt-28 border-y border-primary/20 bg-muted/30">
+      <section id="technical-job-tests" className="relative z-10 scroll-mt-28 border-y border-primary/20 bg-muted/30">
         <div className="mx-auto max-w-7xl px-6 py-20 md:py-28">
           <div className="grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)] lg:items-start lg:gap-16">
             <div className="space-y-8">
@@ -290,7 +290,7 @@ export default async function HomePage() {
                       <Link href="/interview-en">Inglês técnico · hub EN</Link>
                     </Button>
                     <Link
-                      href="/curso/fundamentos-fase-1"
+                      href="/course/fundamentos-fase-1"
                       className="inline-flex items-center gap-2 self-center px-2 text-[11px] font-bold uppercase tracking-[0.2em] text-primary hover:underline"
                     >
                       Revisar fundamentos guiados <ArrowRight className="h-4 w-4 shrink-0" aria-hidden />
@@ -340,7 +340,7 @@ export default async function HomePage() {
               Conceitos aplicados · guias longos
             </Badge>
             <Button asChild variant="outline" size="sm" className="rounded-none border-2 border-primary font-black uppercase tracking-wider">
-              <Link href="/engenharia-trabalho">
+              <Link href="/engineering-work">
                 Abrir guias · Front, Back, DevOps <ArrowRight className="ml-1 h-4 w-4" aria-hidden />
               </Link>
             </Button>
@@ -406,7 +406,7 @@ export default async function HomePage() {
               </p>
               <p className="mt-4 text-sm leading-relaxed">
                 <Link
-                  href="/engenharia-trabalho/frontend-seo-tecnico-cenarios-producao"
+                  href="/engineering-work/frontend-seo-tecnico-cenarios-producao"
                   className="font-semibold text-primary underline-offset-4 hover:underline"
                 >
                   Guia extensivo: SEO técnico — cenários de produção (SPA, e-commerce, multi-idioma, staging…)
@@ -417,7 +417,7 @@ export default async function HomePage() {
           <p className="mt-14 max-w-3xl border-l-[3px] border-primary/30 pl-6 text-sm leading-relaxed text-muted-foreground">
             Esta secção continua a funcionar como âncora na página inicial; os textos completos — por capítulo, com exercícios de reflexão e
             checklists — vivem no hub{' '}
-            <Link href="/engenharia-trabalho" className="font-semibold text-foreground underline-offset-4 hover:underline">
+            <Link href="/engineering-work" className="font-semibold text-foreground underline-offset-4 hover:underline">
               Engenharia no trabalho
             </Link>
             . Novos temas entram no mesmo formato quando estiverem editorialmente maduros.
@@ -517,7 +517,7 @@ export default async function HomePage() {
               <Link href="/problems">Entrar catálogo</Link>
             </Button>
             <Button asChild variant="outline" size="xl" className="rounded-none border-2 border-foreground px-8 font-black uppercase tracking-wider">
-              <Link href="/curso/fundamentos-fase-1">Curso primeiro</Link>
+              <Link href="/course/fundamentos-fase-1">Curso primeiro</Link>
             </Button>
           </div>
         </div>

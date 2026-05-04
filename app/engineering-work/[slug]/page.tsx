@@ -34,13 +34,13 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   return buildPublicMetadata({
     title: `${guide.meta.title} · Engenharia no trabalho`,
     description: guide.meta.summary,
-    pathname: `/engenharia-trabalho/${slug}`,
+    pathname: `/engineering-work/${slug}`,
     keywords: [guide.meta.title, pillar, 'engenharia software', 'boas práticas produção', 'Algoria guia'],
     openGraphType: 'article',
   });
 }
 
-export default async function EngenhariaTrabalhoGuidePage({ params }: { params: Promise<Params> }) {
+export default async function EngineeringWorkGuidePage({ params }: { params: Promise<Params> }) {
   const { slug } = await params;
   const guide = await getEngineeringWorkGuide(slug);
   if (!guide) notFound();
@@ -51,10 +51,10 @@ export default async function EngenhariaTrabalhoGuidePage({ params }: { params: 
         data={articleJsonLd({
           headline: guide.meta.title,
           description: guide.meta.summary,
-          pathname: `/engenharia-trabalho/${slug}`,
+          pathname: `/engineering-work/${slug}`,
         })}
       />
-      <Link href="/engenharia-trabalho" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
+      <Link href="/engineering-work" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
         ← Engenharia no trabalho
       </Link>
 

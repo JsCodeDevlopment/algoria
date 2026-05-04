@@ -45,7 +45,7 @@ export default async function ConceptsPage() {
             </p>
           </div>
           <Link
-            href="/curso/fundamentos-fase-1"
+            href="/course/fundamentos-fase-1"
             className="inline-flex shrink-0 items-center justify-center border-2 border-primary px-6 py-3 text-center text-[11px] font-bold uppercase tracking-[0.2em] transition-colors hover:bg-primary hover:text-primary-foreground"
           >
             Ver curso de Fundamentos

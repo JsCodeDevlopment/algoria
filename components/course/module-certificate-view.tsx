@@ -33,7 +33,7 @@ export function ModuleCertificateView({ courseSlug, module }: Props) {
           localmente esse fecho técnico.
         </p>
         <Button asChild variant="outline" className="rounded-xl">
-          <a href={`/curso/${encodeURIComponent(courseSlug)}/modulo/${encodeURIComponent(module.id)}`}>Voltar às lições</a>
+          <a href={`/course/${encodeURIComponent(courseSlug)}/module/${encodeURIComponent(module.id)}`}>Voltar às lições</a>
         </Button>
       </div>
     );

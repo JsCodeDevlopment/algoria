@@ -47,12 +47,14 @@ export default async function ConceptPage({
   searchParams,
 }: {
   params: Promise<Params>;
-  searchParams?: Promise<{ curso?: string; modulo?: string }>;
+  searchParams?: Promise<{ course?: string; module?: string; curso?: string; modulo?: string }>;
 }) {
   const { slug } = await params;
   const concept = await getConcept(slug);
   if (!concept) notFound();
   const q = (await searchParams) ?? {};
+  const courseSlug = q.course ?? q.curso;
+  const moduleId = q.module ?? q.modulo;
 
   return (
     <div className="mx-auto max-w-3xl px-6 py-12">
@@ -69,14 +71,14 @@ export default async function ConceptPage({
         ← Todos os conceitos
       </Link>
 
-      {q.curso && q.modulo ? (
+      {courseSlug && moduleId ? (
         <div className="mb-8 rounded-lg border border-primary/40 bg-primary/5 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <span>
             Estás dentro do <strong>curso guiado</strong>. Quando terminares a página, volta ao módulo atual para marcar a
             leitura e continuar os exercícios.
           </span>
           <Link
-            href={`/curso/${encodeURIComponent(q.curso)}/modulo/${encodeURIComponent(q.modulo)}`}
+            href={`/course/${encodeURIComponent(courseSlug)}/module/${encodeURIComponent(moduleId)}`}
             className="shrink-0 text-center text-xs font-semibold uppercase tracking-widest px-3 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary/90"
           >
             Voltar ao módulo

@@ -83,7 +83,7 @@ export function CourseProgramsIndex({ pack }: Props) {
         <div className="shrink-0 border-t md:border-t-0 md:border-l border-border p-6 flex md:flex-col items-stretch gap-3 justify-between bg-muted/40">
           {unlock ? (
             <Link
-              href={`/curso/${encodeURIComponent(pack.slug)}/modulo/${encodeURIComponent(module.id)}`}
+              href={`/course/${encodeURIComponent(pack.slug)}/module/${encodeURIComponent(module.id)}`}
               className="inline-flex justify-center px-6 py-3 text-xs font-bold uppercase tracking-[0.2em] border-2 border-primary bg-background hover:bg-primary hover:text-primary-foreground transition-colors"
             >
               Abrir módulo
@@ -93,7 +93,7 @@ export function CourseProgramsIndex({ pack }: Props) {
           )}
           {capPassed ? (
             <Link
-              href={`/curso/${encodeURIComponent(pack.slug)}/modulo/${encodeURIComponent(module.id)}/certificado`}
+              href={`/course/${encodeURIComponent(pack.slug)}/module/${encodeURIComponent(module.id)}/certificate`}
               className="inline-flex items-center gap-2 justify-center text-emerald-600 dark:text-emerald-400 px-6 py-2 text-xs uppercase font-bold tracking-widest underline-offset-4 hover:underline"
             >
               <CheckCircle2 className="h-4 w-4" /> Certificado deste capítulo

@@ -8,7 +8,7 @@ export const metadata: Metadata = buildPublicMetadata({
   title: 'Cursos guiados com certificado por módulo',
   description:
     'Percursos com leitura curada, exercícios no browser e certificado modular ao concluir cada avaliação — progresso guardado localmente.',
-  pathname: '/curso',
+  pathname: '/course',
   keywords: ['curso algoritmos', 'fundamentos programação', 'certificado módulo', 'Algoria curso', 'trilha guiada'],
 });
 
@@ -41,7 +41,7 @@ export default async function CoursesIndexPage() {
                 </p>
               </div>
               <Link
-                href={`/curso/${encodeURIComponent(p.slug)}`}
+                href={`/course/${encodeURIComponent(p.slug)}`}
                 className="self-start px-6 py-3 border-2 border-primary text-xs font-bold uppercase tracking-[0.2em] hover:bg-primary hover:text-primary-foreground transition-colors"
               >
                 Abrir programa

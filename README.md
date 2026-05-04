@@ -18,7 +18,7 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
 - 🧠 **Conceitos** — páginas longas (fundamentos, estruturas, padrões) carregadas do repositório em Markdown
 - 🎓 **Curso guiado** — trilha modular com exemplos, MCQs e certificado por capítulo (progresso no browser)
 - 🌍 **Interview English** — hub `/interview-en` com vocabulário e scripts 100% em inglês para entrevistas
-- 💼 **Engenharia no trabalho** — guias didáticos `/engenharia-trabalho` (frontend, backend, DevOps)
+- 💼 **Engenharia no trabalho** — guias didáticos `/engineering-work` (frontend, backend, DevOps)
 - 🌓 **Tema claro/escuro** (`next-themes`)
 - 📊 **Analytics opcional** — PostHog quando `NEXT_PUBLIC_POSTHOG_KEY` está definido
 - 🔍 **SEO** — `sitemap.ts` e `robots.ts` com gate por ambiente (`NEXT_PUBLIC_ENVIRONMENT` + `NODE_ENV`)

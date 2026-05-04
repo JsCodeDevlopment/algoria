@@ -56,7 +56,7 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
           )}
         </p>
         <Link
-          href={`/curso/${pack.slug}`}
+          href={`/course/${pack.slug}`}
           className="inline-flex items-center justify-center px-6 py-3 rounded-lg border border-border bg-background hover:bg-muted transition-colors font-medium text-sm uppercase tracking-[0.2em]"
         >
           Voltar ao programa do curso
@@ -107,7 +107,7 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
         </div>
         <div className="flex flex-wrap items-center gap-4 pt-2">
           <Link
-            href={`/concepts/${module.linkedConceptSlug}?curso=${encodeURIComponent(pack.slug)}&modulo=${encodeURIComponent(
+            href={`/concepts/${module.linkedConceptSlug}?course=${encodeURIComponent(pack.slug)}&module=${encodeURIComponent(
               module.id,
             )}`}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 shadow-sm uppercase tracking-[0.12em]"
@@ -175,13 +175,13 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
         {capOk ? (
           <div className="flex flex-wrap items-center gap-3">
             <Link
-              href={`/curso/${pack.slug}/modulo/${encodeURIComponent(module.id)}/certificado`}
+              href={`/course/${pack.slug}/module/${encodeURIComponent(module.id)}/certificate`}
               className="inline-flex items-center gap-2 rounded-lg border-2 border-amber-500/70 bg-amber-500/10 px-5 py-2.5 font-semibold text-sm uppercase tracking-[0.12em]"
             >
               Ver certificado
               <ChevronRight className="h-4 w-4" />
             </Link>
-            <Link href={`/curso/${pack.slug}`} className="text-sm text-muted-foreground underline-offset-4 hover:underline">
+            <Link href={`/course/${pack.slug}`} className="text-sm text-muted-foreground underline-offset-4 hover:underline">
               ← Índice do curso
             </Link>
           </div>

@@ -19,8 +19,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE_URL}/problems`, lastModified: now, priority: 0.9, changeFrequency: 'daily' },
     { url: `${BASE_URL}/concepts`, lastModified: now, priority: 0.85, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/interview-en`, lastModified: now, priority: 0.82, changeFrequency: 'weekly' },
-    { url: `${BASE_URL}/engenharia-trabalho`, lastModified: now, priority: 0.81, changeFrequency: 'weekly' },
-    { url: `${BASE_URL}/curso`, lastModified: now, priority: 0.83, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/engineering-work`, lastModified: now, priority: 0.81, changeFrequency: 'weekly' },
+    { url: `${BASE_URL}/course`, lastModified: now, priority: 0.83, changeFrequency: 'weekly' },
   ];
 
   const [problems, conceptSlugs, interviewEnSlugs, engTrabalhoSlugs, courseSlugs] = await Promise.all([
@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const coursePackEntries: MetadataRoute.Sitemap = [];
   for (const cslug of courseSlugs) {
     coursePackEntries.push({
-      url: `${BASE_URL}/curso/${encodeURIComponent(cslug)}`,
+      url: `${BASE_URL}/course/${encodeURIComponent(cslug)}`,
       lastModified: now,
       priority: 0.78,
       changeFrequency: 'weekly',
@@ -43,13 +43,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (!pack) continue;
     for (const m of pack.modules) {
       coursePackEntries.push({
-        url: `${BASE_URL}/curso/${encodeURIComponent(cslug)}/modulo/${encodeURIComponent(m.id)}`,
+        url: `${BASE_URL}/course/${encodeURIComponent(cslug)}/module/${encodeURIComponent(m.id)}`,
         lastModified: now,
         priority: 0.72,
         changeFrequency: 'weekly',
       });
       coursePackEntries.push({
-        url: `${BASE_URL}/curso/${encodeURIComponent(cslug)}/modulo/${encodeURIComponent(m.id)}/certificado`,
+        url: `${BASE_URL}/course/${encodeURIComponent(cslug)}/module/${encodeURIComponent(m.id)}/certificate`,
         lastModified: now,
         priority: 0.55,
         changeFrequency: 'monthly',
@@ -87,7 +87,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   const engTrabalhoEntries: MetadataRoute.Sitemap = engTrabalhoSlugs.map((slug) => ({
-    url: `${BASE_URL}/engenharia-trabalho/${slug}`,
+    url: `${BASE_URL}/engineering-work/${slug}`,
     lastModified: now,
     priority: 0.67,
     changeFrequency: 'monthly',
