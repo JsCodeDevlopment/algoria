@@ -4,6 +4,7 @@ import { Clock, Languages } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { InterviewCatalogClient } from '@/components/interview-en/interview-catalog-client';
 import { INTERVIEW_EN_TRACKS, type InterviewEnglishTrack } from '@/lib/content/schemas';
 import { getAllInterviewEnglishTopics } from '@/lib/content/loader';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
@@ -78,30 +79,16 @@ export default async function InterviewEnglishIndexPage() {
           </p>
         </div>
 
-        <div className="grid gap-0 border border-border sm:grid-cols-2">
-          {topics.map((t) => (
-            <Link key={t.meta.slug} href={`/interview-en/${t.meta.slug}`} className="group relative border border-border p-px hover:z-10">
-              <Card className="h-full rounded-none border-none bg-background transition-all duration-200 group-hover:bg-muted/50">
-                <CardHeader className="px-6 pt-6">
-                  <div className="mb-6 flex items-center gap-2">
-                    <Badge variant="secondary" className="rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[9px] uppercase text-primary">
-                      {TRACK_BADGE[t.meta.track]}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary">
-                    {t.meta.title}
-                  </CardTitle>
-                  <CardDescription className="mt-2 flex items-center gap-2 font-mono text-[10px] uppercase">
-                    <Clock className="h-3 w-3" aria-hidden /> {t.meta.estimatedMinutes}m study block
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="px-6 pb-6">
-                  <p className="text-sm leading-relaxed text-muted-foreground">{t.meta.summary}</p>
-                </CardContent>
-              </Card>
-            </Link>
-          ))}
-        </div>
+        <InterviewCatalogClient
+          topics={topics.map((t) => ({
+            slug: t.meta.slug,
+            title: t.meta.title,
+            summary: t.meta.summary,
+            track: t.meta.track,
+            estimatedMinutes: t.meta.estimatedMinutes,
+            difficulty: t.meta.difficulty,
+          }))}
+        />
       </div>
     </div>
   );

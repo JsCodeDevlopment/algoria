@@ -1,7 +1,8 @@
 {
   "slug": "system-design-phrases-and-framing",
-  "title": "System design phrases that buy you time",
-  "summary": "Open clarifying questions, scope negotiation, narration while sketching, caching and scaling wording, pitfalls—paired with slower B1-friendly clause patterns.",
-  "estimatedMinutes": 36,
-  "track": "system-design"
+  "title": "System design: technical framing and tradeoffs",
+  "summary": "Master the vocabulary of scalability, availability, and database choices. Learn how to drive the conversation while drawing on the board.",
+  "estimatedMinutes": 45,
+  "track": "system-design",
+  "difficulty": "hard"
 }

@@ -162,6 +162,7 @@ export const InterviewEnglishMeta = z.object({
   summary: z.string().min(1),
   estimatedMinutes: z.number().int().positive().default(12),
   track: InterviewEnglishTrack,
+  difficulty: Difficulty.default('easy'),
 });
 export type InterviewEnglishMeta = z.infer<typeof InterviewEnglishMeta>;
 

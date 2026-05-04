@@ -1,7 +1,8 @@
 {
   "slug": "thinking-out-loud-dsa-rounds",
-  "title": "Thinking out loud in DSA rounds",
-  "summary": "Stages of a coding round with short English you can memorize: clarify, brute sketch, optimise, narrate checkpoints, repair slips, pace under B1 friction.",
-  "estimatedMinutes": 38,
-  "track": "communication"
+  "title": "Thinking out loud: DSA live coding track",
+  "summary": "The most important skill in live coding. Learn how to narrate your thought process, clarify constraints, and explain Big O in real-time.",
+  "estimatedMinutes": 50,
+  "track": "communication",
+  "difficulty": "hard"
 }
