@@ -1,0 +1,7 @@
+{
+  "slug": "backend-automacao-cronjobs",
+  "title": "Automação e Tarefas Agendadas com CronJobs",
+  "summary": "Explora padrões de robustez para tarefas em segundo plano: desde scripts simples até filas de trabalho persistentes para processamento de conteúdo.",
+  "estimatedMinutes": 42,
+  "pillar": "backend"
+}

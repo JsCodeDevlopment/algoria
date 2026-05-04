@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-performance-cache-lazy-loading",
+  "title": "Performance: Estratégias de Cache e Lazy Loading",
+  "summary": "Domina o ciclo de vida dos dados no cliente com SWR/React Query e aprende padrões de carregamento preguiçoso para melhorar o LCP e o TBT.",
+  "estimatedMinutes": 45,
+  "pillar": "frontend"
+}

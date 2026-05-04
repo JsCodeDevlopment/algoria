@@ -16,6 +16,11 @@ import {
   DidacticLineChartView,
   DidacticMetricsView,
 } from './didactic-views';
+import {
+  annotateArticleZoomableImages,
+  ArticleImageLightbox,
+  attachArticleImageLightboxDelegates,
+} from './article-image-lightbox';
 
 const rootsMap = new WeakMap<HTMLElement, Root>();
 const pendingUnmounts = new WeakMap<Root, number>();
@@ -104,9 +109,13 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
       if (root) localEntries.push({ el, root });
     });
 
+    annotateArticleZoomableImages(shell);
+    const detachLightbox = attachArticleImageLightboxDelegates(shell);
+
     rootsRef.current = localEntries.map((e) => e.root);
 
     return () => {
+      detachLightbox();
       localEntries.forEach(({ el, root }) => {
         const timeoutId = window.setTimeout(() => {
           try {
@@ -114,7 +123,7 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
             if (rootsMap.get(el) === root) {
               rootsMap.delete(el);
             }
-          } catch (e) {
+          } catch {
             // ignore unmount errors on detached nodes
           }
           pendingUnmounts.delete(root);
@@ -128,8 +137,11 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
   }, [html]);
 
   return (
-    <div ref={shellRef}>
-      <article className={articleClassName} dangerouslySetInnerHTML={{ __html: html }} />
-    </div>
+    <>
+      <ArticleImageLightbox />
+      <div ref={shellRef}>
+        <article className={articleClassName} dangerouslySetInnerHTML={{ __html: html }} />
+      </div>
+    </>
   );
 }

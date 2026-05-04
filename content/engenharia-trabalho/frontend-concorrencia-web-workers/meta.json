@@ -1,0 +1,7 @@
+{
+  "slug": "frontend-concorrencia-web-workers",
+  "title": "Concorrência no Front-end com Web Workers",
+  "summary": "Não bloqueies a UI thread: aprende a mover processamento pesado de dados e filtros complexos para threads paralelas de forma segura.",
+  "estimatedMinutes": 45,
+  "pillar": "frontend"
+}

@@ -370,8 +370,9 @@ export default async function HomePage() {
               tag="Web"
               bullets={[
                 'Otimização sob medida Vitals — carregar menos, hidratar com critério, dividir bundles onde o utilizador estrangula primeiro.',
-                'SEO técnico honesto — indexação, canonical, hreflang, dados estruturados e migrações em cenários reais (guia longo dedicado no hub).',
-                'Superfícies perigosas bem explicadas — XSS em formulários, rich editors e payloads que regressam em silêncio.',
+                'Boas práticas de performance — estratégias de cache (SWR, React Query), lazy loading de imagens e componentes pesados.',
+                'Concorrência no front-end — paralelismo real com Web Workers para descarregar lógica pesada sem bloquear a UI principal.',
+                'SEO técnico honesto — indexação, canonical, hreflang e migrações em cenários reais (guia longo no hub).',
               ]}
             />
             <WorkPracticeColumn
@@ -381,7 +382,8 @@ export default async function HomePage() {
               bullets={[
                 'Autorização distinta da autenticação — rituais curtos úteis no backlog de hardening.',
                 'Caching e quotas no limiar entre clientes legítimos e automação não controlada sobre as tuas APIs.',
-                'Schemas e migrações que não pedem refactor dramático sempre que produto quer pivotar modelo.',
+                'Automação com CronJobs — fluxos de criação e sincronização de material de estudo técnico em segundo plano.',
+                'Schemas e migrações que não pedem refactor dramático sempre que o modelo de negócio muda.',
               ]}
             />
             <WorkPracticeColumn
@@ -389,6 +391,7 @@ export default async function HomePage() {
               title="DevOps & sistema"
               tag="Pipeline"
               bullets={[
+                'Escalabilidade de infraestrutura — cenários de Scale Up vs Scale Out, Load Balancers e Caching.',
                 'Mudança contínua com rollback que não diz “rezemos só desta vez”.',
                 'Observabilidade mínima viável antes do primeiro spike de custo inexplicável à terça-feira.',
                 'Segredos, RBAC e políticas quando equipas clicam rápido em consolas cloud públicas.',
