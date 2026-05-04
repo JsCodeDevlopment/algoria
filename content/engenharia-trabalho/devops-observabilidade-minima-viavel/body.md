@@ -16,6 +16,53 @@
 
 Observabilidade boa permite inferir estado interno **a partir de outputs** — não confundir com apenas “muitos dashboards bonitos”.
 
+Diagrama dos três pilares sobre a base de **correlação** (onde encaixa o request id):
+
+:::didactic-figure
+{
+  "src": "/engenharia/observabilidade-tres-pilares.svg",
+  "alt": "Três caixas Logs, Métricas e Traces ligadas a uma base de correlação com request id",
+  "caption": "Cada pilar responde a uma pergunta diferente; a correlação evita que fiques com três silos que não conversam."
+}
+:::
+
+Valores **puramente ilustrativos** para treinar leitura de golden signals (substitui pelos teus SLIs reais):
+
+:::didactic-metrics
+{
+  "title": "Golden signals — números de exemplo",
+  "columns": 4,
+  "items": [
+    { "label": "Latência p95", "value": "480 ms", "sublabel": "pedido típico ao serviço A" },
+    { "label": "Taxa de erro", "value": "0,6%", "sublabel": "5xx / todas as respostas" },
+    { "label": "Pedidos / min", "value": "2,4k", "sublabel": "tráfego agregado (card controlada)" },
+    { "label": "Saturação CPU", "value": "61%", "sublabel": "pool que serve HTTP" }
+  ]
+}
+:::
+
+Onde equipas costumam ter **retorno cedo** ao investir tempo (escala relativa 1–10, exemplo didático):
+
+:::didactic-bar-chart
+{
+  "title": "Impacto percebido vs típica ordem de adoção",
+  "unit": "Pontuação relativa (1–10)",
+  "bars": [
+    { "label": "Request id", "value": 9 },
+    { "label": "Logs estrut.", "value": 8 },
+    { "label": "Métricas HTTP", "value": 7 },
+    { "label": "Tracing e2e", "value": 6 }
+  ],
+  "caption": "Tracing completo é valioso mas exige disciplina em todas as equipas; correlação + logs estruturados pagam cedo em incidentes."
+}
+:::
+
+Exemplo de linha de log estruturado (JSON):
+
+```json
+{"level":"info","request_id":"req_8f3a","service":"checkout-api","route":"POST /pay","duration_ms":412,"status":200}
+```
+
 ---
 
 ## Passo a passo — começar pequeno mas útil

@@ -1,7 +1,7 @@
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
 
-import { renderMarkdown } from './markdown';
+import { renderMarkdown, type RenderMarkdownOptions } from './markdown';
 import {
   AnnotationsFile,
   ConceptMeta,
@@ -49,10 +49,10 @@ async function readJson<T>(file: string): Promise<T> {
   return JSON.parse(raw) as T;
 }
 
-async function readMarkdown(file: string): Promise<string> {
+async function readMarkdown(file: string, options?: RenderMarkdownOptions): Promise<string> {
   try {
     const raw = await fs.readFile(file, 'utf8');
-    return renderMarkdown(raw);
+    return renderMarkdown(raw, options);
   } catch {
     return '';
   }
@@ -188,7 +188,7 @@ export async function getEngineeringWorkGuide(slug: string): Promise<Engineering
     return null;
   }
   const meta = EngineeringWorkMeta.parse(metaRaw);
-  const bodyHtml = await readMarkdown(path.join(dir, 'body.md'));
+  const bodyHtml = await readMarkdown(path.join(dir, 'body.md'), { didacticBlocks: true });
   return { meta, bodyHtml };
 }
 

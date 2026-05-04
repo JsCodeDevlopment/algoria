@@ -6,6 +6,41 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/backend-autenticacao-autorizacao.svg",
+  "alt": "Duas caixas autenticação e autorização ligadas por seta",
+  "caption": "JWT não é ‘mais seguro por defeito’ — é mais stateless, com trade-offs de revogação e armazenamento."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Ordem obrigatória num handler",
+  "columns": 4,
+  "items": [
+    { "label": "1", "value": "Authn", "sublabel": "token/sessão válidos" },
+    { "label": "2", "value": "Load", "sublabel": "recurso ou referência" },
+    { "label": "3", "value": "Authz", "sublabel": "política + tenant" },
+    { "label": "4", "value": "Act", "sublabel": "efeito colateral" }
+  ]
+}
+:::
+
+Middleware expressivo (pseudo-TypeScript):
+
+```typescript
+async function handler(req: Request) {
+  const user = await authenticate(req); // 401 se falhar
+  const invoice = await invoices.load(req.params.id);
+  authorize(user, 'invoice.refund', invoice); // 403 se negado
+  await refunds.start(invoice, user);
+  return ok();
+}
+```
+
+---
+
 ## Duas portas no mesmo edifício
 
 **Porta A — Autenticação:** verifica identidade (password, SSO, WebAuthn, magic link). Saída típica: identificador estável de utilizador + contexto de sessão ou token assinado.

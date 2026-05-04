@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import { Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { EngineeringGuideArticle } from '@/components/engenharia-trabalho/engineering-guide-article';
 import { getAllEngineeringWorkSlugs, getEngineeringWorkGuide } from '@/lib/content/loader';
 import type { EngineeringWorkPillar } from '@/lib/content/schemas';
 
@@ -54,16 +55,7 @@ export default async function EngenhariaTrabalhoGuidePage({ params }: { params: 
       <h1 className="mb-3 text-3xl font-semibold tracking-tight md:text-4xl">{guide.meta.title}</h1>
       <p className="mb-10 text-lg leading-relaxed text-muted-foreground">{guide.meta.summary}</p>
 
-      <article
-        className="prose prose-zinc max-w-none dark:prose-invert
-                   prose-h2:mt-10 prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight
-                   prose-h3:text-lg prose-h3:font-semibold
-                   prose-code:text-blue-600 dark:prose-code:text-blue-400
-                   prose-code:before:content-none prose-code:after:content-none
-                   prose-ul:my-4 prose-li:my-1
-                   prose-table:text-sm"
-        dangerouslySetInnerHTML={{ __html: guide.bodyHtml }}
-      />
+      <EngineeringGuideArticle html={guide.bodyHtml} />
     </div>
   );
 }

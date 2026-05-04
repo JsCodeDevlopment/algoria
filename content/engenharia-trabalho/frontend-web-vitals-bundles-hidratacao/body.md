@@ -9,9 +9,48 @@ Ao terminar este guia deves conseguir:
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-web-vitals-bundles-hidratacao.svg",
+  "alt": "Duas caixas ligadas: descoberta e transferência de rede versus render delay na thread principal",
+  "caption": "Se o download da hero termina cedo mas o LCP é tarde, o gargalo não é só CDN — investiga CSS/JS bloqueante e hidratação."
+}
+:::
+
+Hero com dimensões fixas e prioridade explícita (HTML):
+
+```html
+<img
+  src="/hero.webp"
+  alt="Descrição útil"
+  width="1200"
+  height="630"
+  fetchpriority="high"
+  decoding="async"
+/>
+```
+
+Reduzir CLS reservando espaço antes dos dados assíncronos:
+
+```tsx
+<section className="min-h-[220px]" aria-busy={loading}>
+  {loading ? <Skeleton /> : <DynamicBlock data={data} />}
+</section>
+```
+
+---
+
 ## Analogia rápida
 
 Imagina uma loja: **LCP** é quanto tempo demoras a ver o cartaz principal à entrada (algo grande e útil). **INP** é o tempo entre pedires algo ao balcão e o funcionário reagir. **CLS** é prateleiras que se mexem depois de já teres estendido a mão. Métricas servem para não discutir “sentimento lentíssimo” — passamos a apontar prateleiras.
+
+:::didactic-figure
+{
+  "src": "/engenharia/web-vitals-analogia-loja.svg",
+  "alt": "Três painéis coloridos associando LCP ao cartaz da loja, INP ao balcão e CLS às prateleiras instáveis",
+  "caption": "Mesma analogia em diagrama: útil para onboardings e para alinhar produto com engenharia."
+}
+:::
 
 ---
 
@@ -24,6 +63,32 @@ Imagina uma loja: **LCP** é quanto tempo demoras a ver o cartaz principal à en
 | **CLS** | O layout reserva espaço para imagens, fontes e blocos async ou salta quando dados chegam? |
 
 Importante: são **sinais de campo** (utilizadores reais). Laboratório (Lighthouse local) orienta; campo decide prioridade.
+
+:::didactic-metrics
+{
+  "title": "Core Web Vitals — leitura rápida",
+  "columns": 3,
+  "items": [
+    { "label": "LCP", "value": "≤ 2,5 s", "sublabel": "alvo comum em docs públicos (campo)" },
+    { "label": "INP", "value": "≤ 200 ms", "sublabel": "boa responsividade percebida" },
+    { "label": "CLS", "value": "≤ 0,10", "sublabel": "pouco salto visual acumulado" }
+  ]
+}
+:::
+
+Laboratório estável vs campo **heterogéneo** (rede, dispositivos, caches). Gráfico ilustrativo — não é um relatório real:
+
+:::didactic-line-chart
+{
+  "title": "Laboratório vs percentis de campo (exemplo didático)",
+  "caption": "O laboratório pode parecer ‘óptimo’ enquanto o p95 de campo ainda sofre — por isso priorizamos dados reais.",
+  "points": [
+    { "x": "Lab", "y": 94 },
+    { "x": "p75 campo", "y": 72 },
+    { "x": "p95 campo", "y": 51 }
+  ]
+}
+:::
 
 ---
 

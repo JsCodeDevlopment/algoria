@@ -6,6 +6,56 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-csr-ssr-streaming.svg",
+  "alt": "Diagrama comparando CSR com HTML mínimo e JS primeiro, SSR com HTML útil cedo e streaming em fatias",
+  "caption": "Nenhum modelo é “equipa de futebol”: mistura rotas estáticas, SSR onde SEO exige e CSR onde métricas internas aceitam."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Sinais típicos por modelo (ordem de grandeza ilustrativa)",
+  "columns": 3,
+  "items": [
+    { "label": "CSR · primeiro HTML útil", "value": "Tarde", "sublabel": "depende de JS + dados no cliente" },
+    { "label": "SSR · leitura inicial", "value": "Cedo", "sublabel": "TTFB pode subir se servidor esperar tudo" },
+    { "label": "Streaming · UX", "value": "Melhor", "sublabel": "shell + Suspense honesto — watchdog em APIs" }
+  ]
+}
+:::
+
+:::didactic-bar-chart
+{
+  "title": "Complexidade operacional relativa (exemplo didático)",
+  "unit": "1–10",
+  "bars": [
+    { "label": "CDN CSR estático", "value": 3 },
+    { "label": "SSR monólito", "value": 6 },
+    { "label": "Streaming + boundaries", "value": 8 }
+  ],
+  "caption": "Mais flexibilidade costuma exigir mais disciplina em timeouts, caches e erros por segmento."
+}
+:::
+
+HTML mínimo típico de SPA (conceito — o teu framework pode gerar mais):
+
+```html
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="utf-8" />
+    <script type="module" src="/assets/entry.js" defer></script>
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+---
+
 ## CSR — o browser faz quase tudo
 
 **Client-Side Rendering**: servidor manda HTML mínimo; bundle JS baixa, parseia, executa; só então montas DOM rico e buscas dados.

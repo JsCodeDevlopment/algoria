@@ -6,6 +6,56 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/devops-pipelines-deploy-rollbacks.svg",
+  "alt": "Pipeline build test artifact promote deploy e quatro modos de deploy",
+  "caption": "Canary sem métricas úteis é teatro · rollback de código não desfaz migração já aplicada."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Gates mínimos antes de promover artefacto",
+  "columns": 4,
+  "items": [
+    { "label": "Build", "value": "Reprod.", "sublabel": "checksum igual ao commit" },
+    { "label": "Testes", "value": "Pirâmide", "sublabel": "unit + integração + e2e crítico" },
+    { "label": "Secrets", "value": "Inject", "sublabel": "nunca em repo" },
+    { "label": "Obs.", "value": "Acoplada", "sublabel": "erro + latência na libertação" }
+  ]
+}
+:::
+
+:::didactic-bar-chart
+{
+  "title": "Risco residual por estratégia (ilustrativo)",
+  "unit": "1–10 (maior = mais risco)",
+  "bars": [
+    { "label": "Recreate", "value": 7 },
+    { "label": "Rolling", "value": 5 },
+    { "label": "Canary", "value": 3 },
+    { "label": "Blue-green", "value": 4 }
+  ],
+  "caption": "Canary precisa observação; blue-green duplica custo temporário mas simplifica swap."
+}
+:::
+
+Fragmento declarativo de pipeline (GitHub Actions estilo):
+
+```yaml
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm audit --audit-level=high
+```
+
+---
+
 ## Pipeline como conversa com risco
 
 Pipeline automatiza decisões repetíveis: **build**, **testes**, **análise estática**, eventualmente **assinatura** e **promoção**.

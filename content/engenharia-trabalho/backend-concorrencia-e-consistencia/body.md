@@ -6,6 +6,45 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/backend-concorrencia-e-consistencia.svg",
+  "alt": "Dois pedidos em paralelo lendo saldo antes dos writes convergirem",
+  "caption": "Descreve o cenário ‘dois pedidos em 200 ms’ num doc antes de escalar réplicas sem idempotência."
+}
+:::
+
+:::didactic-bar-chart
+{
+  "title": "Ferramentas vs custo cognitivo (ilustrativo)",
+  "unit": "1–10",
+  "bars": [
+    { "label": "Chave idempotência", "value": 4 },
+    { "label": "Transação BD curta", "value": 5 },
+    { "label": "Lock pessimista", "value": 7 },
+    { "label": "Fila partitionada", "value": 8 }
+  ],
+  "caption": "Começa pelo contrato de negócio (invariante escrita) e pela instrumentação de duplicados."
+}
+:::
+
+Cabeçalho HTTP típico para deduplicar no servidor:
+
+```http
+POST /v1/payments HTTP/1.1
+Idempotency-Key: 7b03f9e2-8c41-4f6a-9d12-4f8e1c2b9a00
+Content-Type: application/json
+```
+
+Constraint única na BD (exemplo SQL):
+
+```sql
+CREATE UNIQUE INDEX ux_wallet_transfer
+ON transfers (wallet_id, client_reference);
+```
+
+---
+
 ## O que é concorrência neste guia?
 
 **Concorrência** aqui significa: **várias operações em progresso ao mesmo tempo** sobre os mesmos dados ou invariantes de negócio — várias threads num processo, várias corrotinas, ou **várias instâncias** por detrás de um load balancer.

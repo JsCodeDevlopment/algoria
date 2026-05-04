@@ -6,6 +6,50 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/backend-apis-cache-quotas-resiliencia.svg",
+  "alt": "Fluxo cliente CDN proxy aplicação cache com notas de quota e resiliência",
+  "caption": "Timeouts antes de circuit breaker sofisticado; retries só onde há idempotência."
+}
+:::
+
+:::didactic-line-chart
+{
+  "title": "Backoff com jitter reduz ‘thundering herd’ após erro (ilustrativo)",
+  "caption": "Sem jitter, clientes sincronizados martelam o mesmo segundo.",
+  "points": [
+    { "x": "t0", "y": 100 },
+    { "x": "t1", "y": 38 },
+    { "x": "t2", "y": 22 },
+    { "x": "t3", "y": 12 }
+  ]
+}
+:::
+
+Headers úteis em APIs HTTP:
+
+```http
+HTTP/1.1 200 OK
+Cache-Control: private, max-age=60
+Retry-After: 12
+X-RateLimit-Remaining: 3
+```
+
+Cliente com cancelamento e timeout:
+
+```typescript
+const ctrl = new AbortController();
+const t = setTimeout(() => ctrl.abort(), 2500);
+try {
+  await fetch('/api/pedido', { signal: ctrl.signal });
+} finally {
+  clearTimeout(t);
+}
+```
+
+---
+
 ## Cache como contrato social com o cliente
 
 Cache não é “ligar mais rápido”. É **guardar uma resposta anterior** para não repetir trabalho caro — à custa de potencial **staleness** (dados desatualizados).

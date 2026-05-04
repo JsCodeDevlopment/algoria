@@ -7,6 +7,49 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-inp-react-interacividade.svg",
+  "alt": "Três painéis: input delay, processing time e presentation delay",
+  "caption": "Sem perguntar ‘qual fatia dóe?’ optimizas o bundler quando o problema era fila na Main Thread."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Faixas INP para comunicar à equipa (orientadores de campo)",
+  "columns": 3,
+  "items": [
+    { "label": "Boa", "value": "≤ ~200 ms", "sublabel": "interação aceitável" },
+    { "label": "A melhorar", "value": "≤ ~500 ms", "sublabel": "priorizar backlog" },
+    { "label": "Fraca", "value": "> ~500 ms", "sublabel": "piores interações pesam" }
+  ]
+}
+:::
+
+:::didactic-line-chart
+{
+  "title": "Esforço típico de optimização por fase (ilustrativo)",
+  "caption": "Processing alto em React manda-te ao Profiler; input delay alto manda-te a long tasks e analytics no mesmo tick.",
+  "points": [
+    { "x": "Input delay", "y": 22 },
+    { "x": "Processing", "y": 48 },
+    { "x": "Presentation", "y": 30 }
+  ]
+}
+:::
+
+Adiar analytics para não competir com o primeiro paint de feedback:
+
+```typescript
+function onCheckoutClick() {
+  ui.showSpinner();
+  queueMicrotask(() => track('checkout_click')); // ou setTimeout(…, 0) / scheduler.yield()
+}
+```
+
+---
+
 ## INP em linguagem humana
 
 **INP** (*Interaction to Next Paint*) pergunta: *depois que o utilizador toca, clica ou pressiona tecla, quanto tempo até o ecrã mostrar uma resposta visível útil?*

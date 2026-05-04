@@ -8,6 +8,37 @@ Este guia complementa o texto sobre **autenticação vs autorização** no mesmo
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/backend-seguranca-apis-dados-secrets.svg",
+  "alt": "Três caixas dados em repouso trânsito e em uso com aviso sobre leaks em logs",
+  "caption": "Supply chain: lockfile + auditoria em CI — CVE explorável não é ‘nice to have’ para sprint seguinte."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Checklist de superfície antes do merge",
+  "columns": 3,
+  "items": [
+    { "label": "TLS verify", "value": "On", "sublabel": "sem desligar por conveniência" },
+    { "label": "Secrets", "value": "Vault/OIDC", "sublabel": "nada em git" },
+    { "label": "Erros públicos", "value": "Sanitizados", "sublabel": "sem stack trace" }
+  ]
+}
+:::
+
+Consulta parametrizada (Node/pg estilo):
+
+```typescript
+const rows = await pool.query(
+  'SELECT id, email FROM users WHERE tenant_id = $1 AND email = $2',
+  [tenantId, email],
+);
+```
+
+---
+
 ## Três estados dos dados
 
 | Estado | Perguntas |

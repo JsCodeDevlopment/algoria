@@ -7,6 +7,44 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-ux-testes-testing-library-typescript.svg",
+  "alt": "Diagrama centrado em comportamento observável, roles e texto visível",
+  "caption": "Teste que conta uma história curta de utilizador falha quando o produto mexe no comportamento que importa."
+}
+:::
+
+:::didactic-bar-chart
+{
+  "title": "Pirâmide de testes — custo vs velocidade (ilustrativo)",
+  "unit": "Custo relativo",
+  "bars": [
+    { "label": "Unit puros", "value": 2 },
+    { "label": "RTL integração", "value": 5 },
+    { "label": "E2E browser", "value": 9 }
+  ],
+  "caption": "Poucos e2e nos fluxos que mexem dinheiro; muitos testes rápidos no comportamento estável."
+}
+:::
+
+Teste de comportamento com Testing Library (exemplo mínimo):
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { SaveButton } from './SaveButton';
+
+test('mostra erro quando API falha', async () => {
+  const user = userEvent.setup();
+  render(<SaveButton />);
+  await user.click(screen.getByRole('button', { name: /gravar/i }));
+  expect(await screen.findByText(/rede indisponível/i)).toBeTruthy();
+});
+```
+
+---
+
 ## Porque este trio aparece junto
 
 Experiência não é só cor bonita. É **comportamento previsível**:

@@ -16,6 +16,7 @@ import {
   ProblemMeta,
   SolutionMeta,
 } from '../lib/content/schemas';
+import { validateDidacticBlocksInMarkdown } from '../lib/content/didactic-schemas';
 import { FUNDAMENTOS_FASE_1_PACK } from '../lib/courses/fundamentos-fase1-seed';
 
 const ROOT = path.join(process.cwd(), 'content');
@@ -23,6 +24,52 @@ const PROBLEMS = path.join(ROOT, 'problems');
 const CONCEPTS = path.join(ROOT, 'concepts');
 const INTERVIEW_EN = path.join(ROOT, 'interview-en');
 const ENGENHARIA_TRABALHO = path.join(ROOT, 'engenharia-trabalho');
+const ENGENHARIA_PUBLIC_SVG = path.join(process.cwd(), 'public', 'engenharia');
+
+async function validateEngineeringPublicSvgs(): Promise<string[]> {
+  const out: string[] = [];
+  let names: string[];
+  try {
+    names = (await fs.readdir(ENGENHARIA_PUBLIC_SVG)).filter((n) => n.endsWith('.svg'));
+  } catch {
+    return out;
+  }
+  const fatalUtf8 = (buf: Buffer): boolean => {
+    try {
+      new TextDecoder('utf8', { fatal: true }).decode(buf);
+      return false;
+    } catch {
+      return true;
+    }
+  };
+  for (const name of names) {
+    const fp = path.join(ENGENHARIA_PUBLIC_SVG, name);
+    const buf = await fs.readFile(fp);
+    if (fatalUtf8(buf)) {
+      out.push(
+        `[public/engenharia/${name}] SVG não é UTF-8 válido — navegadores podem falhar ao renderizar em <img> (causa comum: bytes Latin-1 / tooling que corrompe acentos)`,
+      );
+      continue;
+    }
+    if (buf.includes(Buffer.from([0xef, 0xbf, 0xbd]))) {
+      out.push(
+        `[public/engenharia/${name}] contém carácter Unicode U+FFFD — normalmente indica texto corrompido ao gravar o SVG`,
+      );
+      continue;
+    }
+    for (let i = 0; i < buf.length; i++) {
+      const x = buf[i]!;
+      if (x === 9 || x === 10 || x === 13) continue;
+      if (x < 32 || x === 127) {
+        out.push(
+          `[public/engenharia/${name}] byte de controlo inválido em XML (0x${x.toString(16)}) no offset ${i} — imagens partidas no browser`,
+        );
+        break;
+      }
+    }
+  }
+  return out;
+}
 
 async function listDirs(dir: string): Promise<string[]> {
   const entries = await fs.readdir(dir, { withFileTypes: true });
@@ -262,7 +309,12 @@ async function validate(): Promise<{ errors: string[]; warnings: string[] }> {
     if (engBody.trim().length < 80) {
       errors.push(`[engenharia-trabalho/${eslug}] body.md demasiado curto ou vazio`);
     }
+    for (const dErr of validateDidacticBlocksInMarkdown(engBody)) {
+      errors.push(`[engenharia-trabalho/${eslug}] ${dErr}`);
+    }
   }
+
+  errors.push(...(await validateEngineeringPublicSvgs()));
 
   return { errors, warnings };
 }

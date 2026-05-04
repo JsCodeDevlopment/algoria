@@ -6,6 +6,41 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-escopos-variaveis-mental-model.svg",
+  "alt": "Caixas aninhadas representando ambiente exterior e bloco interior com shadowing",
+  "caption": "Closure = função que mantém referência à ‘gaveta’ onde nasceu — útil ao debugar hooks e listeners."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Três movimentos para ensinar variáveis",
+  "columns": 3,
+  "items": [
+    { "label": "Declarar", "value": "nome na gaveta", "sublabel": "let / const" },
+    { "label": "Atribuir", "value": "mudar valor", "sublabel": "respeitando `const`" },
+    { "label": "Consultar", "value": "ler na lookup", "sublabel": "ordem causa TDZ clássica" }
+  ]
+}
+:::
+
+Blocos aninhados em TypeScript (útil em revisões):
+
+```typescript
+const outer = 1;
+function demo() {
+  const outer = 2; // sombreia o `outer` do módulo só dentro da função
+  if (true) {
+    const outer = 3;
+    return outer; // 3
+  }
+}
+```
+
+---
+
 ## Analogia central: gavetas empilhadas
 
 Imagina um escritório:

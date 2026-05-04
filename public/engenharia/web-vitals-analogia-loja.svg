@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220" role="img" aria-labelledby="t2">
+  <title id="t2">Analogia da loja para LCP, INP e CLS</title>
+  <rect width="760" height="220" fill="#f8fafc"/>
+  <text x="380" y="34" text-anchor="middle" font-family="system-ui,sans-serif" font-size="16" font-weight="700" fill="#0f172a">Loja H página · utilizador H cliente</text>
+  <rect x="48" y="56" width="200" height="132" rx="12" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+  <text x="148" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#3730a3">LCP</text>
+  <text x="148" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#4338ca">Cartaz principal</text>
+  <text x="148" y="136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#4338ca">à entrada visível</text>
+  <text x="148" y="164" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#6366f1">Hero · maior pintura útil</text>
+  <rect x="280" y="56" width="200" height="132" rx="12" fill="#ecfdf5" stroke="#059669" stroke-width="2"/>
+  <text x="380" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#065f46">INP</text>
+  <text x="380" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#047857">Tempo até o balcão</text>
+  <text x="380" y="136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#047857">reagir ao teu pedido</text>
+  <text x="380" y="164" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#10b981">Interação · thread principal</text>
+  <rect x="512" y="56" width="200" height="132" rx="12" fill="#fff7ed" stroke="#ea580c" stroke-width="2"/>
+  <text x="612" y="88" text-anchor="middle" font-family="system-ui,sans-serif" font-size="13" font-weight="700" fill="#9a3412">CLS</text>
+  <text x="612" y="114" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#c2410c">Prateleiras que saltam</text>
+  <text x="612" y="136" text-anchor="middle" font-family="system-ui,sans-serif" font-size="11" fill="#c2410c">depois de já estendeste a mão</text>
+  <text x="612" y="164" text-anchor="middle" font-family="system-ui,sans-serif" font-size="10" fill="#f97316">Layout estável reserva espaço</text>
+</svg>

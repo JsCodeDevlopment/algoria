@@ -6,6 +6,42 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-xss-seo-superficies-perigosas.svg",
+  "alt": "Fluxo de entrada a HTML executável e camadas de defesa; bloco sobre SEO auditável",
+  "caption": "CSP não substitui sanitização; SEO técnico traduz-se em requisitos que podes medir (sitemap, canonical, Vitals)."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Classificação rápida de dados para reviews",
+  "columns": 3,
+  "items": [
+    { "label": "Confiável", "value": "Sistema", "sublabel": "ainda assim escapa por hábito" },
+    { "label": "Semi", "value": "Moderador", "sublabel": "política própria" },
+    { "label": "Não confiável", "value": "Público", "sublabel": "nunca → HTML cru sem pipeline" }
+  ]
+}
+:::
+
+React: dados dinâmicos no DOM sem interpretar HTML da rede:
+
+```tsx
+// ✅ texto tratado como texto
+export function UserBio({ bio }: { bio: string }) {
+  return <p>{bio}</p>;
+}
+
+// ⚠️ só com pipeline de sanitização explícita e auditoria
+export function RichBio({ html }: { html: string }) {
+  return <div dangerouslySetInnerHTML={{ __html: html }} />;
+}
+```
+
+---
+
 ## XSS em linguagem de equipa
 
 Cross-site scripting não é “virus misterioso”. É quase sempre: **o servidor ou o cliente aceita texto que contém instruções de página** e coloca-o onde o browser interpreta como código.

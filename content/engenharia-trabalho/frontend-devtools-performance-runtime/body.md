@@ -6,6 +6,52 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/frontend-devtools-performance-runtime.svg",
+  "alt": "Diagrama da thread principal com um bloco longo que atrasa input e frames",
+  "caption": "Um trace honesto costuma mostrar um ‘monstro dominante’ — mata esse primeiro antes do refactor épico."
+}
+:::
+
+:::didactic-metrics
+{
+  "title": "Referências clássicas de tempo na thread principal",
+  "columns": 3,
+  "items": [
+    { "label": "Frame budget 60 Hz", "value": "~16 ms", "sublabel": "orçamento por frame, não lei absoluta" },
+    { "label": "Long task (referência)", "value": "> 50 ms", "sublabel": "JS contínuo que atrasa fila" },
+    { "label": "CPU throttle DevTools", "value": "4×", "sublabel": "simula telemóveis modestos" }
+  ]
+}
+:::
+
+:::didactic-bar-chart
+{
+  "title": "Onde tempo some num trace típico (exemplo)",
+  "unit": "% tempo Main",
+  "bars": [
+    { "label": "React/commit", "value": 38 },
+    { "label": "Estilo/layout", "value": 22 },
+    { "label": "GC", "value": 12 },
+    { "label": "Script próprio", "value": 28 }
+  ],
+  "caption": "Usa Bottom-Up para não culpar o GC até ver proporção real · nomes minificados pedem source maps."
+}
+:::
+
+Marcar um intervalo no Performance panel (DevTools):
+
+```javascript
+performance.mark('antes-scroll');
+// … gesto do utilizador …
+performance.mark('depois-scroll');
+performance.measure('scroll', 'antes-scroll', 'depois-scroll');
+console.table(performance.getEntriesByName('scroll'));
+```
+
+---
+
 ## Porque “sinto lag” não chega
 
 Browsers fazem parsing, estilo, layout, pintura e composição — maior parte em coordenação com **uma thread principal** ocupada também com JavaScript.

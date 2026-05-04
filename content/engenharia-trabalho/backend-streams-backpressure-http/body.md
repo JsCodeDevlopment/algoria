@@ -6,6 +6,41 @@
 
 ---
 
+:::didactic-figure
+{
+  "src": "/engenharia/backend-streams-backpressure-http.svg",
+  "alt": "Produtor envia chunks para consumidor e HTTP chunked à direita",
+  "caption": "Middleware que materializa o corpo inteiro para logging recria o monólito em RAM sem querer."
+}
+:::
+
+:::didactic-bar-chart
+{
+  "title": "Picos de RSS export CSV — monólito vs streaming (ilustrativo)",
+  "unit": "Memória relativa",
+  "bars": [
+    { "label": "array.concat tudo", "value": 100 },
+    { "label": "stream linha a linha", "value": 28 }
+  ],
+  "caption": "Mede p95 do payload antes de escolher estratégia · proxies devem preservar chunked."
+}
+:::
+
+Esboço Node: ler query como fluxo e escrever para `res` (conceito):
+
+```typescript
+import { pipeline } from 'node:stream/promises';
+
+async function exportCsv(req: IncomingMessage, res: ServerResponse) {
+  res.setHeader('Content-Type', 'text/csv; charset=utf-8');
+  res.setHeader('Transfer-Encoding', 'chunked');
+  const dbStream = db.query('COPY (...) TO STDOUT WITH CSV').stream();
+  await pipeline(dbStream, res);
+}
+```
+
+---
+
 ## Problema que todos repetem uma vez
 
 Implementação “rápida”:

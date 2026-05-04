@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 260" role="img">
+  <title>Cache layers and resilience</title>
+  <rect fill="#f8fafc" width="760" height="260"/>
+  <text x="380" y="26" text-anchor="middle" font-family="system-ui,sans-serif" font-size="14" font-weight="700" fill="#0f172a">Request crosses layers</text>
+  <rect x="60" y="48" width="120" height="48" rx="8" fill="#e0e7ff" stroke="#4338ca"/>
+  <text x="120" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#312e81">Browser</text>
+  <path d="M180 72 L220 72" stroke="#64748b" stroke-width="2"/>
+  <rect x="220" y="48" width="120" height="48" rx="8" fill="#dbeafe" stroke="#2563eb"/>
+  <text x="280" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#1e3a8a">CDN</text>
+  <path d="M340 72 L380 72" stroke="#64748b" stroke-width="2"/>
+  <rect x="380" y="48" width="120" height="48" rx="8" fill="#dcfce7" stroke="#16a34a"/>
+  <text x="440" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#14532d">App</text>
+  <path d="M500 72 L540 72" stroke="#64748b" stroke-width="2"/>
+  <rect x="540" y="48" width="160" height="48" rx="8" fill="#fef3c7" stroke="#d97706"/>
+  <text x="620" y="78" text-anchor="middle" font-size="11" font-weight="700" fill="#92400e">Redis</text>
+  <text x="380" y="128" text-anchor="middle" font-size="11" fill="#475569">Rate limits, timeouts, idempotent retries, circuit breaker, jitter</text>
+  <rect x="100" y="148" width="560" height="88" rx="10" fill="#f1f5f9" stroke="#64748b"/>
+  <text x="380" y="178" text-anchor="middle" font-size="11" fill="#334155">Cache key: tenant + resource + version — avoids cross-tenant leakage</text>
+  <text x="380" y="204" text-anchor="middle" font-size="11" fill="#64748b">429 + Retry-After + documented quotas</text>
+</svg>
