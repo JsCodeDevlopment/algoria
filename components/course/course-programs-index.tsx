@@ -36,15 +36,22 @@ export function CourseProgramsIndex({ pack }: Props) {
       solvedExerciseIds: { ...(raw?.solvedExerciseIds ?? {}) },
     };
   }
-  let sum = 0;
-  let denom = 0;
+  const aggregate = pack.modules.reduce(
+    (acc, module) => {
+      const slice = sliceFor(module.id);
+      const exIds = module.exercises.map((e) => e.id);
+      const { earned, total } = progressUnitsForModule(exIds, slice);
+      return { sum: acc.sum + earned, denom: acc.denom + total };
+    },
+    { sum: 0, denom: 0 },
+  );
+  const sum = aggregate.sum;
+  const denom = aggregate.denom;
 
   const rows = pack.modules.map((module, idx) => {
     const slice = sliceFor(module.id);
     const exIds = module.exercises.map((e) => e.id);
     const { earned, total } = progressUnitsForModule(exIds, slice);
-    sum += earned;
-    denom += total;
     const unlock = moduleUnlocked(orderedIds, idx, sliceFor);
     const pct = Math.round((earned / total) * 100);
 

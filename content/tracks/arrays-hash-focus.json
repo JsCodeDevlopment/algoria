@@ -1,0 +1,16 @@
+{
+  "slug": "arrays-hash-focus",
+  "title": "Arrays & hashing",
+  "summary": "Problemas onde vectores e tabelas de dispersão são centrais (bom para consolidar Map/dict antes de sliding window avançado).",
+  "problemSlugs": [
+    "two-sum",
+    "contains-duplicate",
+    "valid-anagram",
+    "merge-sorted-array",
+    "move-zeroes",
+    "intersection-of-two-arrays-ii",
+    "group-anagrams",
+    "longest-substring-without-repeating",
+    "minimum-window-substring"
+  ]
+}

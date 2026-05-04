@@ -184,6 +184,9 @@ export default async function SolutionPage({
         annotations={playerAnnotations}
         conceptTitles={conceptTitles}
         readOnlyExplanationMd={readOnlyExplanationMd}
+        executionTrace={lineSynced ? solution.executionTrace : undefined}
+        problemSlug={problem.meta.slug}
+        solutionSlug={solutionSlug}
       />
 
       <Separator className="my-10" />

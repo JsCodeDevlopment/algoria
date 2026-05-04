@@ -10,6 +10,8 @@ export const ProblemStudyStateSchema = z.object({
   openedSolutions: z.array(z.string()).default([]),
   /** Opção manual «Concluí o estudo deste problema» */
   markedCompleteAt: iso,
+  /** Última linha activa no player por slug de solução (retoma leitura). */
+  lastLinesBySolution: z.record(z.string(), z.number().int().positive()).optional(),
 });
 
 export const ProgressBlobSchema = z.object({

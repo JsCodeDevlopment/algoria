@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 
 const NAV = [
   { href: '/problems', label: 'Problemas' },
+  { href: '/tracks', label: 'Trilhos' },
   { href: '/concepts', label: 'Conceitos' },
   { href: '/interview-en', label: 'Inglês entrevistas' },
   { href: '/course', label: 'Curso' },

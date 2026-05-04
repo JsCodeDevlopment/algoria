@@ -12,15 +12,18 @@ import {
   AnnotationsFile,
   ConceptMeta,
   EngineeringWorkMeta,
+  ExecutionTraceFileSchema,
   InterviewEnglishMeta,
   ProblemMeta,
   SolutionMeta,
 } from '../lib/content/schemas';
+import { StudyTrackFileSchema } from '../lib/content/track-schema';
 import { validateDidacticBlocksInMarkdown } from '../lib/content/didactic-schemas';
 import { FUNDAMENTOS_FASE_1_PACK } from '../lib/courses/fundamentos-fase1-seed';
 
 const ROOT = path.join(process.cwd(), 'content');
 const PROBLEMS = path.join(ROOT, 'problems');
+const TRACKS_DIR = path.join(ROOT, 'tracks');
 const CONCEPTS = path.join(ROOT, 'concepts');
 const INTERVIEW_EN = path.join(ROOT, 'interview-en');
 const ENGENHARIA_TRABALHO = path.join(ROOT, 'engenharia-trabalho');
@@ -192,6 +195,49 @@ async function validate(): Promise<{ errors: string[]; warnings: string[] }> {
           errors.push(`[${slug}/${sol}] linha ${row.line}: level3 vazio`);
         else if (row.level3.trim().length < 40)
           errors.push(`[${slug}/${sol}] linha ${row.line}: level3 demasiado curto (${row.level3.trim().length} chars)`);
+      }
+
+      const tracePath = path.join(sdir, 'trace.json');
+      if (await fileExists(tracePath)) {
+        const traceParsed = ExecutionTraceFileSchema.safeParse(await readJson(tracePath));
+        if (!traceParsed.success) {
+          errors.push(`[${slug}/${sol}] trace.json inválido: ${traceParsed.error.message}`);
+        } else {
+          const lineSet = new Set(annParsed.data.annotations.map((a) => a.line));
+          for (const step of traceParsed.data.steps) {
+            if (!lineSet.has(step.line)) {
+              warnings.push(
+                `[${slug}/${sol}] trace.json linha ${step.line} não tem entrada correspondente em annotations.json`,
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
+  let trackFiles: string[] = [];
+  try {
+    trackFiles = (await fs.readdir(TRACKS_DIR)).filter((n) => n.endsWith('.json'));
+  } catch {
+    warnings.push('Pasta content/tracks ausente — trilhos curados não serão validados');
+  }
+  const problemSlugSet = new Set(slugs);
+  for (const tf of trackFiles) {
+    const stem = tf.replace(/\.json$/i, '');
+    const tpath = path.join(TRACKS_DIR, tf);
+    const tparsed = StudyTrackFileSchema.safeParse(await readJson(tpath));
+    if (!tparsed.success) {
+      errors.push(`[tracks/${tf}] JSON inválido: ${tparsed.error.message}`);
+      continue;
+    }
+    const tr = tparsed.data;
+    if (tr.slug !== stem) {
+      errors.push(`[tracks/${tf}] slug "${tr.slug}" deve coincidir com o nome do ficheiro ("${stem}")`);
+    }
+    for (const ps of tr.problemSlugs) {
+      if (!problemSlugSet.has(ps)) {
+        errors.push(`[tracks/${tf}] problema desconhecido em problemSlugs: "${ps}"`);
       }
     }
   }

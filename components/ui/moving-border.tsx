@@ -12,7 +12,6 @@ import { cn } from "@/lib/utils";
 export function ButtonMovingBorder({
   borderRadius = "0px",
   children,
-  as: Component = "button",
   containerClassName,
   borderClassName,
   duration = 2000,
@@ -21,15 +20,14 @@ export function ButtonMovingBorder({
 }: {
   borderRadius?: string;
   children: React.ReactNode;
-  as?: any;
   containerClassName?: string;
   borderClassName?: string;
   duration?: number;
   className?: string;
-  [key: string]: any;
-}) {
+} & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'children' | 'className'>) {
   return (
-    <Component
+    <button
+      type="button"
       className={cn(
         "bg-transparent relative text-xl  h-16 w-40 p-[1px] overflow-hidden ",
         containerClassName
@@ -64,7 +62,7 @@ export function ButtonMovingBorder({
       >
         {children}
       </div>
-    </Component>
+    </button>
   );
 }
 
@@ -73,15 +71,17 @@ export const MovingBorder = ({
   duration = 2000,
   rx,
   ry,
-  ...otherProps
+  className,
+  style,
 }: {
   children: React.ReactNode;
   duration?: number;
   rx?: string;
   ry?: string;
-  [key: string]: any;
+  className?: string;
+  style?: React.CSSProperties;
 }) => {
-  const pathRef = useRef<any>(null);
+  const pathRef = useRef<SVGRectElement | null>(null);
   const progress = useMotionValue<number>(0);
 
   useAnimationFrame((time) => {
@@ -108,10 +108,10 @@ export const MovingBorder = ({
       <svg
         xmlns="http://www.w3.org/2000/svg"
         preserveAspectRatio="none"
-        className="absolute h-full w-full"
+        className={cn("absolute h-full w-full", className)}
         width="100%"
         height="100%"
-        {...otherProps}
+        style={style}
       >
         <rect
           fill="none"

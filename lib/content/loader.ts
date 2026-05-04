@@ -6,6 +6,7 @@ import {
   AnnotationsFile,
   ConceptMeta,
   EngineeringWorkMeta,
+  ExecutionTraceFileSchema,
   InterviewEnglishMeta,
   LANGUAGES,
   ProblemMeta,
@@ -102,7 +103,15 @@ async function loadSolution(problemDir: string, solutionSlug: string): Promise<S
   const introHtml = await readMarkdown(path.join(dir, 'intro.md'));
   const annotationsRaw = await readJson<unknown>(path.join(dir, 'annotations.json'));
   const annotations = AnnotationsFile.parse(annotationsRaw).annotations;
-  return { meta, codeByLanguage, introHtml, annotations };
+
+  let executionTrace: Solution['executionTrace'];
+  const tracePath = path.join(dir, 'trace.json');
+  if (await fileExists(tracePath)) {
+    const traceRaw = await readJson<unknown>(tracePath);
+    executionTrace = ExecutionTraceFileSchema.parse(traceRaw).steps;
+  }
+
+  return { meta, codeByLanguage, introHtml, annotations, executionTrace };
 }
 
 export async function getProblem(slug: string): Promise<Problem | null> {

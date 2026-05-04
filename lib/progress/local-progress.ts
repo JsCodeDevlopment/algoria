@@ -29,6 +29,7 @@ export function touchProblemVisited(problemSlug: string): ProgressBlob {
   const blob = loadProgressBlob();
   const cur = blob.problems[problemSlug] ?? {};
   blob.problems[problemSlug] = {
+    ...cur,
     openedSolutions: cur.openedSolutions ?? [],
     visitedAt: cur.visitedAt ?? new Date().toISOString(),
     markedCompleteAt: cur.markedCompleteAt,
@@ -44,12 +45,57 @@ export function touchSolutionVisited(problemSlug: string, solutionSlug: string):
   const set = new Set(cur.openedSolutions ?? []);
   set.add(solutionSlug);
   blob.problems[problemSlug] = {
+    ...cur,
     visitedAt: cur.visitedAt ?? new Date().toISOString(),
     markedCompleteAt: cur.markedCompleteAt,
     openedSolutions: [...set],
   };
   saveProgressBlob(blob);
   return blob;
+}
+
+/** Persiste a linha actual do player para uma solução (debounced no cliente). */
+export function touchSolutionLastLine(problemSlug: string, solutionSlug: string, line: number): ProgressBlob {
+  const blob = loadProgressBlob();
+  const cur = blob.problems[problemSlug] ?? { openedSolutions: [] };
+  blob.problems[problemSlug] = {
+    ...cur,
+    lastLinesBySolution: {
+      ...(cur.lastLinesBySolution ?? {}),
+      [solutionSlug]: line,
+    },
+  };
+  saveProgressBlob(blob);
+  return blob;
+}
+
+export function getSolutionResumeLine(
+  problemSlug: string,
+  solutionSlug: string,
+  annotatedLines: number[],
+): number | undefined {
+  const blob = loadProgressBlob();
+  const line = blob.problems[problemSlug]?.lastLinesBySolution?.[solutionSlug];
+  if (line != null && annotatedLines.includes(line)) return line;
+  return undefined;
+}
+
+/** Serializa o blob actual para backup (browser). */
+export function serializeProgressBlob(): string {
+  return JSON.stringify(loadProgressBlob(), null, 2);
+}
+
+/** Substitui o progresso pelo JSON validado (útil para restaurar backup). */
+export function importProgressReplace(jsonText: string): { ok: true } | { ok: false; error: string } {
+  try {
+    const parsed = JSON.parse(jsonText) as unknown;
+    const blob = ProgressBlobSchema.parse(parsed);
+    saveProgressBlob(blob);
+    return { ok: true };
+  } catch (e) {
+    const msg = e instanceof Error ? e.message : 'JSON inválido';
+    return { ok: false, error: msg };
+  }
 }
 
 export function toggleProblemMarkedComplete(problemSlug: string): ProgressBlob {

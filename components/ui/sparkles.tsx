@@ -3,6 +3,15 @@ import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+type SparkleParticle = {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  duration: number;
+  delay: number;
+};
+
 export const SparklesCore = (props: {
   id?: string;
   className?: string;
@@ -24,20 +33,22 @@ export const SparklesCore = (props: {
     speed = 1,
   } = props;
 
-  const [particles, setParticles] = useState<any[]>([]);
+  const [particles, setParticles] = useState<SparkleParticle[]>([]);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-    const generatedParticles = Array.from({ length: particleDensity }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      size: Math.random() * (maxSize - minSize) + minSize,
-      duration: Math.random() * 10 + 10 / speed,
-      delay: Math.random() * 20,
-    }));
-    setParticles(generatedParticles);
+    queueMicrotask(() => {
+      setMounted(true);
+      const generatedParticles = Array.from({ length: particleDensity }).map((_, i) => ({
+        id: i,
+        x: Math.random() * 100,
+        y: Math.random() * 100,
+        size: Math.random() * (maxSize - minSize) + minSize,
+        duration: Math.random() * 10 + 10 / speed,
+        delay: Math.random() * 20,
+      }));
+      setParticles(generatedParticles);
+    });
   }, [particleDensity, minSize, maxSize, speed]);
 
   if (!mounted) return null;

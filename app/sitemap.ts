@@ -1,7 +1,13 @@
 import type { MetadataRoute } from 'next';
 
 import { listCourseSlugs, getCoursePackHydrated } from '@/lib/courses/hydrate-course-pack';
-import { getAllProblems, getAllConceptSlugs, getAllInterviewEnglishSlugs, getAllEngineeringWorkSlugs } from '@/lib/content/loader';
+import {
+  getAllProblems,
+  getAllConceptSlugs,
+  getAllInterviewEnglishSlugs,
+  getAllEngineeringWorkSlugs,
+} from '@/lib/content/loader';
+import { getStudyTrackSlugs } from '@/lib/content/track-loader';
 import { getSiteOrigin } from '@/lib/seo/site';
 
 export const revalidate = 3600;
@@ -17,18 +23,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     { url: `${BASE_URL}`, lastModified: now, priority: 1.0, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/problems`, lastModified: now, priority: 0.9, changeFrequency: 'daily' },
+    { url: `${BASE_URL}/tracks`, lastModified: now, priority: 0.88, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/concepts`, lastModified: now, priority: 0.85, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/interview-en`, lastModified: now, priority: 0.82, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/engineering-work`, lastModified: now, priority: 0.81, changeFrequency: 'weekly' },
     { url: `${BASE_URL}/course`, lastModified: now, priority: 0.83, changeFrequency: 'weekly' },
   ];
 
-  const [problems, conceptSlugs, interviewEnSlugs, engTrabalhoSlugs, courseSlugs] = await Promise.all([
+  const [problems, conceptSlugs, interviewEnSlugs, engTrabalhoSlugs, courseSlugs, trackSlugs] = await Promise.all([
     getAllProblems(),
     getAllConceptSlugs(),
     getAllInterviewEnglishSlugs(),
     getAllEngineeringWorkSlugs(),
     listCourseSlugs(),
+    getStudyTrackSlugs(),
   ]);
 
   const coursePackEntries: MetadataRoute.Sitemap = [];
@@ -56,6 +64,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       });
     }
   }
+
+  const trackEntries: MetadataRoute.Sitemap = trackSlugs.map((slug) => ({
+    url: `${BASE_URL}/tracks/${slug}`,
+    lastModified: now,
+    priority: 0.76,
+    changeFrequency: 'weekly',
+  }));
 
   const problemEntries: MetadataRoute.Sitemap = problems.flatMap((p) => [
     {
@@ -93,5 +108,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: 'monthly',
   }));
 
-  return [...staticEntries, ...coursePackEntries, ...problemEntries, ...conceptEntries, ...interviewEnEntries, ...engTrabalhoEntries];
+  return [...staticEntries, ...coursePackEntries, ...problemEntries, ...trackEntries, ...conceptEntries, ...interviewEnEntries, ...engTrabalhoEntries];
 }

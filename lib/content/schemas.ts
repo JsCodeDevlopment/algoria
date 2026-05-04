@@ -114,6 +114,32 @@ export const AnnotationsFile = z.object({
 });
 export type AnnotationsFile = z.infer<typeof AnnotationsFile>;
 
+/** Modelo manual do estado em cada passo — MVP Fase 2 (arrays / mapas). */
+export const ExecutionTraceArraySnapshotSchema = z.object({
+  label: z.string().min(1),
+  values: z.array(z.union([z.number(), z.string(), z.null()])),
+  highlightIndices: z.array(z.number().int().nonnegative()).default([]),
+});
+
+export const ExecutionTraceSnapshotSchema = z.object({
+  caption: z.string().optional(),
+  arrays: z.array(ExecutionTraceArraySnapshotSchema).optional(),
+  mapEntries: z.array(z.object({ key: z.string(), value: z.string() })).optional(),
+  scalars: z.record(z.string(), z.string()).optional(),
+});
+
+export const ExecutionTraceStepSchema = z.object({
+  line: z.number().int().positive(),
+  snapshot: ExecutionTraceSnapshotSchema,
+});
+
+export const ExecutionTraceFileSchema = z.object({
+  steps: z.array(ExecutionTraceStepSchema).min(1),
+});
+
+export type ExecutionTraceSnapshot = z.infer<typeof ExecutionTraceSnapshotSchema>;
+export type ExecutionTraceStep = z.infer<typeof ExecutionTraceStepSchema>;
+
 export const ConceptMeta = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
@@ -136,6 +162,8 @@ export interface Solution {
   introHtml: string;
   /** Annotations indexed by line number. */
   annotations: LineAnnotation[];
+  /** Opcional — trace visual curado (`trace.json`). */
+  executionTrace?: ExecutionTraceStep[];
 }
 
 export interface Problem {
