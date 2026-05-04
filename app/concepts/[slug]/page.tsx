@@ -57,7 +57,7 @@ export default async function ConceptPage({
   const moduleId = q.module ?? q.modulo;
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
+    <div className="mx-auto max-w-7xl px-6 py-12">
       <JsonLdScript
         data={learningResourceJsonLd({
           name: concept.meta.title,

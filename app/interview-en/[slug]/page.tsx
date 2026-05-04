@@ -54,7 +54,7 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
   if (!topic) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
+    <div className="mx-auto max-w-7xl px-6 py-12">
       <JsonLdScript
         data={learningResourceJsonLd({
           name: topic.meta.title,

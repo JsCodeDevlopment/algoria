@@ -109,7 +109,7 @@ export function CourseProgramsIndex({ pack }: Props) {
   const overallPct = denom ? Math.round((sum / denom) * 100) : 0;
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-12 space-y-10">
+    <div className="mx-auto max-w-7xl px-6 py-12 space-y-10">
       <header className="space-y-3 border-l-4 border-primary pl-6">
         <Badge variant="secondary" className="rounded-none uppercase text-[10px] tracking-[0.3em]">
           Curso local · progresso no browser apenas

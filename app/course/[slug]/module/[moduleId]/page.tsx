@@ -70,7 +70,7 @@ export default async function CourseModulePage({ params }: { params: Promise<Par
           pathname: `/course/${slug}/module/${moduleId}`,
         })}
       />
-      <div className="mx-auto max-w-3xl px-6 pt-6 print:hidden">
+      <div className="mx-auto max-w-7xl px-6 pt-6 print:hidden">
         <Link href={`/course/${encodeURIComponent(slug)}`} className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
           ← Índice do programa
         </Link>

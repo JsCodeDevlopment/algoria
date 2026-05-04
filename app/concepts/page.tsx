@@ -34,7 +34,7 @@ export default async function ConceptsPage() {
 
   return (
     <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-5xl px-6 py-24">
+      <div className="mx-auto max-w-7xl px-6 py-24">
         <div className="mb-14 flex flex-col gap-6 rounded-xl border border-primary/35 bg-background/95 p-6 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl space-y-2">
             <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">Nova trilha</p>

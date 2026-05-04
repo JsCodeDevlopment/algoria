@@ -78,7 +78,7 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
   const capOk = !!slice.capstonePassedAt;
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-10 space-y-12">
+    <div className="mx-auto max-w-7xl px-6 py-10 space-y-12">
       <header className="space-y-3 border-l-4 border-primary pl-5">
         <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
           <Badge variant="secondary" className="rounded-none text-[10px]">

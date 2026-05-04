@@ -174,7 +174,7 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
   );
 
   return (
-    <div className="mx-auto max-w-5xl px-6 py-12">
+    <div className="mx-auto max-w-7xl px-6 py-12">
       <JsonLdScript
         data={learningResourceJsonLd({
           name: problem.meta.title,

@@ -17,7 +17,7 @@ export default async function CoursesIndexPage() {
   const packs = await Promise.all(slugs.map((s) => getCoursePackHydrated(s)));
 
   return (
-    <div className="mx-auto max-w-4xl px-6 py-24 space-y-12">
+    <div className="mx-auto max-w-7xl px-6 py-24 space-y-12">
       <header className="space-y-4">
         <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-primary">Algoria.curriculum</p>
         <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">Cursos</h1>

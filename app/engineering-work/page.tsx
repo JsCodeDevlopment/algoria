@@ -60,7 +60,7 @@ export default async function EngineeringWorkHubPage() {
 
   return (
     <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-5xl px-6 py-24">
+      <div className="mx-auto max-w-7xl px-6 py-24">
         <header className="mb-14 rounded-xl border border-primary/35 bg-background/95 p-6 md:p-8">
           <div className="flex flex-col gap-6 md:flex-row md:items-start">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-primary text-primary">

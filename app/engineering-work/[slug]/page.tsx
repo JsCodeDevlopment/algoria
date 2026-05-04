@@ -46,7 +46,7 @@ export default async function EngineeringWorkGuidePage({ params }: { params: Pro
   if (!guide) notFound();
 
   return (
-    <div className="mx-auto max-w-3xl px-6 py-12">
+    <div className="mx-auto max-w-7xl px-6 py-12">
       <JsonLdScript
         data={articleJsonLd({
           headline: guide.meta.title,
