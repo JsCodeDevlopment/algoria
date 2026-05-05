@@ -3,7 +3,7 @@
   "title": "Closures e currying em JavaScript",
   "category": "fundamentals",
   "difficulty": "medium",
-  "estimatedMinutes": 14,
+  "estimatedMinutes": 20,
   "prerequisites": ["big-o"],
-  "summary": "Ambiente léxico, funções que carregam estado privado, currying como cadeia de funções unárias e APIs fluentes — com pé na terra para não over-engineering."
+  "summary": "Entenda o ambiente léxico através de exemplos práticos: o dilema do var no loop, closures assíncronas, estado privado e currying para APIs elegantes."
 }

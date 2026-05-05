@@ -3,7 +3,7 @@
   "title": "Queues (filas)",
   "category": "fundamentals",
   "difficulty": "easy",
-  "estimatedMinutes": 10,
+  "estimatedMinutes": 20,
   "prerequisites": ["big-o"],
-  "summary": "FIFO: ideal para níveis-BFS ou ordem estritamente cronológica de eventos discretos."
+  "summary": "Domine o conceito de FIFO, implementações otimizadas em O(1) e como as filas são a base para algoritmos como BFS e sistemas de mensageria modernos."
 }
