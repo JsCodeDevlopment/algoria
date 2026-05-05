@@ -1,9 +1,9 @@
 'use client';
 
-import * as React from 'react';
+import { Button } from '@/components/ui/button';
 import { Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
-import { Button } from '@/components/ui/button';
+import * as React from 'react';
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -27,7 +27,7 @@ export function ThemeToggle() {
       variant="ghost"
       size="icon"
       onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-      className="rounded-full w-9 h-9 hover:bg-accent transition-colors relative group"
+      className="rounded-full cursor-pointer w-9 h-9 hover:bg-accent transition-colors relative group"
       aria-label="Trocar tema"
     >
       <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />

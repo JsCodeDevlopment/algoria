@@ -1,0 +1,44 @@
+{
+  "steps": [
+    {
+      "line": 2,
+      "snapshot": {
+        "caption": "Ponteiros no fim da parte preenchida de nums1 e nums2; write no último índice total.",
+        "arrays": [
+          { "label": "nums1", "values": [1, 2, 3, 0, 0, 0], "highlightIndices": [2] },
+          { "label": "nums2", "values": [2, 5, 6], "highlightIndices": [2] }
+        ],
+        "scalars": { "i": "m-1", "j": "n-1", "write": "m+n-1", "exemplo": "m=3, n=3" }
+      }
+    },
+    {
+      "line": 6,
+      "snapshot": {
+        "caption": "Enquanto ainda há elementos de nums2 por colocar, comparas os valores nas pontas.",
+        "scalars": { "loop": "j ≥ 0" }
+      }
+    },
+    {
+      "line": 7,
+      "snapshot": {
+        "caption": "Se nums1[i] ganha a nums2[j], copias esse valor para nums1[write].",
+        "arrays": [{ "label": "nums1", "values": [1, 2, 3, 0, 0, 0], "highlightIndices": [2, 5] }],
+        "scalars": { "decisão": "nums1[i] > nums2[j]" }
+      }
+    },
+    {
+      "line": 8,
+      "snapshot": {
+        "caption": "Escreve de trás para a frente — não sobrescreves dados de nums1 que ainda não processaste.",
+        "scalars": { "ação": "nums1[write--] = nums1[i--]" }
+      }
+    },
+    {
+      "line": 10,
+      "snapshot": {
+        "caption": "Caso contrário puxas do nums2 — mescla ordenada preservada.",
+        "scalars": { "ação": "nums1[write--] = nums2[j--]" }
+      }
+    }
+  ]
+}

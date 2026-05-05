@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { CatalogReviewSection } from '@/components/catalog/catalog-review-section';
 import { ProgressBackupControls } from '@/components/catalog/progress-backup-controls';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
@@ -57,15 +58,20 @@ export function ProblemsCatalogClient({ problems }: Props) {
             Filtra por dificuldade e categoria, pesquisa por título e segue a ordem recomendada de aprendizagem.
             O progresso fica no teu browser (localStorage).
           </p>
-          <p className="mt-4">
+          <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
             <Link
               href="/tracks"
               className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
             >
               Trilhos curados (por tema e ordem editorial)
             </Link>
+            <Link href="/changelog" className="text-sm font-semibold text-primary underline-offset-4 hover:underline">
+              Novidades
+            </Link>
           </p>
         </header>
+
+        <CatalogReviewSection problems={problems} />
 
         <div className="mb-10 flex flex-col gap-4 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
           <div className="flex-1 min-w-[12rem]">

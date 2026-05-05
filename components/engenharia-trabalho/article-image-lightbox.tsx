@@ -30,6 +30,17 @@ function captionNearImage(img: HTMLImageElement): string | undefined {
   return text || undefined;
 }
 
+function openArticleImageLightboxFromImg(img: HTMLImageElement): void {
+  if (img.closest('[data-no-article-zoom]')) return;
+  const src = img.currentSrc || img.src;
+  if (!src) return;
+  useArticleImageLightboxStore.getState().open({
+    src,
+    alt: img.alt?.trim() || 'Imagem do artigo',
+    caption: captionNearImage(img),
+  });
+}
+
 /** Delegação para `<img>` do artigo (Markdown + figuras hidratadas). */
 export function attachArticleImageLightboxDelegates(root: HTMLElement) {
   const onClickCapture = (e: MouseEvent) => {
@@ -40,27 +51,38 @@ export function attachArticleImageLightboxDelegates(root: HTMLElement) {
 
     const img = t.closest('article img') as HTMLImageElement | null;
     if (!img || !root.contains(img)) return;
-    if (img.closest('[data-no-article-zoom]')) return;
 
     const src = img.currentSrc || img.src;
     if (!src) return;
 
     e.preventDefault();
 
-    useArticleImageLightboxStore.getState().open({
-      src,
-      alt: img.alt?.trim() || 'Imagem do artigo',
-      caption: captionNearImage(img),
-    });
+    openArticleImageLightboxFromImg(img);
+  };
+
+  const onKeyDownCapture = (e: KeyboardEvent) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    const t = e.target;
+    if (!(t instanceof Element)) return;
+    const img = t.closest('article img') as HTMLImageElement | null;
+    if (!img || !root.contains(img)) return;
+    if (document.activeElement !== img) return;
+    e.preventDefault();
+    openArticleImageLightboxFromImg(img);
   };
 
   root.addEventListener('click', onClickCapture, true);
+  root.addEventListener('keydown', onKeyDownCapture, true);
 
-  return () => root.removeEventListener('click', onClickCapture, true);
+  return () => {
+    root.removeEventListener('click', onClickCapture, true);
+    root.removeEventListener('keydown', onKeyDownCapture, true);
+  };
 }
 
-/** Marca `<img>` do artigo com cursor e tooltip. */
+/** Marca `<img>` do artigo com cursor, foco por teclado e tooltip. */
 export function annotateArticleZoomableImages(root: HTMLElement, titleUi = 'Clique para ampliar') {
+  const ariaHint = `${titleUi}. Enter ou Espaço para abrir em destaque.`;
   root.querySelectorAll('article img').forEach((node) => {
     const img = node as HTMLImageElement;
     if (img.closest('[data-no-article-zoom]')) return;
@@ -72,10 +94,16 @@ export function annotateArticleZoomableImages(root: HTMLElement, titleUi = 'Cliq
       'active:opacity-85',
       'motion-reduce:transition-none',
     );
+    img.tabIndex = 0;
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-haspopup', 'dialog');
     const hasCustomTitle = typeof img.title === 'string' && img.title.trim().length > 0;
     const hasAria = img.hasAttribute('aria-describedby') || img.hasAttribute('aria-labelledby');
     if (!hasCustomTitle && !hasAria) {
-      img.title = titleUi;
+      img.title = ariaHint;
+    }
+    if (!img.getAttribute('aria-label')) {
+      img.setAttribute('aria-label', ariaHint);
     }
     if (!img.getAttribute('decoding')) {
       img.decoding = 'async';
@@ -92,10 +120,18 @@ export function ArticleImageLightbox() {
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[100] animate-in bg-black/80 backdrop-blur-[2px]" />
         <Dialog.Content
+          aria-describedby={payload ? 'article-lightbox-desc' : undefined}
           className={
             'fixed inset-4 z-[101] mx-auto flex h-fit max-w-6xl flex-col rounded-xl border border-white/15 ' +
-            'bg-zinc-950/95 p-3 shadow-[0_24px_80px_-12px_rgba(0,0,0,0.65)] animate-in '
+            'bg-zinc-950/95 p-3 shadow-[0_24px_80px_-12px_rgba(0,0,0,0.65)] animate-in outline-none '
           }
+          onOpenAutoFocus={(e) => {
+            e.preventDefault();
+            const closeBtn = (e.currentTarget as HTMLElement).querySelector<HTMLElement>(
+              '[data-lightbox-close]',
+            );
+            closeBtn?.focus();
+          }}
         >
           <div className="flex shrink-0 items-start justify-between gap-3 pb-2">
             <Dialog.Title className="line-clamp-2 pr-2 text-sm font-medium leading-snug text-zinc-100">
@@ -104,6 +140,7 @@ export function ArticleImageLightbox() {
             <Dialog.Close asChild>
               <button
                 type="button"
+                data-lightbox-close
                 className="inline-flex shrink-0 items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white transition-colors hover:bg-white/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               >
                 <X className="size-4" aria-hidden />
@@ -112,7 +149,9 @@ export function ArticleImageLightbox() {
             </Dialog.Close>
           </div>
           {payload ? (
-            <Dialog.Description className="sr-only">{payload.alt}</Dialog.Description>
+            <Dialog.Description id="article-lightbox-desc" className="sr-only">
+              {payload.alt}
+            </Dialog.Description>
           ) : null}
           <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto rounded-lg bg-black/35 p-2">
             {payload ? (

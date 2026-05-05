@@ -6,6 +6,8 @@ import { AlgoriaBrand } from "@/components/branding/algoria-logo";
 
 const explore = [
   { href: "/problems", label: "Catálogo de problemas" },
+  { href: "/tracks", label: "Trilhos curados" },
+  { href: "/changelog", label: "Novidades" },
   { href: "/concepts", label: "Conceitos algorítmicos" },
   { href: "/interview-en", label: "Inglês técnico · entrevistas (EN)" },
   { href: "/engineering-work", label: "Engenharia no trabalho" },

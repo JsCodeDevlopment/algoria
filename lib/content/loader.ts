@@ -25,6 +25,7 @@ const PROBLEMS_DIR = path.join(CONTENT_ROOT, 'problems');
 const CONCEPTS_DIR = path.join(CONTENT_ROOT, 'concepts');
 const INTERVIEW_EN_DIR = path.join(CONTENT_ROOT, 'interview-en');
 const ENGENHARIA_TRABALHO_DIR = path.join(CONTENT_ROOT, 'engenharia-trabalho');
+const CHANGELOG_MD = path.join(CONTENT_ROOT, 'changelog.md');
 
 const SOLUTION_FILES: Record<Language, string> = {
   typescript: 'solution.ts',
@@ -205,6 +206,16 @@ export async function getAllEngineeringWorkGuides(): Promise<EngineeringWorkGuid
   const slugs = await getAllEngineeringWorkSlugs();
   const guides = await Promise.all(slugs.map((slug) => getEngineeringWorkGuide(slug)));
   return guides.filter((g): g is EngineeringWorkGuide => g !== null);
+}
+
+/** Markdown editorial da página Novidades (`content/changelog.md`). */
+export async function getChangelogHtml(): Promise<string | null> {
+  try {
+    const raw = await fs.readFile(CHANGELOG_MD, 'utf8');
+    return renderMarkdown(raw);
+  } catch {
+    return null;
+  }
 }
 
 export async function getSolution(problemSlug: string, solutionSlug: string): Promise<Solution | null> {

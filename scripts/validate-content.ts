@@ -242,6 +242,11 @@ async function validate(): Promise<{ errors: string[]; warnings: string[] }> {
     }
   }
 
+  const changelogMd = path.join(ROOT, 'changelog.md');
+  if (!(await fileExists(changelogMd))) {
+    warnings.push('content/changelog.md em falta — /changelog mostra estado vazio');
+  }
+
   const conceptSlugs = await listDirs(CONCEPTS).catch(() => [] as string[]);
   for (const cslug of conceptSlugs) {
     const cdir = path.join(CONCEPTS, cslug);

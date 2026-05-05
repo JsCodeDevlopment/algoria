@@ -1,0 +1,48 @@
+{
+  "steps": [
+    {
+      "line": 2,
+      "snapshot": {
+        "caption": "Comprimentos diferentes ⇒ nunca são anagramas.",
+        "scalars": { "s.length vs t.length": "≠ → false" }
+      }
+    },
+    {
+      "line": 3,
+      "snapshot": {
+        "caption": "26 buckets para letras minúsculas inglesas — todos a zero.",
+        "arrays": [{ "label": "count[26]", "values": [0, 0, 0, "…"], "highlightIndices": [] }]
+      }
+    },
+    {
+      "line": 5,
+      "snapshot": {
+        "caption": "Exemplo: s = «anagram», t = «nagaram». Um índice i percorre ambas ao mesmo tempo.",
+        "scalars": { "i": "0 … n-1", "base": "código de 'a'" }
+      }
+    },
+    {
+      "line": 6,
+      "snapshot": {
+        "caption": "Incrementas o bucket da letra em s na posição i.",
+        "arrays": [{ "label": "count (resumo)", "values": ["+", "?", "…"], "highlightIndices": [0] }],
+        "scalars": { "op": "count[s[i]]++" }
+      }
+    },
+    {
+      "line": 7,
+      "snapshot": {
+        "caption": "Decrementas o bucket paralelo em t — frequências devem cancelar-se.",
+        "scalars": { "op": "count[t[i]]--" }
+      }
+    },
+    {
+      "line": 9,
+      "snapshot": {
+        "caption": "Se todos os buckets voltaram a zero, as multiset de letras coincidem.",
+        "arrays": [{ "label": "count", "values": [0, 0, 0, "…"], "highlightIndices": [] }],
+        "scalars": { "every zero": "true → anagrama" }
+      }
+    }
+  ]
+}
