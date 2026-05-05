@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { useEffect, useId, useRef, useState } from 'react';
 
 import { AlgoriaBrand } from '@/components/branding/algoria-logo';
+import { SessionNav } from '@/components/layout/session-nav';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -136,6 +137,7 @@ export function SiteHeader() {
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3 xl:gap-4">
           <ThemeToggle />
+          <SessionNav />
           <Button
             asChild
             variant="outline"

@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
 
 import { AlgoriaPostHogProvider } from '@/components/analytics/posthog-provider';
+import { ProgressSyncOnLogin } from '@/components/billing/progress-sync';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SiteFooter } from '@/components/layout/site-footer';
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <JsonLdScript data={structuredData} />
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AlgoriaPostHogProvider>
+            <ProgressSyncOnLogin />
             <SiteHeader />
             <main className="flex-1">{children}</main>
             <SiteFooter />

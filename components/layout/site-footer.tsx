@@ -6,6 +6,7 @@ import { AlgoriaBrand } from "@/components/branding/algoria-logo";
 
 const explore = [
   { href: "/problems", label: "Catálogo de problemas" },
+  { href: "/pricing", label: "Preços e Pro" },
   { href: "/tracks", label: "Trilhos curados" },
   { href: "/changelog", label: "Novidades" },
   { href: "/concepts", label: "Conceitos algorítmicos" },
@@ -90,27 +91,62 @@ export function SiteFooter() {
       </div>
 
       <div className="border-t border-border/60 bg-muted/15">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-6 py-10 text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-          <span className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground/70">
-            &copy; {new Date().getFullYear()} Algoria. Conteúdo educativo.
-          </span>
-          <div className="flex flex-wrap gap-x-8 gap-y-2 text-[10px] font-bold uppercase tracking-widest">
-            <span className="inline-flex items-center gap-2 text-muted-foreground/80">
-              <span
-                className="h-2 w-2 rounded-none bg-primary"
-                aria-hidden
-              />
-              Criador e idealizador:&nbsp;
-              <Link
-                href="https://github.com/JsCodeDevlopment"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold underline decoration-dotted underline-offset-2 text-primary hover:text-primary/80 transition-colors"
+        <div className="mx-auto max-w-7xl px-6 py-10 text-muted-foreground">
+          <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
+            <div className="min-w-0 space-y-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground/70">
+                &copy; {new Date().getFullYear()} Algoria. Conteúdo educativo.
+              </p>
+              <nav
+                className="flex max-w-full flex-nowrap gap-x-5 overflow-x-auto pb-1 text-[10px] font-bold uppercase tracking-widest [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                aria-label="Links legais"
               >
-                Jonatas Silva
-              </Link>
-              &nbsp;— Senior Fullstack Software Engineer
-            </span>
+                <Link
+                  href="/legal/terms"
+                  className="shrink-0 whitespace-nowrap hover:text-primary"
+                >
+                  Termos
+                </Link>
+                <Link
+                  href="/legal/privacy"
+                  className="shrink-0 whitespace-nowrap hover:text-primary"
+                >
+                  Privacidade
+                </Link>
+                <Link
+                  href="/legal/cookies"
+                  className="shrink-0 whitespace-nowrap hover:text-primary"
+                >
+                  Cookies
+                </Link>
+                <Link
+                  href="/legal/refunds"
+                  className="shrink-0 whitespace-nowrap hover:text-primary"
+                >
+                  Reembolsos
+                </Link>
+              </nav>
+            </div>
+            <div className="shrink-0 lg:max-w-md lg:text-right">
+              <span className="inline-flex flex-wrap items-center justify-start gap-x-2 gap-y-1 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80 lg:justify-end">
+                <span
+                  className="h-2 w-2 shrink-0 rounded-none bg-primary"
+                  aria-hidden
+                />
+                <span>
+                  Criador e idealizador:&nbsp;
+                  <Link
+                    href="https://github.com/JsCodeDevlopment"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold underline decoration-dotted underline-offset-2 text-primary transition-colors hover:text-primary/80"
+                  >
+                    Jonatas Silva
+                  </Link>
+                  &nbsp;— Senior Fullstack Software Engineer
+                </span>
+              </span>
+            </div>
           </div>
         </div>
       </div>

@@ -60,6 +60,10 @@ export const Example = z.object({
 });
 export type Example = z.infer<typeof Example>;
 
+export const CONTENT_ACCESS = ['free', 'pro'] as const;
+export const ContentAccess = z.enum(CONTENT_ACCESS);
+export type ContentAccess = z.infer<typeof ContentAccess>;
+
 export const ProblemMeta = z.object({
   slug: z.string().min(1),
   title: z.string().min(1),
@@ -72,6 +76,8 @@ export const ProblemMeta = z.object({
   estimatedMinutes: z.number().int().positive().default(15),
   /** Menor aparece primeiro no modo «ordem recomendada» da Fase 1. */
   recommendedOrder: z.number().int().positive().optional(),
+  /** `pro` = requer assinatura para player e soluções. Omisso = `pro`. */
+  access: ContentAccess.default('pro'),
 });
 export type ProblemMeta = z.infer<typeof ProblemMeta>;
 

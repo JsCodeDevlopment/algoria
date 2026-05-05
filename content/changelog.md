@@ -11,7 +11,14 @@ Histórico editorial e técnico da Algoria. Actualizado quando há novas rotas, 
 ## Próximas áreas
 
 - Mais `trace.json` por problema / solução óptima.
-- Smoke tests E2E no CI (Playwright) para regressões do layout principal.
+
+## 2026-05-05 — Freemium e infraestrutura comercial
+
+- **Pacotes Free / Pro** — Campo `access` nos problemas (`free`: 10 exercícios hero; restantes `pro`).
+- **Conta** — Better Auth + Postgres (Drizzle): registo, sessão, merge de progresso local para servidor.
+- **Pagamentos** — Stripe Checkout + webhook para tabela `subscription`.
+- **Preços e legal** — `/pricing`, termos, privacidade, cookies e reembolsos.
+- **Analytics de funil** — Eventos PostHog `pricing_view`, `checkout_start`, `paywall_hit`, `subscription_active`.
 
 ---
 

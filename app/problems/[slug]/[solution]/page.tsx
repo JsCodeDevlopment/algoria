@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
+import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +16,9 @@ import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { SolutionLanguageSelect } from '@/components/solution/solution-language-select';
 import { SolutionVisitTracker } from '@/components/solution/solution-visit-tracker';
+import { auth } from '@/lib/auth';
+import { userHasPro } from '@/lib/billing/entitlements';
+import { getProblemAccess, isProblemUnlockedForUser } from '@/lib/billing/tiering';
 import { getAllProblems, getConcept, getProblem } from '@/lib/content/loader';
 import {
   LANGUAGE_LABEL_PT,
@@ -85,6 +90,11 @@ export default async function SolutionPage({
   const solution = problem.solutions.find((s) => s.meta.slug === solutionSlug);
   if (!solution) notFound();
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const access = getProblemAccess(problem.meta);
+  const unlocked = isProblemUnlockedForUser(access, hasPro);
+
   const availableLanguages = LANGUAGE_ORDER_FOR_UI.filter(
     (l) => Boolean(solution.codeByLanguage[l]?.trim()),
   ) as Language[];
@@ -126,6 +136,17 @@ export default async function SolutionPage({
   const jsonLdDescription =
     introPlain ||
     `Solução com explicação linha-a-linha para «${problem.meta.title}» (${solution.meta.name}). Complexidade ${solution.meta.complexity.time} tempo, ${solution.meta.complexity.space} espaço.`;
+
+  if (!unlocked) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-16">
+        <Link href={`/problems/${problem.meta.slug}`} className="text-sm text-muted-foreground hover:text-foreground mb-8 inline-block">
+          ← {problem.meta.title}
+        </Link>
+        <UpgradePrompt context="Player e soluções Pro" problemSlug={problem.meta.slug} />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">

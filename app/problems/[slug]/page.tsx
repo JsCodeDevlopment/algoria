@@ -1,8 +1,10 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { ArrowRight, BookOpen } from 'lucide-react';
 
+import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
@@ -12,6 +14,9 @@ import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { ProblemStudyCompletionBar } from '@/components/problem/problem-study-completion-bar';
 import { ProblemStudyTabs } from '@/components/problem/problem-study-tabs';
 import { ProblemVisitTracker } from '@/components/problem/problem-visit-tracker';
+import { auth } from '@/lib/auth';
+import { userHasPro } from '@/lib/billing/entitlements';
+import { getProblemAccess, isProblemUnlockedForUser } from '@/lib/billing/tiering';
 import { getAllProblemSlugs, getProblem, getConcept } from '@/lib/content/loader';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
@@ -58,6 +63,11 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
   const { slug } = await params;
   const problem = await getProblem(slug);
   if (!problem) notFound();
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const access = getProblemAccess(problem.meta);
+  const strategiesLocked = !isProblemUnlockedForUser(access, hasPro);
 
   const prereqs = (
     await Promise.all(problem.meta.prerequisites.map((s) => getConcept(s).then((c) => (c ? { slug: s, title: c.meta.title } : null))))
@@ -201,7 +211,16 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
 
       <Separator className="mb-10" />
 
-      <ProblemStudyTabs statement={statement} strategies={strategies} />
+      <ProblemStudyTabs
+        statement={statement}
+        strategies={
+          strategiesLocked ? (
+            <UpgradePrompt context="Soluções comentadas e player" problemSlug={slug} />
+          ) : (
+            strategies
+          )
+        }
+      />
 
       <ProblemStudyCompletionBar problemSlug={slug} solutionCount={problem.solutions.length} />
     </div>

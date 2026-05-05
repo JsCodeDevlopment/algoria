@@ -56,7 +56,7 @@ export function ProblemsCatalogClient({ problems }: Props) {
           </h1>
           <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl font-medium">
             Filtra por dificuldade e categoria, pesquisa por título e segue a ordem recomendada de aprendizagem.
-            O progresso fica no teu browser (localStorage).
+            O progresso fica no teu browser (localStorage); com conta Pro podes sincronizar na nuvem após iniciar sessão.
           </p>
           <p className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
             <Link
@@ -155,6 +155,15 @@ export function ProblemsCatalogClient({ problems }: Props) {
                 <CardHeader className="px-6 pt-6">
                   <div className="flex items-center gap-2 mb-4 flex-wrap">
                     <DifficultyBadge difficulty={p.difficulty} />
+                    {p.access === 'pro' ? (
+                      <Badge variant="outline" className="rounded-none border-primary font-mono text-[9px] uppercase text-primary">
+                        Pro
+                      </Badge>
+                    ) : (
+                      <Badge variant="secondary" className="rounded-none font-mono text-[9px] uppercase">
+                        Free
+                      </Badge>
+                    )}
                     <ProblemStatusBadge problemSlug={p.slug} solutionCount={p.solutionCount} />
                     {p.categories.slice(0, 2).map((c) => (
                       <Badge key={c} variant="secondary" className="font-mono text-[9px] px-1.5 py-0 rounded-none bg-primary/10 text-primary">

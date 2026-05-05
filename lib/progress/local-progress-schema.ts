@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+const slugKey = z.string().max(220);
+
 const iso = z.string().optional();
 
 /** Estado de um problema no dispositivo (sem auth na Fase 1). */
@@ -7,17 +9,24 @@ export const ProblemStudyStateSchema = z.object({
   /** Primeira vez que abriste `/problems/[slug]` */
   visitedAt: iso,
   /** Slugs das soluções que já visitaste pelo menos uma vez */
-  openedSolutions: z.array(z.string()).default([]),
+  openedSolutions: z.array(slugKey).max(80).default([]),
   /** Opção manual «Concluí o estudo deste problema» */
   markedCompleteAt: iso,
   /** Última linha activa no player por slug de solução (retoma leitura). */
-  lastLinesBySolution: z.record(z.string(), z.number().int().positive()).optional(),
+  lastLinesBySolution: z
+    .record(slugKey, z.number().int().positive().max(500_000))
+    .optional(),
 });
 
 export const ProgressBlobSchema = z.object({
   version: z.literal(1),
   /** Chave = problem slug */
-  problems: z.record(z.string(), ProblemStudyStateSchema).default({}),
+  problems: z
+    .record(slugKey, ProblemStudyStateSchema)
+    .default({})
+    .refine((p) => Object.keys(p).length <= 600, {
+      message: 'Demasiados problemas no progresso.',
+    }),
 });
 
 export type ProgressBlob = z.infer<typeof ProgressBlobSchema>;
