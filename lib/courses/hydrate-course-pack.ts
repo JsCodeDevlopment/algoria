@@ -11,6 +11,7 @@ import type {
 } from '@/lib/content/schemas';
 
 import { FUNDAMENTOS_FASE_1_PACK } from '@/lib/courses/fundamentos-fase1-seed';
+import { FUNDAMENTOS_FASE_2_PACK } from '@/lib/courses/fundamentos-fase2-seed';
 import { INTERVIEW_ENGLISH_INTERVIEWS_PACK } from '@/lib/courses/interview-english-seed';
 
 async function mapExercise(ex: CourseMcqExercise): Promise<CourseExerciseHydrated> {
@@ -62,12 +63,15 @@ export async function hydrateCoursePack(parsed: CoursePackParsed): Promise<Cours
 
 /** Pacotes editoriais disponíveis no catálogo de cursos. */
 export async function listCourseSlugs(): Promise<string[]> {
-  return [FUNDAMENTOS_FASE_1_PACK.slug, INTERVIEW_ENGLISH_INTERVIEWS_PACK.slug];
+  return [FUNDAMENTOS_FASE_1_PACK.slug, FUNDAMENTOS_FASE_2_PACK.slug, INTERVIEW_ENGLISH_INTERVIEWS_PACK.slug];
 }
 
 export async function getCoursePackHydrated(slug: string): Promise<CoursePackHydrated | null> {
   if (slug === FUNDAMENTOS_FASE_1_PACK.slug) {
     return hydrateCoursePack(FUNDAMENTOS_FASE_1_PACK);
+  }
+  if (slug === FUNDAMENTOS_FASE_2_PACK.slug) {
+    return hydrateCoursePack(FUNDAMENTOS_FASE_2_PACK);
   }
   if (slug === INTERVIEW_ENGLISH_INTERVIEWS_PACK.slug) {
     return hydrateCoursePack(INTERVIEW_ENGLISH_INTERVIEWS_PACK);
