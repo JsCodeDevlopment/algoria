@@ -77,6 +77,11 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
   const pct = Math.round((progress.earned / progress.total) * 100);
   const capOk = !!slice.capstonePassedAt;
 
+  const studyHref =
+    module.linkedResourceKind === 'interview-en'
+      ? `/interview-en/${module.linkedConceptSlug}?course=${encodeURIComponent(pack.slug)}&module=${encodeURIComponent(module.id)}`
+      : `/concepts/${module.linkedConceptSlug}?course=${encodeURIComponent(pack.slug)}&module=${encodeURIComponent(module.id)}`;
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-10 space-y-12">
       <header className="space-y-3 border-l-4 border-primary pl-5">
@@ -107,12 +112,10 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
         </div>
         <div className="flex flex-wrap items-center gap-4 pt-2">
           <Link
-            href={`/concepts/${module.linkedConceptSlug}?course=${encodeURIComponent(pack.slug)}&module=${encodeURIComponent(
-              module.id,
-            )}`}
+            href={studyHref}
             className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 shadow-sm uppercase tracking-[0.12em]"
           >
-            Abrir página do conceito
+            {module.linkedResourceKind === 'interview-en' ? 'Abrir artigo base (Interview EN)' : 'Abrir página do conceito'}
             <ChevronRight className="h-4 w-4" />
           </Link>
           <label className="flex items-center gap-2 cursor-pointer select-none">

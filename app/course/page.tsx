@@ -51,8 +51,7 @@ export default async function CoursesIndexPage() {
         )}
       </ul>
       <footer className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-        Mais trilhos aparecem assim que ampliamos o catálogo — por agora apenas a primeira fase de fundamentos já cobre
-        todas oito peças atuais.
+        O catálogo cresce por fases: fundamentos técnicos e trilhos de comunicação para entrevistas em inglês.
       </footer>
     </div>
   );

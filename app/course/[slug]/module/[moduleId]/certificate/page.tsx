@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { ModuleCertificateView } from '@/components/course/module-certificate-view';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
-import { FUNDAMENTOS_FASE_1_PACK } from '@/lib/courses/fundamentos-fase1-seed';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
@@ -19,10 +18,10 @@ export async function generateStaticParams(): Promise<Params[]> {
   const base = await listCourseSlugs();
   const combos: Params[] = [];
   for (const slug of base) {
-    if (slug === FUNDAMENTOS_FASE_1_PACK.slug) {
-      for (const m of FUNDAMENTOS_FASE_1_PACK.modules) {
-        combos.push({ slug, moduleId: m.id });
-      }
+    const pack = await getCoursePackHydrated(slug);
+    if (!pack) continue;
+    for (const m of pack.modules) {
+      combos.push({ slug, moduleId: m.id });
     }
   }
   return combos;

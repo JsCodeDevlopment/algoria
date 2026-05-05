@@ -243,6 +243,7 @@ export type CourseMcqExercise = z.infer<typeof CourseMcqExerciseSchema>;
 export const CourseModuleDefinition = z.object({
   id: z.string().min(1),
   linkedConceptSlug: z.string().min(1),
+  linkedResourceKind: z.enum(['concept', 'interview-en']).default('concept'),
   certificateTitle: z.string().min(1),
   certificateTagline: z.string().optional(),
   examples: z.array(CourseExampleBlockSchema).min(1),
@@ -295,6 +296,7 @@ export interface CourseExerciseHydrated extends CourseMcqExercise {
 export interface CourseModuleHydrated {
   id: string;
   linkedConceptSlug: string;
+  linkedResourceKind: 'concept' | 'interview-en';
   conceptSummary: string;
   certificateTitle: string;
   certificateTagline?: string;
