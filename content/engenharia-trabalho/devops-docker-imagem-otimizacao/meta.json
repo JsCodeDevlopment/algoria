@@ -1,0 +1,7 @@
+{
+  "slug": "devops-docker-imagem-otimizacao",
+  "title": "Imagem Docker menor e mais segura: camadas, cache e produção",
+  "summary": "Porque imagens leves importam para custo e SLA na empresa; camadas, multi-stage, Buildx e exemplos numéricos antes de tocar no Dockerfile.",
+  "estimatedMinutes": 34,
+  "pillar": "devops"
+}

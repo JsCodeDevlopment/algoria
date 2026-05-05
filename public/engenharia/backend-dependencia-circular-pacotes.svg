@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 300" role="img">
+  <title>Ciclo de dependencias entre modulos A B C</title>
+  <rect fill="#f8fafc" width="760" height="300"/>
+  <text x="380" y="28" text-anchor="middle" font-family="system-ui,sans-serif" font-size="15" font-weight="700" fill="#0f172a">Import circular: o grafo fecha antes da equipa perceber</text>
+  <circle cx="380" cy="120" r="56" fill="#e0e7ff" stroke="#4338ca" stroke-width="2"/>
+  <text x="380" y="115" text-anchor="middle" font-size="13" font-weight="700" fill="#312e81">modulo A</text>
+  <text x="380" y="138" text-anchor="middle" font-size="10" fill="#4338ca">services/user</text>
+  <circle cx="220" cy="200" r="56" fill="#fce7f3" stroke="#db2777" stroke-width="2"/>
+  <text x="220" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="#9d174d">modulo B</text>
+  <text x="220" y="218" text-anchor="middle" font-size="10" fill="#be185d">billing/invoice</text>
+  <circle cx="540" cy="200" r="56" fill="#dcfce7" stroke="#16a34a" stroke-width="2"/>
+  <text x="540" y="195" text-anchor="middle" font-size="13" font-weight="700" fill="#14532d">modulo C</text>
+  <text x="540" y="218" text-anchor="middle" font-size="10" fill="#15803d">auth/tokens</text>
+  <path d="M340 150 L260 175" stroke="#64748b" stroke-width="2" marker-end="url(#m)"/>
+  <path d="M440 150 L500 175" stroke="#64748b" stroke-width="2" marker-end="url(#m)"/>
+  <path d="M480 220 L300 220" stroke="#b91c1c" stroke-width="2.5" marker-end="url(#m2)"/>
+  <text x="380" y="212" text-anchor="middle" font-size="9" fill="#b91c1c" font-weight="700">fecha o ciclo</text>
+  <text x="380" y="268" text-anchor="middle" font-size="11" fill="#475569">Saida: contrato comum, DIP, eventos async</text>
+  <defs>
+    <marker id="m" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#64748b"/></marker>
+    <marker id="m2" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8 z" fill="#b91c1c"/></marker>
+  </defs>
+</svg>
