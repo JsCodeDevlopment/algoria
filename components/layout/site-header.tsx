@@ -4,6 +4,7 @@ import {
   ArrowUpRight,
   BookOpen,
   Briefcase,
+  CircleDollarSign,
   Code2,
   GraduationCap,
   Languages,
@@ -23,7 +24,8 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const NAV = [
-  { href: '/problems', label: 'Problemas', description: 'Catálogo e code player', Icon: Code2 },
+  { href: '/problems', label: 'Abrir catálogo', description: 'Catálogo e code player', Icon: Code2 },
+  { href: '/pricing', label: 'Preços', description: 'Planos Free e Pro', Icon: CircleDollarSign },
   { href: '/tracks', label: 'Trilhos', description: 'Percursos recomendados', Icon: Map },
   { href: '/concepts', label: 'Conceitos', description: 'Resumos algorítmicos', Icon: BookOpen },
   { href: '/interview-en', label: 'Inglês entrevistas', description: 'Preparação EN', Icon: Languages },
@@ -138,17 +140,6 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3 xl:gap-4">
           <ThemeToggle />
           <SessionNav />
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="h-9 shrink-0 rounded-none border-2 border-primary px-2 text-[8px] font-black uppercase tracking-wide shadow-none sm:px-3 xl:px-5 xl:tracking-wider"
-          >
-            <Link href="/problems" className="whitespace-nowrap">
-              <span className="sm:hidden">Catálogo</span>
-              <span className="hidden sm:inline">Abrir catálogo</span>
-            </Link>
-          </Button>
           <Button
             ref={menuButtonRef}
             type="button"

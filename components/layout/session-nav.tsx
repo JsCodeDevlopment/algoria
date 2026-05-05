@@ -14,20 +14,14 @@ export function SessionNav() {
 
   if (!data?.user) {
     return (
-      <div className="flex items-center gap-2 sm:gap-3">
-        <Link
-          href="/pricing"
-          className="hidden text-[9px] font-black uppercase tracking-wide text-muted-foreground hover:text-primary sm:inline"
-        >
-          Preços
-        </Link>
-        <Link
-          href="/auth/sign-in"
-          className="text-[9px] font-black uppercase tracking-wide text-muted-foreground hover:text-primary"
-        >
-          Entrar
-        </Link>
-      </div>
+      <Button
+        asChild
+        variant="default"
+        size="sm"
+        className="h-9 shrink-0 rounded-none px-3 text-[9px] font-black uppercase tracking-wide shadow-none sm:px-4"
+      >
+        <Link href="/auth/sign-in">Entrar</Link>
+      </Button>
     );
   }
 
