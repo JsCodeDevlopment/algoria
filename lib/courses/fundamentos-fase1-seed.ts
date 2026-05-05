@@ -1,519 +1,592 @@
 import { CoursePackParsed } from '@/lib/content/schemas';
 
 /**
- * Pacote editorial do curso de fundamentos. A prova final de cada módulo desbloqueia o respectivo certificado;
- * o módulo seguinte só desbloqueia após essa prova passar neste navegador (persistência local).
+ * Pacote editorial do curso de fundamentos.
+ * Cada módulo segue a progressão:
+ * leitura -> exemplos guiados -> exercícios de fixação -> prova final.
  */
 export const FUNDAMENTOS_FASE_1_PACK = CoursePackParsed.parse({
   slug: 'fundamentos-fase-1',
   title: 'Curso Fundamentos — Fase 1',
   subtitle:
-    'Trilha sequencial: texto no catálogo de conceitos, exemplos simples ou profundos aqui mesmo, exercícios de fixação e prova final por módulo. Os certificados são emitidos localmente quando concluíres cada avaliação.',
+    'Trilha sequencial com progressão didática: leitura orientada, exemplos em camadas, exercícios de reconhecimento e aplicação, e prova final integradora por módulo.',
   modules: [
     {
       id: 'big-o',
       linkedConceptSlug: 'big-o',
       certificateTitle: 'Certificado — Big O e análise assintótica',
-      certificateTagline: 'Conclusão válida neste navegador após a avaliação final.',
+      certificateTagline: 'Você domina crescimento de custo e evita decisões ruins de escalabilidade.',
       examples: [
         {
-          title: 'Dois laços aninhados — o cliché quadratico',
+          title: 'Ler crescimento sem decorar fórmula',
           simple:
-            'Se **para cada posição** vais espreitar **todas** as outras, o trabalho cresce tipo “n × n”: é o cenário habitual de tempo **O(n²)**.',
+            'Big O descreve **como o custo cresce** quando o input cresce. Uma varredura única tende a `O(n)`; dois loops aninhados sem poda tendem a `O(n²)`.',
           deep:
-            'Na notação assimptótica, constantes grandes somecem quando n tende ao infinito. Laços assim aninhados **sem poda combinacional** fazem aparecer trabalho proporcional aos **pares ordenados**. Memória conta à parte — um acumulador não importa expoente temporal.',
-          code: '// corpo interior O(1) dentro de dois for sobre n ⇒ O(n^2)',
+            'A notação assintótica compara classes de crescimento, não tempos absolutos. Constantes importam na prática, mas para escalabilidade o termo dominante guia decisões arquiteturais.',
+          code:
+            'for (let i = 0; i < n; i++) {\n  for (let j = 0; j < n; j++) {\n    // O(1)\n  }\n}\n// O(n^2)',
         },
         {
-          title: 'Uma volta linear com acumulação constante',
+          title: 'Tempo e espaço devem ser analisados juntos',
           simple:
-            'Visitas todas as casas uma vez só: esforço habitual **linear**. Duplicar escritas dentro do laço só mexe em **fatores**, não mudas o expoente maior.',
+            'Um algoritmo pode ser rápido no tempo e caro em memória. Sempre responda as duas dimensões: tempo e espaço extra.',
           deep:
-            'Quando perguntarem complexidade espacial observa onde guardas dados **proporcionais ao input** (cópia completa ⇒ Ω(n)); um par de ints não escala assim.',
+            'Guardar estrutura proporcional ao input muda espaço para `O(n)` ou mais. Um acumulador simples normalmente mantém espaço auxiliar `O(1)`.',
         },
       ],
       exercises: [
         {
           id: 'big-o-e1',
-          stem: 'Um único loop varre todas as posições exactamente uma vez cada. Ordem habitual do tempo?',
-          choices: ['O(n²)', 'O(n)', 'O(log n)', 'O(1)'],
-          correctIndex: 1,
-          explanationSimple: 'Percorrer tudo uma vez ⇒ **linear** no tamanho do array.',
+          stem: 'Um loop percorre todos os elementos de um array uma única vez. Qual tempo assintótico típico?',
+          choices: ['O(1)', 'O(log n)', 'O(n)', 'O(n²)'],
+          correctIndex: 2,
+          explanationSimple: 'Uma passada completa sobre `n` elementos é linear.',
           explanationDeep:
-            'Se o trabalho dentro do loop for amortizado O(1) por iteração, o expoente líquido fica **1** relativo ao tamanho do input.',
+            'Se cada iteração custa constante e há `n` iterações, o custo total cresce proporcionalmente a `n`.',
         },
         {
           id: 'big-o-e2',
-          stem: 'Cada passo corta pela metade o espaço de busca válido até chegar caso trivial.',
-          choices: ['O(log n)', 'O(n)', 'O(1)', 'O(n³)'],
+          stem: 'Busca binária elimina metade da faixa de busca por passo. Qual tempo típico?',
+          choices: ['O(log n)', 'O(n)', 'O(n log n)', 'O(n²)'],
           correctIndex: 0,
-          explanationSimple: '`log` aparece porque o número de “meias-vidas” escala logarithmicamente.',
+          explanationSimple: 'Redução por metade gera crescimento logarítmico.',
           explanationDeep:
-            'Clássico em estratégias divide-and-cut que mantêm apenas **factores constantes** de trabalho por nível até esgotares o problema.',
+            'A sequência `n, n/2, n/4, ...` atinge 1 em aproximadamente `log2(n)` passos.',
+        },
+        {
+          id: 'big-o-e3',
+          stem: 'Duas passadas independentes em array (`sum` e `max`) resultam em qual classe de tempo?',
+          choices: ['O(n)', 'O(n²)', 'O(log n)', 'O(2^n)'],
+          correctIndex: 0,
+          explanationSimple: 'Duas passadas lineares continuam lineares em Big O.',
+          explanationDeep:
+            'Big O ignora multiplicadores constantes: `O(n) + O(n) = O(2n)`, simplificado para `O(n)`.',
         },
       ],
       capstone: {
         id: 'big-o-cap',
-        stem: 'Algoritmo percorre o array inteiro uma vez para somar tudo num acumulador inteiro só. Como descrever tempo e espaço extra habituais?',
-        choices: [
-          'Tempo O(n²), espaço Ω(n²)',
-          'Tempo O(n), espaço O(1) extra',
-          'Tempo O(1), espaço Ω(n)',
-          'Impossível classificar assim',
-        ],
-        correctIndex: 1,
-        explanationSimple: 'Uma passagem ⇒ **linear**; sem estruturas que crescam com todos elementos ⇒ espaço auxiliar habitual **constante**.',
+        stem: 'Algoritmo percorre array uma vez e guarda apenas `sum` e `max`. Qual par (tempo, espaço extra) está correto?',
+        choices: ['O(n), O(1)', 'O(log n), O(n)', 'O(n²), O(1)', 'O(1), O(n)'],
+        correctIndex: 0,
+        explanationSimple: 'Uma varredura linear com poucas variáveis auxiliares.',
         explanationDeep:
-          'Se também copiar o array inteiro para outro lado, **aí sim** ocupavas Ω(n) extra — mas isso já seria decisão nova do algorítmo.',
+          'Sem estruturas proporcionais ao input, espaço extra permanece constante enquanto o tempo cresce linearmente.',
       },
     },
     {
       id: 'hash-tables',
       linkedConceptSlug: 'hash-tables',
       certificateTitle: 'Certificado — Hash tables e lookups',
-      certificateTagline: 'Sabes porque mapas rápidos têm peso próprio memorização.',
+      certificateTagline: 'Você troca buscas repetidas por consulta rápida com trade-offs explícitos.',
       examples: [
         {
-          title: 'Buscar sócio já visto antes',
+          title: 'Eliminar varreduras internas com mapa',
           simple:
-            'Em vez perguntares a **todos** candidatos sempre, perguntares “já apareceu alguém assim?” usando mapa permite **consultar em tempo esperado muito menor** segundo nível pairwise.',
+            'Hash table responde rápido: "já vi este valor?". Isso evita varrer coleção inteira várias vezes.',
           deep:
-            'Hash transforma objeto numa assinatura; em cenários saudáveis consultas ficam amortizadas O(1) **esperado**. Colisões demais ⇒ degrada — por isso análises falam amortização probabilística esperada forte.',
-          code: 'seen.has(key); seen.set(key, value);',
+            'O ganho típico vem de lookups amortizados esperados próximos de `O(1)`, ao custo de memória adicional e cuidado com modelagem de chave.',
+          code: 'if (seen.has(x)) return true;\nseen.set(x, true);',
         },
         {
-          title: 'Chaves bem escolhidas',
+          title: 'Chave correta é decisão de modelagem',
           simple:
-            'Num anagram grouping, primeiro normalizamos string de letras numa forma **canónica comparable** porque mapa só funciona assim que chave representa igualdades certas problema.',
+            'Em agrupamento de anagramas, chaves precisam representar equivalência real (ex.: string ordenada).',
           deep:
-            'Objetos JavaScript fazem hashing diferente das maps — escolhas de ADT são parte soluções corretas e legíveis em entrevistas modernas mesmo TypeScript só.',
+            'A escolha da chave afeta corretude e desempenho. Chave mal desenhada pode causar colisão semântica e bugs difíceis de perceber.',
         },
       ],
       exercises: [
         {
           id: 'ht-e1',
-          stem: 'Lookup habitual médio amortizado forte numa hash table bem dimensionada?',
-          choices: ['O(n³)', 'O(log n)', 'O(n)', 'Próximo amortizado esperado constante típico'],
-          correctIndex: 3,
-          explanationSimple:
-            'Não garante sempre O(1) pior cenário contra adversários, mas padrões entrevistas usam amortização forte esperada **constante média típica**.',
+          stem: 'Em hash table bem distribuída, qual custo médio esperado para consulta (`get`)?',
+          choices: ['O(n²)', 'O(n)', 'Próximo de O(1) amortizado', 'O(log n) obrigatório'],
+          correctIndex: 2,
+          explanationSimple: 'Na média, hash table tende a consulta constante amortizada.',
           explanationDeep:
-            'Worst Ω(n) com colisões massivas sempre possível teorico — comunica isso se pedirem prova formal rigor máximo.',
+            'Existe pior caso linear, mas em cenário saudável a distribuição reduz colisões e mantém lookups rápidos.',
         },
         {
           id: 'ht-e2',
-          stem: 'Um map simples apenas contagem frequências de carácter numa grande string habitualmente aumenta espaço proporcional?',
+          stem: 'No Two Sum, por que hash map costuma superar brute force?',
           choices: [
-            'Não aumenta porque strings ignoram hashing',
-            'Sim — ao número diferentes chaves vistas (Σ ou carácter set practical)',
-            'Sempre proporcional apenas total caracteres apenas sem distinção repetidos apenas',
-            'Sempre proporcional n² apenas',
+            'Porque remove uma varredura aninhada',
+            'Porque sempre usa menos memória',
+            'Porque ordena entrada sem custo',
+            'Porque garante pior caso O(1)',
+          ],
+          correctIndex: 0,
+          explanationSimple: 'Lookup de complemento evita testar todos os pares.',
+          explanationDeep:
+            'A força bruta compara pares (`O(n²)`); com hash, cada elemento faz lookup/insert, levando a comportamento esperado linear.',
+        },
+        {
+          id: 'ht-e3',
+          stem: 'Qual trade-off mais comum ao adotar hash map para acelerar consultas?',
+          choices: [
+            'Mais tempo e menos memória',
+            'Menos tempo médio e mais memória',
+            'Sem trade-off relevante',
+            'Ganho absoluto sem exceções',
           ],
           correctIndex: 1,
-          explanationSimple:
-            'Se manténs apenas contadores diferentes letras vistas ⇒ **Ω(alfabeto prático efectivo vista)** ⇒ na prática O(Σ) onde Σ modesto ⇒ constante amortizada problema.',
+          explanationSimple: 'Hash geralmente troca espaço por velocidade média.',
           explanationDeep:
-            'Trade-off **memória proporcional aos estados chave distinta** aparece igualmente outros problemas com keys compostas grandes.',
+            'Buckets, metadados e pares chave-valor aumentam uso de memória para reduzir custo de busca.',
         },
       ],
       capstone: {
         id: 'ht-cap',
-        stem: 'Transformas cenário habitual “nested loops brute complement search” usando map amortizado rápido. Esperas predominantemente?',
+        stem: 'Você precisa detectar duplicatas com baixa latência em lista grande. Qual estratégia é mais adequada?',
         choices: [
-          'Exponente igual quadratico apenas micro constantes apenas',
-          'Comportamento esperado mais próximo **linear totals** combinando lookups substituindo varreduras internas sempre repetidas sempre',
-          'Forças garantia absoluta sempre O(log n) sempre qualquer cenário sempre',
-          'Eliminas sempre qualquer uso memória sempre',
+          'Comparar cada elemento com todos os demais',
+          'Usar `Set` para registrar itens já vistos',
+          'Ordenar e ignorar checks de igualdade',
+          'Aplicar recursão sem estrutura auxiliar',
         ],
         correctIndex: 1,
-        explanationSimple:
-          'Eliminar inner linear scan habitualmente remove **Ω(n²)** combinatório porque cada elemento consulta apenas histórico passado.',
+        explanationSimple: 'Set/Map permite verificar presença rapidamente durante uma única passada.',
         explanationDeep:
-          'Este pattern aparece verbatim em **two-sum** style + extensões; lembra revalidação hashing bem definidos + edge empty map.',
+          'A abordagem reduz comparações redundantes e costuma atingir comportamento esperado `O(n)`.',
       },
     },
     {
       id: 'two-pointers',
       linkedConceptSlug: 'two-pointers',
       certificateTitle: 'Certificado — Dois ponteiros coordenados',
-      certificateTagline: 'Sabes ler monotonia ordenada usando extremos síncronos.',
+      certificateTagline: 'Você aplica invariantes de ordem para reduzir busca sem perder corretude.',
       examples: [
         {
-          title: 'Ordenação dá garantias',
+          title: 'Mover ponteiro com justificativa, não por tentativa',
           simple:
-            'Arrays **ordenados** permitem perguntares “valor demasiado grande mover extremo alto descer” porque sabes lado monotonia consistente garante descartões seguros válidos apenas.',
+            'Com array ordenado, cada movimento de ponteiro descarta cenários inviáveis de forma segura.',
           deep:
-            'Invariantes provam porque “nunca descartarias soluções restantes válidas porque escolheres mover extremo alto” etc — argumento dois-sum ordered pattern.',
+            'Se `arr[l] + arr[r]` excede alvo, reduzir `r` é correto porque aumentar `l` só aumentaria ou manteria a soma. A prova depende de monotonicidade.',
         },
         {
-          title: 'Ponteiros avançados e sentinellas',
+          title: 'Fronteiras e critérios de parada',
           simple:
-            '`left/right` habitualmente apenas movem sempre frente porque cada movimento garante decidiste caminho irrevogável localmente apenas.',
+            'Erros mais comuns são `off-by-one` e atualização incorreta de ponteiros.',
           deep:
-            'Off-by-one e duplicidades triplas aparecem com frequência porque esquecestes atualizar dois índices corretamente em ordem garantida apenas.',
-          code: 'let l = 0, r = n-1;// while...\n',
+            'A invariante útil é: "pares fora do intervalo atual já foram descartados com justificativa". Essa frase orienta implementação e debug.',
+          code:
+            'let l = 0;\nlet r = arr.length - 1;\nwhile (l < r) {\n  const s = arr[l] + arr[r];\n  if (s === target) break;\n  if (s < target) l++;\n  else r--;\n}',
         },
       ],
       exercises: [
         {
           id: 'tp-e1',
-          stem: 'Two pointers clássico extremos costuma aparecer porque estruturas mostram?',
+          stem: 'Qual pré-condição viabiliza two pointers por extremos em soma alvo?',
           choices: [
-            'Ordenação total irrelevante apenas',
-            'Invariante garante lado errado apenas descartável irreversível seguro apenas',
-            'Exige sempre paralelização GPU apenas',
-            'Sem laços apenas',
+            'Estrutura com ordem/monotonicidade útil',
+            'Uso obrigatório de recursão',
+            'Hash map obrigatório',
+            'Ausência total de laços',
           ],
-          correctIndex: 1,
-          explanationSimple:
-            'Sem garantia ordenação/monotonia confiável, não há argumento porque mover extremidades seguro sempre.',
+          correctIndex: 0,
+          explanationSimple: 'Sem ordem, não há critério seguro para descartar lado.',
           explanationDeep:
-            'Generaliza outros arranjos dois índices (merge), mas invariante física igual.',
+            'A técnica depende de relação monotônica entre posição e valor para manter corretude dos movimentos.',
         },
         {
           id: 'tp-e2',
-          stem: 'Bug frequente usando two pointers apenas?',
-          choices: ['Nenhum apenas', 'Off-by-one violar bounds apenas', 'Nunca aparece loops apenas', 'Compilador sempre avisa apenas'],
+          stem: 'Se em array ordenado `arr[l] + arr[r] < alvo`, qual movimento típico?',
+          choices: ['Decrementar `r`', 'Incrementar `l`', 'Parar execução', 'Ordenar novamente'],
           correctIndex: 1,
-          explanationSimple:
-            'Sem sentinelas/for guards correctos rapidamente ler fora estruturas ou loops infinitos.',
+          explanationSimple: 'Para aumentar soma, mova `l` para valor maior.',
           explanationDeep:
-            'Debugging mental pequenos arrays papel resolve rapidamente cenários duvidos atualização ambos ponteiros vs só um apenas.',
+            'Diminuir `r` reduziria ainda mais a soma em array crescente, contrariando objetivo.',
+        },
+        {
+          id: 'tp-e3',
+          stem: 'Qual bug frequente nesse padrão?',
+          choices: ['Erro de CSS', 'Loop infinito por ponteiro não atualizado', 'Deadlock de banco', 'Falta de import'],
+          correctIndex: 1,
+          explanationSimple: 'Atualizar ponteiro errado pode prender o laço.',
+          explanationDeep:
+            'Casos de borda pequenos (`[]`, tamanho 1, todos iguais) costumam revelar rapidamente esse tipo de erro.',
         },
       ],
       capstone: {
         id: 'tp-cap',
-        stem: 'Porque dois índices num array ordenado batem habitualmente brute all-pairs soma problema típico só?',
+        stem: 'Por que two pointers em array ordenado costuma superar brute force de pares?',
         choices: [
-          'Somente porque hardware apenas',
-          'Cada decisão extremos descarta metade combinacional válida sem revisitar soluções ainda vivas apenas',
-          'Hashing físico impede sempre pairwise apenas',
-          'Ordenação força paralelismo obrigatorio apenas',
+          'Porque usa mais memória auxiliar',
+          'Porque descarta combinações inviáveis sem revisitar tudo',
+          'Porque evita qualquer comparação',
+          'Porque elimina necessidade de ordenação',
         ],
         correctIndex: 1,
-        explanationSimple:
-          'Monotonicidade faz descartões irreversível seguras sem regressão combinacional brute.',
+        explanationSimple: 'A técnica reduz espaço de busca com movimentos justificáveis.',
         explanationDeep:
-          'Este mesmo argumento aparece no padrão clássico **Two Sum II** com entrada ordenada: memoriza a intuição antes de memorizar código.',
+          'No brute force há crescimento combinatório; com dois ponteiros cada iteração move um limite e evita revisitas explosivas.',
       },
     },
     {
       id: 'sliding-window',
       linkedConceptSlug: 'sliding-window',
       certificateTitle: 'Certificado — Janelas deslizantes',
-      certificateTagline: 'Sabes manter contagens válidas usando deltas em vez recomputar sempre a mesma fatia inteira.',
+      certificateTagline: 'Você mantém estado incremental e evita recomputação completa de subarrays.',
       examples: [
         {
-          title: 'Histogramas que não resetam sempre',
+          title: 'Atualização por delta',
           simple:
-            'Quando entra elemento novo incrementas conta; quando abandona janela decrementas aquele mesmo tipo. Assim só guardas trabalho proporcional aos **vários deltas** aplicados pelo movimento frontal.',
+            'Quando janela anda, entra um item e sai outro. Atualize estado com essas mudanças, sem recontar tudo.',
           deep:
-            'Se o lado esquerdo se move só para a frente (sem saltos aleatórios para trás) cada índice entra na janela e sai **um número constante limitado vezes**. Somando ao longo de n passos aparece habitualmente **costura linear amortizada**, desde que atualizar deltas seja amortizado bom por caracter quando alfabeto pequeno fixo típico problemas texto.',
-          code: 'freq[in]++; while (!valid) freq[out]--;',
+            'Com ponteiros monotônicos, cada índice entra/sai poucas vezes. Esse limite sustenta análise amortizada próxima de linear em vários problemas.',
+          code: 'freq[in]++;\nwhile (!valid) {\n  freq[out]--;\n  left++;\n}',
         },
         {
-          title: 'Teleportar vs deslizar',
+          title: 'Defina claramente o que é "janela válida"',
           simple:
-            'Se sempre resetavas janelas do zero sempre que mover extremo esquerdo fosse arbitrário longe perdias garantias trabalho proporcional apenas movimentações locais porque terias sempre varrer interior completo sempre.',
+            'Em menor substring, você expande até ficar válido e contrai para tentar minimizar.',
           deep:
-            'Padrões clássicos “menor substring com inventário” mantêm left monotone move relaxando apenas excesso apenas quando válido apenas — sem regressões arbitrárias longe apenas.',
+            'Sem predicado de validade explícito, o algoritmo vira tentativa e erro. A qualidade da formulação do estado define a qualidade da implementação.',
         },
       ],
       exercises: [
         {
           id: 'sw-e1',
-          stem: 'Num padrão clássico sliding window porque movemos habitualmente apenas o lado esquerdo para a frente (sem regressões)?',
+          stem: 'Por que o ponteiro esquerdo normalmente não volta para trás?',
           choices: [
-            'Porque regressar tornava impossível qualquer amortização porque terias sempre revarrer sempre janela inteira sempre',
-            'Porque loops infinitos automáticos desejamos sempre sempre',
-            'Porque problema exige apenas GPU sempre apenas',
-            'Porque problema exige recursão pura apenas',
+            'Para preservar limite de movimentação e custo amortizado',
+            'Porque TypeScript proíbe',
+            'Porque janela exige recursão',
+            'Porque melhora visual do código',
           ],
           correctIndex: 0,
-          explanationSimple:
-            'Monotonicidade esquerdo permite apenas limitar numero vezes cada posição apenas entra apenas sai apenas.',
+          explanationSimple: 'Ponteiros monotônicos evitam revisitas excessivas.',
           explanationDeep:
-            'Quando apenas permites regressões arbitrárias longe apenas perdes argumento apenas linearidade amortizada apenas clássica apenas habitualmente apenas.',
+            'Voltar frequentemente pode destruir a análise amortizada e empurrar complexidade para perto de quadrática.',
         },
         {
           id: 'sw-e2',
-          stem: 'Construir substring válida menor costuma usar que ingredientes combinados?',
+          stem: 'Qual combinação é central em problemas de menor substring válida?',
           choices: [
-            'Apenas BFS apenas grafos apenas',
-            'Ponteiros + mapa obrigações apenas + mover left relaxar excesso quando já válido',
-            'Divide conquista apenas merge apenas sempre',
-            'Nada estruturas auxiliares',
+            'Dois ponteiros + frequências + critério de validade',
+            'Apenas busca binária',
+            'Apenas heap',
+            'Apenas ordenação',
           ],
-          correctIndex: 1,
-          explanationSimple:
-            'Precisamos saber rapidamente apenas se já satisfazemos apenas restrições apenas + podemos podar apenas frente apenas.',
+          correctIndex: 0,
+          explanationSimple: 'Precisamos medir validade e ajustar janela incrementalmente.',
           explanationDeep:
-            'Generaliza apenas histogramas apenas múltiplos caracter apenas simultâneo apenas apenas.',
+            'Frequências e contadores de requisito permitem saber quando expandir ou contrair sem recontagem completa.',
+        },
+        {
+          id: 'sw-e3',
+          stem: 'Qual indício de que sua solução virou brute force disfarçada?',
+          choices: [
+            'Recontar toda janela a cada movimento',
+            'Usar duas variáveis de ponteiro',
+            'Ter laço while',
+            'Receber string de entrada',
+          ],
+          correctIndex: 0,
+          explanationSimple: 'Recomputação integral elimina o ganho da técnica.',
+          explanationDeep:
+            'A vantagem de sliding window vem de manter estado incremental. Recalcular tudo em cada passo reintroduz custo alto.',
         },
       ],
       capstone: {
         id: 'sw-cap',
-        stem: 'Diferencial chave apenas atualização incremental contagens apenas vs recomputações completas janela apenas?',
+        stem: 'Qual frase resume melhor o benefício da sliding window?',
         choices: [
-          'Nunca existe diferença prática apenas',
-          'Delta apenas evita apenas recalcular apenas interior inteira repetidamente apenas ⇒ habitually linear total apenas apenas',
-          'GPU apenas apenas obrigatory apenas apenas',
-          'Monotone stacks apenas apenas obrigatorily sempre apenas',
+          'Atualiza estado por entrada/saída sem recomputar subarray inteiro',
+          'Sempre dispensa estrutura auxiliar',
+          'Só funciona para números inteiros',
+          'Sempre depende de ordenação',
         ],
-        correctIndex: 1,
-        explanationSimple:
-          'Recontagens completas apenas cada apenas movimento apenas ⇒ habitualmente apenas Ω(n apenas * apenas larguras grandes apenas) apenas apenas.',
+        correctIndex: 0,
+        explanationSimple: 'O ganho principal é evitar trabalho repetido desnecessário.',
         explanationDeep:
-          'Sliding window forte apenas apenas move ponteiros apenas finito apenas vezes apenas combinados apenas apenas n apenas apenas.',
+          'A técnica usa deltas e movimento monotônico para reduzir complexidade em problemas de intervalos contíguos.',
       },
     },
     {
       id: 'recursion-intro',
       linkedConceptSlug: 'recursion-intro',
       certificateTitle: 'Certificado — Recursão com propósito',
-      certificateTagline: 'Sabes enunciar casos bases claros e percebes quando overlaps pedem memoização.',
+      certificateTagline: 'Você define base, redução e sabe quando memoizar para controlar custo.',
       examples: [
         {
-          title: 'Instâncias menores até triviais',
+          title: 'Caso base + redução',
           simple:
-            'Resolves problema grande chamando sempre versões estritamente menores (subintervalos subtamanhos diferentes) combinando apenas resultados subproblems até problema trivial apenas.',
+            'Recursão funciona quando cada chamada aproxima de um caso simples que encerra execução.',
           deep:
-            'Precisamos medida apenas estritamente decrescent bem fundada apenas (tamanhos distâncias apenas) apenas garantindo apenas terminar sempre apenas apenas.',
-          code: '// if trivial return...\n// return combine(rec(..),rec(..));\n',
+            'A prova de término exige medida decrescente. Sem essa disciplina, a função pode nunca parar.',
+          code: 'function fact(n: number): number {\n  if (n <= 1) return 1;\n  return n * fact(n - 1);\n}',
         },
         {
-          title: 'Explosões quando repetes igual subproblems',
+          title: 'Evitar recomputação com memoização',
           simple:
-            'Fibonacci ingénuo refaz igual subtarefas muitíssimos vezes ⇒ custo apenas exponencial terrível apenas.',
+            'Se subproblemas se repetem, cache de estados reduz custo drasticamente.',
           deep:
-            'Memo apenas transforma apenas grafo dependências apenas acíclicas apenas apenas reusa estados apenas finitos apenas.',
+            'Memoização converte árvore redundante em reaproveitamento de resultados. Em muitos casos, sai de exponencial para polinomial.',
         },
       ],
       exercises: [
         {
           id: 'rec-e1',
-          stem: 'Papel apenas caso base numa recursão corretamente desenhada apenas?',
+          stem: 'Qual papel do caso base em recursão?',
           choices: [
-            'Permitir apenas profundidade infinita apenas',
-            'Parar apenas chamadas devolver apenas respostas fechadas sem novas recurso',
-            'Criar sempre ciclos apenas',
-            'Nada papel apenas',
+            'Garantir parada e retorno válido',
+            'Aumentar profundidade da pilha',
+            'Eliminar necessidade de condição',
+            'Forçar complexidade logarítmica',
           ],
-          correctIndex: 1,
-          explanationSimple:
-            'Sem apenas base apenas pilha apenas física apenas explode apenas.',
+          correctIndex: 0,
+          explanationSimple: 'Sem base, chamadas continuam indefinidamente.',
           explanationDeep:
-            'Induction proofs apenas precisam caso base apenas fechamento apenas apenas.',
+            'O caso base ancora corretude e encerra a cadeia de chamadas recursivas.',
         },
         {
           id: 'rec-e2',
-          stem: 'Overlapping subproblems iguais recorrentemente ⇒ técnica associada apenas?',
-          choices: ['BFS apenas grafos apenas', 'Programação dinâmica apenas memorização apenas', 'Hash apenas sempre apenas', 'Aleatório apenas'],
-          correctIndex: 1,
-          explanationSimple:
-            'Cache apenas estados apenas evita apenas recomputações apenas exponenciais apenas.',
+          stem: 'Subproblemas repetidos em recursão indicam qual técnica?',
+          choices: ['Memoização/DP', 'Heap', 'Two pointers', 'Busca binária'],
+          correctIndex: 0,
+          explanationSimple: 'Guardar resultado por estado evita recomputar.',
           explanationDeep:
-            'Topologia apenas DAG apenas estados apenas permite apenas ordem apenas avaliar apenas bottom apenas up apenas apenas.',
+            'A técnica reduz redundância estrutural da árvore de chamadas e melhora escalabilidade.',
+        },
+        {
+          id: 'rec-e3',
+          stem: 'Qual cenário sinaliza risco de stack overflow?',
+          choices: [
+            'Profundidade muito alta proporcional ao input',
+            'Uso de variável booleana',
+            'Função com retorno numérico',
+            'Uso de TypeScript',
+          ],
+          correctIndex: 0,
+          explanationSimple: 'Chamadas profundas demais podem exceder limite da pilha.',
+          explanationDeep:
+            'Mesmo algoritmo correto pode falhar em runtime por limite de stack; versão iterativa pode ser alternativa.',
         },
       ],
       capstone: {
         id: 'rec-cap',
-        stem: 'Que condição grosso modo apenas garante termina apenas recursivas apenas apenas?',
+        stem: 'Qual conjunto mínimo caracteriza recursão saudável?',
         choices: [
-          'Nunca existe apenas',
-          'Argumentos apenas fazem apenas medidas apenas sempre descendo até apenas casos base determinísticos apenas fechamento apenas apenas',
-          'Dois apenas laços apenas externos apenas obrigatorily apenas apenas',
-          'Nomes apenas funções apenas',
+          'Caso base + redução em direção ao caso base',
+          'Apenas função curta',
+          'Apenas cache global',
+          'Apenas ausência de laços',
         ],
-        correctIndex: 1,
-        explanationSimple:
-          'Sem apenas descida apenas garantida apenas loop apenas infinitamente apenas recurso apenas.',
+        correctIndex: 0,
+        explanationSimple: 'Sem base e progresso, a recursão não é confiável.',
         explanationDeep:
-          'Este raciocinio apenas intuitivo apenas formaliza apenas bem fundamentações ordinals apenas apenas.',
+          'Esses dois elementos sustentam término e corretude; otimizações vêm depois.',
       },
     },
     {
       id: 'stacks-intro',
       linkedConceptSlug: 'stacks-intro',
       certificateTitle: 'Certificado — Pilhas LIFO',
-      certificateTagline: 'Compreensão do “último a entrar, primeiro a sair” aplicada a parsers e undone mental.',
+      certificateTagline: 'Você aplica LIFO com segurança em validação e padrões monotônicos.',
       examples: [
         {
-          title: 'Parêntesis — só o parceiro recente conta',
+          title: 'LIFO na validação de delimitadores',
           simple:
-            'Sempre fecha primeiro delimitador ainda pendurado mais interno porque abriu por último: é **LIFO** palavras simples apenas.',
+            'O último delimitador aberto deve ser o primeiro fechado. Pilha representa essa regra naturalmente.',
           deep:
-            'Invariante apenas: topo apenas pilha apenas representa apenas delimitadores apenas ainda apenas em abertos apenas apenas sem parceiros fechamentos externos antes apenas.',
-          code: 'push(abre);\nassert topo compatible antes pop;',
+            'A invariante é que topo guarda abertura pendente mais recente. Fechamento incompatível detecta erro imediatamente.',
+          code: 'if (isOpen(ch)) stack.push(ch);\nelse if (!match(stack.pop(), ch)) return false;',
         },
         {
-          title: 'Monotonic stacks (gancho rápido)',
+          title: 'Monotonic stack para consultas de vizinho',
           simple:
-            'Quando apenas precisa próximo valor maior menor apenas lado apenas certo apenas muitos candidatos apenas intermediários tornam apenas irrelevant apenas rapidamente apenas.',
+            'Mantemos apenas candidatos que ainda podem ser resposta futura.',
           deep:
-            'Cada apenas elemento apenas empilha apenas apenas expulso apenas apenas finitas vezes ⇒ trabalho apenas linear amortizado típico problemas apenas histogramas apenas temperaturas apenas.',
+            'Cada elemento entra/sai no máximo uma vez, o que permite custo linear amortizado em problemas como temperaturas e histogramas.',
         },
       ],
       exercises: [
         {
           id: 'st-e1',
-          stem: 'Topo pilha apenas após apenas push apenas 1,2,3 nessa ordem sem pop apenas apenas?',
-          choices: ['valor 1 apenas', 'valor 2 apenas', 'valor 3 apenas', 'estrutura vazia apenas'],
+          stem: 'Após `push(1)`, `push(2)`, `push(3)`, qual é o topo?',
+          choices: ['1', '2', '3', 'vazio'],
           correctIndex: 2,
-          explanationSimple:
-            'LIFO apenas — últimos push sobrepõem anterior apenas.',
-          explanationDeep:
-            'peek apenas pop apenas interagem apenas topo apenas estruturas.',
+          explanationSimple: 'Pilha é LIFO: último a entrar fica no topo.',
+          explanationDeep: '`peek` retorna esse topo sem remover; `pop` remove exatamente ele.',
         },
         {
           id: 'st-e2',
-          stem: 'pop apenas quando já vazio — resultado típico sem protocolo apenas próprio apenas?',
-          choices: ['Sempre apenas sucesso apenas neutro apenas', 'underflow apenas erro apenas undefined apenas', 'pilha apenas cresce automaticamente infinitamente', 'sort apenas mágico'],
+          stem: 'O que significa realizar `pop` em pilha vazia?',
+          choices: ['Operação normal', 'Underflow/erro de protocolo', 'Auto crescimento da pilha', 'Ordenação automática'],
           correctIndex: 1,
-          explanationSimple:
-            'Invariantes apenas alturas apenas não apenas negativo apenas apenas.',
+          explanationSimple: 'Remoção sem elemento disponível viola a estrutura.',
           explanationDeep:
-            'Implementações apenas seguras apenas verificam empty apenas antes apenas pop apenas.',
+            'Implementações robustas tratam esse caso explicitamente para evitar comportamento indefinido.',
+        },
+        {
+          id: 'st-e3',
+          stem: 'Por que pilha funciona para parênteses balanceados?',
+          choices: [
+            'Compara fechamento com abertura pendente mais recente',
+            'Ordena símbolos por valor',
+            'Elimina laços',
+            'Substitui parser completo',
+          ],
+          correctIndex: 0,
+          explanationSimple: 'A ordem de fechamento esperada é exatamente LIFO.',
+          explanationDeep:
+            'Escopos internos fecham antes dos externos; pilha modela essa hierarquia com simplicidade.',
         },
       ],
       capstone: {
         id: 'st-cap',
-        stem: 'Por que pilha encaixa naturalmente apenas validação parêntesis balanceados apenas apenas?',
+        stem: 'Qual estratégia valida corretamente delimitadores `()[]{}`?',
         choices: [
-          'shuffle apenas aleatorio apenas apenas',
-          'LIFO apenas reproduz regra apenas fechos apenas internos antes externos apenas',
-          'Filas apenas equivalentes apenas sempre apenas',
-          'não apenas encaixa apenas nunca apenas',
+          'Fila FIFO com todos símbolos',
+          'Pilha LIFO validando fechamento com topo',
+          'Somar códigos ASCII',
+          'Ordenar string e comparar pares',
         ],
         correctIndex: 1,
-        explanationSimple:
-          'Topo apenas espelha parceiros apenas esperando apenas fecha apenas.',
+        explanationSimple: 'Aberturas pendentes são controladas no topo da pilha.',
         explanationDeep:
-          'Demonstração apenas inductive apenas escaneamentos apenas string apenas apenas.',
+          'Ao percorrer a string, cada fechamento precisa casar com o último aberto ainda não fechado.',
       },
     },
     {
       id: 'queues-intro',
       linkedConceptSlug: 'queues-intro',
       certificateTitle: 'Certificado — Filas FIFO',
-      certificateTagline: 'Sabes ler processamento primeira chegada primeira saida — porta de entrada habitual BFS níveis.',
+      certificateTagline: 'Você entende ordem de chegada e aplicação em exploração por camadas.',
       examples: [
         {
-          title: 'Balcão de atendimento',
+          title: 'FIFO no processamento de tarefas',
           simple:
-            'enqueue apenas adiciona apenas traseira apenas dequeue apenas retira apenas frente — ordem física intuitiva apenas.',
+            'Em fila, quem entra primeiro sai primeiro. Esse modelo é comum em buffers e orquestração de trabalho.',
           deep:
-            'Implementações apenas circulares apenas economizam memória apenas apenas frequentemente apenas dois índices apenas.',
+            'Buffers circulares permitem operações eficientes sem deslocamento de elementos, com controle explícito de capacidade.',
         },
         {
-          title: 'Deque quando precisamos ambos fins',
+          title: 'Fila no BFS',
           simple:
-            'Quando apenas precisamos pop apenas também frente apenas além apenas enqueue apenas traseiras rápidos apenas apenas.',
+            'No BFS, fila garante exploração por níveis de distância.',
           deep:
-            'Deque monótona aparece apenas problemas apenas avançados apenas janelas apenas combina apenas operações dois lados apenas.',
+            'A fronteira da busca avança camada por camada; isso sustenta corretude para menor caminho em grafos não ponderados.',
         },
       ],
       exercises: [
         {
           id: 'q-e1',
-          stem: 'enqueue apenas A apenas depois B apenas depois C apenas — dequeue apenas primeiro apenas devolve apenas?',
-          choices: ['Ordem C,B,A', 'Ordem B primeiro sempre', 'Ordem A primeiro', 'Ordem indefinível legal'],
+          stem: 'Após enfileirar A, B, C, qual elemento sai primeiro no `dequeue`?',
+          choices: ['C', 'B', 'A', 'depende do hardware'],
           correctIndex: 2,
-          explanationSimple:
-            'FIFO apenas — primeiro apenas entrou apenas primeiro apenas sai apenas.',
+          explanationSimple: 'FIFO preserva ordem de chegada.',
           explanationDeep:
-            'Prioridades apenas diferentes apenas exigiriam heaps apenas apenas.',
+            'Fila padrão não altera prioridade; para isso usa-se fila de prioridade.',
         },
         {
           id: 'q-e2',
-          stem: 'Queues bounded sem política apenas extra quando enqueue cheio apenas típico apenas?',
+          stem: 'Em fila limitada, o que deve existir quando ela lota?',
           choices: [
-            'Nada apenas críticos apenas sempre',
-            'Falhas dados apenas ou necessidade apenas descartes apenas resizing apenas comunicados apenas',
-            'dequeue apenas overflow apenas',
-            'nunca apenas importa apenas',
+            'Política de overflow (erro, bloqueio, descarte, retry)',
+            'Somente renomear variável',
+            'Trocar automaticamente para pilha',
+            'Nenhuma decisão adicional',
           ],
-          correctIndex: 1,
-          explanationSimple:
-            'buffers apenas finitos apenas precisa apenas tratamento apenas overflow apenas explícitos apenas apenas.',
+          correctIndex: 0,
+          explanationSimple: 'Capacidade finita exige decisão explícita de pressão.',
           explanationDeep:
-            'Circular apenas queue apenas precisa apenas distinguir apenas cheio apenas vazio apenas sentinelas apenas contador apenas.',
+            'Sem política clara, o sistema pode perder dados silenciosamente ou travar sem previsibilidade.',
+        },
+        {
+          id: 'q-e3',
+          stem: 'Por que BFS usa fila em grafo não ponderado?',
+          choices: [
+            'Porque preserva expansão por camadas',
+            'Porque evita visitar nós',
+            'Porque substitui arestas',
+            'Porque não usa memória',
+          ],
+          correctIndex: 0,
+          explanationSimple: 'FIFO garante processamento por distância crescente.',
+          explanationDeep:
+            'Nós descobertos primeiro pertencem a camadas menores e devem ser processados antes para manter corretude do BFS.',
         },
       ],
       capstone: {
         id: 'q-cap',
-        stem: 'Porque BFS apenas grafos apenas não ponderados apenas usa filas hábito apenas?',
-        choices: [
-          'pilhas apenas hardware apenas obrigatorily apenas',
-          'FIFO apenas explora fronteira apenas camadas aumentando apenas distancia apenas apenas monotonicidade níveis apenas',
-          'somente apenas estéticos apenas apenas',
-          'RNG apenas apenas',
-        ],
+        stem: 'Qual estrutura sustenta corretamente a fronteira de exploração no BFS?',
+        choices: ['Pilha LIFO', 'Fila FIFO', 'Hash isolado', 'Recursão sem auxiliar'],
         correctIndex: 1,
-        explanationSimple:
-          'Garantimos apenas vértices apenas mais apenas próximos apenas descobertos apenas antes apenas saltos apenas distantes apenas.',
-          explanationDeep:
-          'Introduções apenas posteriores apenas grafos ponderados apenas usam apenas heaps apenas diferente apenas.',
+        explanationSimple: 'BFS depende da ordem FIFO para manter camadas.',
+        explanationDeep:
+          'Sem essa ordem, você perde a propriedade de menor número de arestas em grafos não ponderados.',
       },
     },
     {
       id: 'linked-list-intro',
       linkedConceptSlug: 'linked-list-intro',
       certificateTitle: 'Certificado — Listas ligadas',
-      certificateTagline: 'Sabes navegar apenas next apenas usar sentinelas reduz branching extremos apenas.',
+      certificateTagline: 'Você manipula ponteiros com segurança e entende os trade-offs dessa estrutura.',
       examples: [
         {
-          title: 'Sem random access garantido apenas',
+          title: 'Acesso sequencial e custo de navegação',
           simple:
-            'Cada apenas posição apenas alcança apenas saltando apenas campo next apenas — por isso acesso apenas índice arbitrário apenas custa apenas proporcional trajeto apenas até lá apenas.',
+            'Lista ligada não oferece acesso aleatório eficiente por índice; é preciso caminhar nó a nó.',
           deep:
-            'Caches apenas CPU apenas frequentemente penalizam dispersão apenas nós apenas longe apenas memória contígua apenas comparando arrays apenas densos apenas.',
-          code: 'prev.next = node; node.next = old;',
+            'A estrutura favorece inserção/remoção local com referência prévia, mas perde em localidade de cache comparada a arrays.',
+          code: 'let curr = head;\nfor (let i = 0; i < k && curr; i++) curr = curr.next;',
         },
         {
-          title: 'Nó sentinel cabeça apenas',
+          title: 'Nó sentinela reduz casos de borda',
           simple:
-            'Dummy apenas head apenas simplifica apenas eliminar apenas casos fronteira prev nulo apenas initial apenas.',
+            'Sentinela ajuda a tratar inserção/remoção no início sem lógica especial em cada operação.',
           deep:
-            'Invariant apenas sentinel.next sempre aponta primeiro nó apenas valido apenas reduz apenas provas apenas casos apenas extremos apenas.',
+            'A invariante de "sempre existir predecessor" simplifica manipulação de ponteiros e reduz ramificações.',
         },
       ],
       exercises: [
         {
           id: 'll-e1',
-          stem: 'Lista apenas singular apenas — aceso apenas i-ésimo elemento apenas habitualmente apenas?',
-          choices: ['O(1) sempre garantido apenas', 'O(log n apenas)', 'O(i) apenas tipico seguindo next apenas', 'O(n² apenas) apenas'],
+          stem: 'Em lista simplesmente ligada, acessar o i-ésimo elemento custa tipicamente:',
+          choices: ['O(1)', 'O(log n)', 'O(i) por navegação sequencial', 'O(n²)'],
           correctIndex: 2,
-          explanationSimple:
-            'Precisa apenas atravessar apenas cadeia apenas linearmente apenas até apenas posição apenas.',
+          explanationSimple: 'É necessário seguir ponteiros até alcançar a posição.',
           explanationDeep:
-            'lista apenas dupla apenas liga apenas não apenas melhora apenas random access apenas apenas.',
+            'Sem índice auxiliar, não existe salto direto para posição arbitrária como no array.',
         },
         {
           id: 'll-e2',
-          stem: 'Reversão apenas iterativa clássica frequentemente apenas guarda apenas?',
-          choices: ['apenas apenas um apenas int apenas', 'Tripla apenas ponteiros prev cur next antes perder apenas ligações', 'heap apenas apenas', 'mergesort apenas apenas'],
+          stem: 'Na reversão iterativa de lista, quais referências são essenciais por passo?',
+          choices: ['Apenas `current`', '`prev`, `current`, `next`', 'Apenas `head`', 'Nenhuma'],
           correctIndex: 1,
-          explanationSimple:
-            'Salva apenas próximo apenas antes apenas rewire atual apenas apenas.',
+          explanationSimple: 'Sem guardar `next`, você perde o restante da lista.',
           explanationDeep:
-            'Recursion apenas implicitamente apenas empilha chamadas apenas O(n apenas) apenas espaço stack apenas físico apenas.',
+            'A sequência segura é: salvar próximo, inverter ponteiro atual, avançar janela de ponteiros.',
+        },
+        {
+          id: 'll-e3',
+          stem: 'Qual benefício do nó sentinela na cabeça?',
+          choices: [
+            'Uniformizar operações no início da lista',
+            'Garantir acesso O(1) ao i-ésimo',
+            'Eliminar necessidade de checar null sempre',
+            'Reduzir complexidade para O(log n)',
+          ],
+          correctIndex: 0,
+          explanationSimple: 'Sentinela reduz tratamento especial em bordas.',
+          explanationDeep:
+            'Ao manter um predecessor estável, inserções e remoções no início ficam alinhadas ao mesmo fluxo do meio da lista.',
         },
       ],
       capstone: {
         id: 'll-cap',
-        stem: 'Por que null pointers apenas merecem atenção constante apenas apenas?',
+        stem: 'Qual cuidado indispensável em manipulação de listas ligadas?',
         choices: [
-          'Nunca apenas aparecem apenas',
-          'Fim apenas lista apenas next null apenas aparece apenas sempre apenas — obriga apenas checagens explícitos apenas sentinelas apenas',
-          'GC apenas apenas remove apenas necessidades apenas invariantes apenas',
-          'loops apenas param apenas automaticamente sempre apenas',
+          'Ignorar `null` para simplificar',
+          'Validar referências antes de acessar `next`',
+          'Converter para array em cada operação',
+          'Usar recursão obrigatória',
         ],
         correctIndex: 1,
-        explanationSimple:
-          'Ignorar apenas fim apenas causa apenas crash apenas runtime apenas.',
-          explanationDeep:
-          'Para apenas ciclos apenas futuros apenas tortoise hare apenas detetores apenas apenas.',
+        explanationSimple: 'Checagem de ponteiros evita erros de runtime.',
+        explanationDeep:
+          'Fins de lista e nós ausentes precisam de invariantes claras e validação defensiva para manter corretude.',
       },
     },
   ],
