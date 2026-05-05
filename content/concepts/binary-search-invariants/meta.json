@@ -1,0 +1,9 @@
+{
+  "slug": "binary-search-invariants",
+  "title": "Busca binária — invariantes e fronteiras",
+  "category": "binary-search",
+  "difficulty": "medium",
+  "estimatedMinutes": 18,
+  "prerequisites": ["big-o", "two-pointers"],
+  "summary": "Mais do que “partir ao meio”: busca binária exige invariante explícita, decisão de fronteira e prevenção de off-by-one em respostas por posição."
+}

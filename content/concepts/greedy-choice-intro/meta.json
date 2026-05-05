@@ -1,0 +1,9 @@
+{
+  "slug": "greedy-choice-intro",
+  "title": "Greedy — escolha local com prova global",
+  "category": "greedy",
+  "difficulty": "medium",
+  "estimatedMinutes": 18,
+  "prerequisites": ["sorting-fundamentals", "big-o"],
+  "summary": "Greedy funciona quando uma decisão local correta preserva otimalidade global; o desafio é provar e não apenas 'parecer intuitivo'."
+}

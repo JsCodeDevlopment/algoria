@@ -1,0 +1,9 @@
+{
+  "slug": "dynamic-programming-intro",
+  "title": "Programação dinâmica — estados e reutilização",
+  "category": "dynamic-programming",
+  "difficulty": "hard",
+  "estimatedMinutes": 24,
+  "prerequisites": ["recursion-intro", "big-o"],
+  "summary": "DP como evolução da recursão: identificar estado, recorrência e cache para trocar explosão combinatória por custo controlado."
+}
