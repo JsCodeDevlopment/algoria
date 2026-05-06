@@ -89,6 +89,14 @@ A evolução de um sistema deve ser gradual e justificada por métricas reais.
 
 Neste estágio, a simplicidade é a maior aliada. O foco está na entrega de funcionalidades.
 
+:::didactic-figure
+{
+  "src": "/engenharia/escala-estagio-1.png",
+  "alt": "Infraestrutura Estágio 1: API e Banco no mesmo servidor",
+  "caption": "Estágio 1: Arquitetura minimalista onde todos os componentes residem no mesmo nó computacional."
+}
+:::
+
 #### Como fazer (Passo a Passo):
 
 1. Escolha de Framework:
@@ -132,6 +140,14 @@ Neste estágio, a simplicidade é a maior aliada. O foco está na entrega de fun
 
 O sistema começa a apresentar lentidão em horários de pico devido à contenção de I/O.
 
+:::didactic-figure
+{
+  "src": "/engenharia/escala-estagio-2.png",
+  "alt": "Infraestrutura Estágio 2: Banco e Cache separados da API",
+  "caption": "Estágio 2: Desacoplamento do banco de dados e introdução de cache em memória (Redis)."
+}
+:::
+
 #### Como fazer (Passo a Passo):
 
 1. Desacoplamento do Banco de Dados:
@@ -174,6 +190,14 @@ O sistema começa a apresentar lentidão em horários de pico devido à contenç
 
 O crescimento exige que o sistema suporte falhas de hardware sem interrupção de serviço.
 
+:::didactic-figure
+{
+  "src": "/engenharia/escala-estagio-3.png",
+  "alt": "Infraestrutura Estágio 3: Load Balancer e múltiplas APIs",
+  "caption": "Estágio 3: Introdução de Load Balancer para distribuir carga entre múltiplas instâncias stateless."
+}
+:::
+
 #### Como fazer (Passo a Passo):
 
 1. Pool de Instâncias Imutáveis:
@@ -214,6 +238,14 @@ O crescimento exige que o sistema suporte falhas de hardware sem interrupção d
 ### Estágio 4: Desacoplamento Assíncrono e Réplicas de Leitura (100k a 1 Milhão de usuários)
 
 O volume de requisições satura a capacidade de escrita e processamento síncrono.
+
+:::didactic-figure
+{
+  "src": "/engenharia/escala-estagio-4.png",
+  "alt": "Infraestrutura Estágio 4: Filas, Microserviços e Réplicas de Leitura",
+  "caption": "Estágio 4: Escala de leitura via réplicas e processamento assíncrono via mensageria."
+}
+:::
 
 #### Como fazer (Passo a Passo):
 
@@ -256,6 +288,14 @@ O volume de requisições satura a capacidade de escrita e processamento síncro
 ### Estágio 5: Escala Massiva e Sharding (1M+ usuários)
 
 O sistema atinge o limite tecnológico de um único banco Master centralizado.
+
+:::didactic-figure
+{
+  "src": "/engenharia/escala-estagio-5.png",
+  "alt": "Infraestrutura Estágio 5: Sharding Global e Multi-region",
+  "caption": "Estágio 5: Arquitetura globalmente distribuída com particionamento horizontal de banco (Sharding)."
+}
+:::
 
 #### Como fazer (Passo a Passo):
 
