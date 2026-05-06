@@ -75,4 +75,4 @@ export default async function EngineeringWorkGuidePage({ params }: { params: Pro
   );
 }
 
-export const dynamicParams = false;
+export const dynamicParams = true;
