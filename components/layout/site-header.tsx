@@ -140,12 +140,13 @@ export function SiteHeader() {
         <div className="flex shrink-0 items-center gap-2 sm:gap-3 xl:gap-4">
           <ThemeToggle />
           <SessionNav />
+          {/* Menu button: hidden on xl+ where the sidebar takes over */}
           <Button
             ref={menuButtonRef}
             type="button"
             variant="outline"
             size="icon"
-            className="h-9 w-9 shrink-0 rounded-none cursor-pointer border-2 border-border hover:border-primary"
+            className="h-9 w-9 shrink-0 rounded-none cursor-pointer border-2 border-border hover:border-primary xl:hidden"
             aria-expanded={open}
             aria-controls={navId}
             aria-label={open ? 'Fechar navegação' : 'Abrir navegação'}
@@ -161,7 +162,7 @@ export function SiteHeader() {
           ref={drawerRef}
           id={navId}
           className={cn(
-            'fixed top-16 right-0 z-105 flex max-h-[calc(100dvh-4rem)] w-[min(calc(100vw-0.75rem),24rem)] flex-col overflow-hidden border-l-2 border-primary/35 shadow-2xl animate-in slide-in-from-right-4 duration-200',
+            'fixed top-16 right-0 z-105 flex max-h-[calc(100dvh-4rem)] w-[min(calc(100vw-0.75rem),24rem)] flex-col overflow-hidden border-l-2 border-primary/35 shadow-2xl animate-in slide-in-from-right-4 duration-200 xl:hidden',
             'bg-grid-pattern bg-background',
           )}
           role="dialog"

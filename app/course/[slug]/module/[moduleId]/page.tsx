@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import { ArrowLeft } from 'lucide-react';
 
 import { CourseModuleRunner } from '@/components/course/course-module-runner';
+import { Button } from '@/components/ui/button';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
@@ -70,9 +72,9 @@ export default async function CourseModulePage({ params }: { params: Promise<Par
         })}
       />
       <div className="mx-auto max-w-7xl px-6 pt-6 print:hidden">
-        <Link href={`/course/${encodeURIComponent(slug)}`} className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground hover:text-primary transition-colors">
-          ← Índice do programa
-        </Link>
+        <Button asChild variant="outline" size="sm" className="rounded-none gap-2 text-xs font-bold uppercase tracking-wide print:hidden">
+          <Link href={`/course/${encodeURIComponent(slug)}`}><ArrowLeft className="h-3.5 w-3.5" /> Índice do programa</Link>
+        </Button>
       </div>
       <CourseModuleRunner pack={pack} module={moduleHydrated} previousModuleCertificateTitle={prevCert} />
     </div>

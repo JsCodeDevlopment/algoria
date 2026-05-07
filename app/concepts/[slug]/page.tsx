@@ -1,13 +1,15 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Clock } from 'lucide-react';
+import { ArrowLeft, Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
+import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
-import { getAllConceptSlugs, getConcept } from '@/lib/content/loader';
+import { getAllConceptSlugs, getConcept, getAdjacentConcepts } from '@/lib/content/loader';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
@@ -55,6 +57,7 @@ export default async function ConceptPage({
   const q = (await searchParams) ?? {};
   const courseSlug = q.course ?? q.curso;
   const moduleId = q.module ?? q.modulo;
+  const adjacent = await getAdjacentConcepts(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -67,9 +70,9 @@ export default async function ConceptPage({
       />
       <ConceptVisitTracker slug={slug} />
 
-      <Link href="/concepts" className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 inline-block mb-6">
-        ← Todos os conceitos
-      </Link>
+      <Button asChild variant="outline" size="sm" className="mb-6 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+        <Link href="/concepts"><ArrowLeft className="h-3.5 w-3.5" /> Todos os conceitos</Link>
+      </Button>
 
       {courseSlug && moduleId ? (
         <div className="mb-8 rounded-lg border border-primary/40 bg-primary/5 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
@@ -107,6 +110,12 @@ export default async function ConceptPage({
                    prose-code:before:content-none prose-code:after:content-none
                    prose-pre:bg-zinc-900 prose-pre:text-zinc-100"
         dangerouslySetInnerHTML={{ __html: concept.bodyHtml }}
+      />
+
+      <ContentNavigation
+        sectionLabel="Navegar conceitos"
+        prev={adjacent.prev ? { slug: adjacent.prev.slug, title: adjacent.prev.title, href: `/concepts/${adjacent.prev.slug}` } : null}
+        next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/concepts/${adjacent.next.slug}` } : null}
       />
     </div>
   );

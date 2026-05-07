@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 
 import { getChangelogHtml } from "@/lib/content/loader";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
@@ -18,12 +21,9 @@ export default async function ChangelogPage() {
   return (
     <div className="relative bg-grid-pattern">
       <div className="mx-auto max-w-3xl px-6 py-24">
-        <Link
-          href="/"
-          className="text-sm text-muted-foreground hover:text-foreground mb-8 inline-block"
-        >
-          ← Início
-        </Link>
+        <Button asChild variant="outline" size="sm" className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+          <Link href="/"><ArrowLeft className="h-3.5 w-3.5" /> Início</Link>
+        </Button>
         <main>
           <header className="mb-10 border-l-4 border-primary pl-8">
             <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary mb-2">

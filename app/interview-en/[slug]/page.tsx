@@ -1,11 +1,13 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Clock } from 'lucide-react';
+import { ArrowLeft, Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
-import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic } from '@/lib/content/loader';
+import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic, getAdjacentInterviewEnglish } from '@/lib/content/loader';
 import type { InterviewEnglishTrack } from '@/lib/content/schemas';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
@@ -52,6 +54,7 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
   const { slug } = await params;
   const topic = await getInterviewEnglishTopic(slug);
   if (!topic) notFound();
+  const adjacent = await getAdjacentInterviewEnglish(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -63,9 +66,9 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
           inLanguage: 'en',
         })}
       />
-      <Link href="/interview-en" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
-        ← Interview English hub
-      </Link>
+      <Button asChild variant="outline" size="sm" className="mb-6 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+        <Link href="/interview-en"><ArrowLeft className="h-3.5 w-3.5" /> Interview English hub</Link>
+      </Button>
 
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Badge variant="outline" className="rounded-none text-[10px] uppercase">
@@ -89,6 +92,12 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
                    prose-pre:bg-zinc-900 prose-pre:text-zinc-100
                    prose-table:text-sm"
         dangerouslySetInnerHTML={{ __html: topic.bodyHtml }}
+      />
+
+      <ContentNavigation
+        sectionLabel="Mais conteúdo de inglês"
+        prev={adjacent.prev ? { slug: adjacent.prev.slug, title: adjacent.prev.title, href: `/interview-en/${adjacent.prev.slug}` } : null}
+        next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/interview-en/${adjacent.next.slug}` } : null}
       />
     </div>
   );

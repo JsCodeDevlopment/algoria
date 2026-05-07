@@ -9,6 +9,7 @@ import { JsonLdScript } from '@/components/seo/json-ld';
 import { ThemeProvider } from '@/components/theme-provider';
 import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
+import { SidebarProvider } from '@/components/layout/sidebar';
 import { getMetadataBase, getSiteOrigin } from '@/lib/seo/site';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -72,7 +73,11 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <AlgoriaPostHogProvider>
             <ProgressSyncOnLogin />
             <SiteHeader />
-            <main className="flex-1">{children}</main>
+            <SidebarProvider>
+              <main className="flex flex-1 flex-col xl:ml-[var(--sidebar-width,48px)] transition-[margin-left] duration-300">
+                {children}
+              </main>
+            </SidebarProvider>
             <SiteFooter />
           </AlgoriaPostHogProvider>
         </ThemeProvider>

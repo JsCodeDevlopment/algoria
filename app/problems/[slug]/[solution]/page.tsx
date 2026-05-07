@@ -140,9 +140,9 @@ export default async function SolutionPage({
   if (!unlocked) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <Link href={`/problems/${problem.meta.slug}`} className="text-sm text-muted-foreground hover:text-foreground mb-8 inline-block">
-          ← {problem.meta.title}
-        </Link>
+        <Button asChild variant="outline" size="sm" className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+          <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
+        </Button>
         <UpgradePrompt context="Player e soluções Pro" problemSlug={problem.meta.slug} />
       </div>
     );
@@ -159,12 +159,9 @@ export default async function SolutionPage({
       />
       <SolutionVisitTracker problemSlug={problem.meta.slug} solutionSlug={solutionSlug} />
 
-      <Link
-        href={`/problems/${problem.meta.slug}`}
-        className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 inline-flex items-center gap-1 mb-4"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}
-      </Link>
+      <Button asChild variant="outline" size="sm" className="mb-4 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+        <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
+      </Button>
 
       <div className="flex items-baseline gap-3 flex-wrap mb-2">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">{solution.meta.name}</h1>

@@ -1,12 +1,13 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Clock } from 'lucide-react';
+import { ArrowLeft, Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ProblemStatusBadge } from '@/components/catalog/problem-status-badge';
+import { Button } from '@/components/ui/button';
 import { catalogModelsFromProblems } from '@/lib/catalog/problem-card-model';
 import { categoryLabelPt } from '@/lib/catalog/category-labels';
 import { getAllProblems } from '@/lib/content/loader';
@@ -48,12 +49,9 @@ export default async function TrackDetailPage({ params }: { params: Promise<Para
   return (
     <div className="relative bg-grid-pattern">
       <div className="mx-auto max-w-7xl px-6 py-24">
-        <Link
-          href="/tracks"
-          className="text-sm text-muted-foreground hover:text-foreground inline-flex items-center gap-1 mb-6"
-        >
-          ← Trilhos
-        </Link>
+        <Button asChild variant="outline" size="sm" className="mb-6 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+          <Link href="/tracks"><ArrowLeft className="h-3.5 w-3.5" /> Trilhos</Link>
+        </Button>
 
         <header className="mb-10 border-l-4 border-primary pl-8">
           <h1 className="text-4xl md:text-5xl font-black tracking-tighter mb-3 uppercase">{track.title}</h1>

@@ -1,12 +1,14 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { Clock } from 'lucide-react';
+import { ArrowLeft, Clock } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { EngineeringGuideArticle } from '@/components/engenharia-trabalho/engineering-guide-article';
+import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
-import { getAllEngineeringWorkSlugs, getEngineeringWorkGuide } from '@/lib/content/loader';
+import { getAllEngineeringWorkSlugs, getEngineeringWorkGuide, getAdjacentEngineeringWork } from '@/lib/content/loader';
 import type { EngineeringWorkPillar } from '@/lib/content/schemas';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { articleJsonLd } from '@/lib/seo/structured-data';
@@ -44,6 +46,7 @@ export default async function EngineeringWorkGuidePage({ params }: { params: Pro
   const { slug } = await params;
   const guide = await getEngineeringWorkGuide(slug);
   if (!guide) notFound();
+  const adjacent = await getAdjacentEngineeringWork(slug);
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">
@@ -54,9 +57,9 @@ export default async function EngineeringWorkGuidePage({ params }: { params: Pro
           pathname: `/engineering-work/${slug}`,
         })}
       />
-      <Link href="/engineering-work" className="mb-6 inline-block text-sm text-muted-foreground hover:text-foreground">
-        ← Engenharia no trabalho
-      </Link>
+      <Button asChild variant="outline" size="sm" className="mb-6 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+        <Link href="/engineering-work"><ArrowLeft className="h-3.5 w-3.5" /> Engenharia no trabalho</Link>
+      </Button>
 
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Badge variant="outline" className="rounded-none text-[10px] uppercase">
@@ -71,6 +74,12 @@ export default async function EngineeringWorkGuidePage({ params }: { params: Pro
       <p className="mb-10 text-lg leading-relaxed text-muted-foreground">{guide.meta.summary}</p>
 
       <EngineeringGuideArticle html={guide.bodyHtml} />
+
+      <ContentNavigation
+        sectionLabel="Mais guias de engenharia"
+        prev={adjacent.prev ? { slug: adjacent.prev.slug, title: adjacent.prev.title, href: `/engineering-work/${adjacent.prev.slug}` } : null}
+        next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/engineering-work/${adjacent.next.slug}` } : null}
+      />
     </div>
   );
 }
