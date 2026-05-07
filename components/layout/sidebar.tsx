@@ -50,11 +50,18 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const stored = localStorage.getItem(SIDEBAR_STORAGE_KEY);
-      if (stored !== null) setCollapsed(stored === 'true');
+      if (stored !== null) {
+        const isCollapsed = stored === 'true';
+        if (collapsed !== isCollapsed) {
+          queueMicrotask(() => {
+            setCollapsed(isCollapsed);
+          });
+        }
+      }
     } catch {
       /* noop */
     }
-  }, []);
+  }, [collapsed]);
 
   useEffect(() => {
     const w = collapsed ? SIDEBAR_WIDTH_COLLAPSED : SIDEBAR_WIDTH_EXPANDED;

@@ -58,7 +58,7 @@ export function ExplanationPanel({ annotations, conceptTitles }: Props) {
           </Badge>
           <span className="text-xs text-zinc-500">{LEVEL_DESCRIPTION[level]}</span>
         </div>
-        <LevelTabs level={level} setLevel={setLevel} availability={availability(annotation)} />
+        <LevelTabs level={level} setLevel={setLevel} availability={availability()} />
       </header>
 
       <div
@@ -108,7 +108,7 @@ function pickLevel(a: LineAnnotation, level: ExplanationLevel): string {
   return a.level1;
 }
 
-function availability(_a: LineAnnotation): Record<ExplanationLevel, boolean> {
+function availability(): Record<ExplanationLevel, boolean> {
   return {
     1: true,
     2: true,

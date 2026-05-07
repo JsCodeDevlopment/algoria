@@ -71,9 +71,14 @@ export default async function EngineeringWorkGuidePage({
   const adjacent = await getAdjacentEngineeringWork(slug);
 
   // Busca o ID do Jonatas para o link do perfil
-  const authorData = await db.query.user.findFirst({
-    where: eq(user.name, "Jonatas Silva"),
-  });
+  let authorData = null;
+  try {
+    authorData = (await db.query.user.findFirst({
+      where: eq(user.name, "Jonatas Silva"),
+    })) ?? null;
+  } catch (e) {
+    console.warn("Could not fetch author data from DB during build. Using fallback.");
+  }
 
   return (
     <div className="mx-auto max-w-7xl px-6 py-12">

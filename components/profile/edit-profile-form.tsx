@@ -6,7 +6,17 @@ import { updateProfile } from '@/app/profile/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 
-export function EditProfileForm({ profile }: { profile: any }) {
+interface UserProfile {
+  id?: string;
+  userId?: string;
+  headline?: string | null;
+  bio?: string | null;
+  githubUrl?: string | null;
+  linkedinUrl?: string | null;
+  technologies?: string[] | null;
+}
+
+export function EditProfileForm({ profile }: { profile: UserProfile | null | undefined }) {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {

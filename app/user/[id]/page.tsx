@@ -1,4 +1,5 @@
 import { eq } from 'drizzle-orm';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowLeft, BookOpen, Code2, Award, Link2 } from 'lucide-react';
 import Link from 'next/link';
@@ -85,9 +86,11 @@ export default async function PublicProfilePage({ params }: PublicProfileProps) 
         <header className="mb-12 flex flex-col items-start gap-6 rounded-none border-2 border-border bg-background/80 p-8 shadow-sm backdrop-blur-sm md:flex-row md:items-center">
           <div className="flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden rounded-none border-4 border-background bg-primary/10 text-4xl font-black text-primary shadow-md">
             {userData.image ? (
-              <img
+              <Image
                 src={userData.image}
-                alt={userData.name}
+                alt={userData.name || 'User avatar'}
+                width={128}
+                height={128}
                 className="h-full w-full object-cover"
               />
             ) : (

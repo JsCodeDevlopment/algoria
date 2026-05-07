@@ -39,7 +39,7 @@ export default function TermsPage() {
         <section>
           <h2 className="text-2xl font-bold">1. Aceitação dos Termos</h2>
           <p>
-            Ao acessar e utilizar a plataforma Algoria ("Serviço"), você
+            Ao acessar e utilizar a plataforma Algoria (&quot;Serviço&quot;), você
             concorda em cumprir e estar vinculado aos seguintes Termos de Uso.
             Se você não concordar com qualquer parte destes termos, não deverá
             utilizar o Serviço. Estes termos aplicam-se a todos os visitantes,
@@ -92,7 +92,7 @@ export default function TermsPage() {
               código-fonte do Serviço.
             </li>
             <li>
-              Utilizar "web scraping", "crawlers" ou qualquer método
+              Utilizar &quot;web scraping&quot;, &quot;crawlers&quot; ou qualquer método
               automatizado para extrair dados ou conteúdo de forma massiva.
             </li>
           </ul>
@@ -102,7 +102,7 @@ export default function TermsPage() {
           <h2 className="text-2xl font-bold">4. Assinaturas e Pagamentos</h2>
           <p>
             Algumas partes do Serviço são faturadas em base de assinatura
-            ("Algoria Pro"). Você será faturado antecipadamente em uma base
+            (&quot;Algoria Pro&quot;). Você será faturado antecipadamente em uma base
             recorrente e periódica (como mensal ou anual).
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
@@ -141,8 +141,8 @@ export default function TermsPage() {
               serviços da plataforma.
             </li>
             <li>
-              Compartilhar sua conta com terceiros ("compartilhamento de
-              login"), o que resultará no banimento imediato da conta sem
+              Compartilhar sua conta com terceiros (&quot;compartilhamento de
+              login&quot;), o que resultará no banimento imediato da conta sem
               direito a reembolso.
             </li>
           </ul>
@@ -152,7 +152,7 @@ export default function TermsPage() {
           <h2 className="text-2xl font-bold">6. Isenção de Garantias</h2>
           <p>
             O uso do Serviço é por sua conta e risco. O Serviço é fornecido
-            "COMO ESTÁ" e "CONFORME DISPONÍVEL". A Algoria não garante que (i) o
+            &quot;COMO ESTÁ&quot; e &quot;CONFORME DISPONÍVEL&quot;. A Algoria não garante que (i) o
             Serviço funcionará de forma ininterrupta, segura ou disponível em
             qualquer momento ou local específico; (ii) quaisquer erros ou
             defeitos serão corrigidos; ou (iii) os resultados do uso do Serviço

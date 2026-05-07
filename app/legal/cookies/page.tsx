@@ -41,7 +41,7 @@ export default function CookiesPage() {
           <p>
             Cookies são pequenos arquivos de texto enviados pelo nosso servidor
             para o seu navegador e armazenados no seu dispositivo (computador,
-            smartphone, tablet). Eles permitem que a plataforma "lembre" de suas
+            smartphone, tablet). Eles permitem que a plataforma &quot;lembre&quot; de suas
             ações ou preferências ao longo do tempo, garantindo uma navegação
             mais eficiente e segura.
           </p>
