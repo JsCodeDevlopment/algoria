@@ -78,3 +78,15 @@ export const authSchema = {
   account,
   verification,
 };
+
+export const userProfile = pgTable('user_profile', {
+  userId: text('userId')
+    .primaryKey()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  headline: text('headline'),
+  bio: text('bio'),
+  technologies: text('technologies').array(),
+  githubUrl: text('githubUrl'),
+  linkedinUrl: text('linkedinUrl'),
+  updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+});
