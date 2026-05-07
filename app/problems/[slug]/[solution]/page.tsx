@@ -143,7 +143,11 @@ export default async function SolutionPage({
         <Button asChild variant="outline" size="sm" className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
           <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
         </Button>
-        <UpgradePrompt context="Player e soluções Pro" problemSlug={problem.meta.slug} />
+        <UpgradePrompt
+          context="Player e soluções Pro"
+          problemSlug={problem.meta.slug}
+          hideLogin={!!session}
+        />
       </div>
     );
   }

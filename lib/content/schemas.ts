@@ -155,6 +155,8 @@ export const ConceptMeta = z.object({
   estimatedMinutes: z.number().int().positive().default(10),
   prerequisites: z.array(z.string()).default([]),
   summary: z.string().min(1),
+  /** `pro` = requer assinatura. Omisso = `pro`. */
+  access: ContentAccess.default('pro'),
 });
 export type ConceptMeta = z.infer<typeof ConceptMeta>;
 

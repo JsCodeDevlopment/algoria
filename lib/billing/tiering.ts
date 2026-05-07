@@ -1,4 +1,4 @@
-import type { ContentAccess, ProblemMeta } from '@/lib/content/schemas';
+import type { ContentAccess, ProblemMeta, ConceptMeta } from '@/lib/content/schemas';
 
 /** Slugs que devem permanecer gratuitos (espelha metadata editorial). */
 export const FREE_PROBLEM_SLUGS = [
@@ -18,7 +18,16 @@ export function getProblemAccess(meta: Pick<ProblemMeta, 'access'>): ContentAcce
   return meta.access ?? 'pro';
 }
 
-export function isProblemUnlockedForUser(access: ContentAccess, hasPro: boolean): boolean {
+export function getConceptAccess(meta: Pick<ConceptMeta, 'access'>): ContentAccess {
+  return meta.access ?? 'pro';
+}
+
+export function isContentUnlockedForUser(access: ContentAccess, hasPro: boolean): boolean {
   if (access === 'free') return true;
   return hasPro;
+}
+
+/** @deprecated Use isContentUnlockedForUser */
+export function isProblemUnlockedForUser(access: ContentAccess, hasPro: boolean): boolean {
+  return isContentUnlockedForUser(access, hasPro);
 }

@@ -218,7 +218,11 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
         statement={statement}
         strategies={
           strategiesLocked ? (
-            <UpgradePrompt context="Soluções comentadas e player" problemSlug={slug} />
+            <UpgradePrompt
+              context="Soluções comentadas e player"
+              problemSlug={slug}
+              hideLogin={!!session}
+            />
           ) : (
             strategies
           )

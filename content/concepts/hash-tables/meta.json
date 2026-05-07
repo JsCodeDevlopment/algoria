@@ -5,5 +5,6 @@
   "difficulty": "medium",
   "estimatedMinutes": 10,
   "prerequisites": ["big-o"],
-  "summary": "Como funciona um hash map por dentro, porque é que `O(1)` é \"amortizado\" e quando a tabela hash não é a ferramenta certa."
+  "summary": "Como funciona um hash map por dentro, porque é que `O(1)` é \"amortizado\" e quando a tabela hash não é a ferramenta certa.",
+  "access": "free"
 }

@@ -1,14 +1,19 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
+import { headers } from 'next/headers';
 import { ArrowLeft, Clock } from 'lucide-react';
 
+import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { auth } from '@/lib/auth';
+import { userHasPro } from '@/lib/billing/entitlements';
+import { getConceptAccess, isContentUnlockedForUser } from '@/lib/billing/tiering';
 import { getAllConceptSlugs, getConcept, getAdjacentConcepts } from '@/lib/content/loader';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
@@ -54,6 +59,12 @@ export default async function ConceptPage({
   const { slug } = await params;
   const concept = await getConcept(slug);
   if (!concept) notFound();
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const access = getConceptAccess(concept.meta);
+  const isLocked = !isContentUnlockedForUser(access, hasPro);
+
   const q = (await searchParams) ?? {};
   const courseSlug = q.course ?? q.curso;
   const moduleId = q.module ?? q.modulo;
@@ -102,15 +113,21 @@ export default async function ConceptPage({
       <h1 className="text-3xl md:text-4xl font-semibold tracking-tight mb-3">{concept.meta.title}</h1>
       <p className="text-lg text-zinc-600 dark:text-zinc-400 mb-10 leading-relaxed">{concept.meta.summary}</p>
 
-      <article
-        className="prose prose-zinc dark:prose-invert max-w-none
-                   prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight prose-h2:mt-10
-                   prose-h3:text-lg prose-h3:font-semibold
-                   prose-code:text-blue-600 dark:prose-code:text-blue-400
-                   prose-code:before:content-none prose-code:after:content-none
-                   prose-pre:bg-zinc-900 prose-pre:text-zinc-100"
-        dangerouslySetInnerHTML={{ __html: concept.bodyHtml }}
-      />
+      {isLocked ? (
+        <div className="py-12 border-y border-dashed border-zinc-200 dark:border-zinc-800 my-10 bg-zinc-50/50 dark:bg-zinc-900/20">
+          <UpgradePrompt conceptSlug={slug} hideLogin={!!session} />
+        </div>
+      ) : (
+        <article
+          className="prose prose-zinc dark:prose-invert max-w-none
+                     prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight prose-h2:mt-10
+                     prose-h3:text-lg prose-h3:font-semibold
+                     prose-code:text-blue-600 dark:prose-code:text-blue-400
+                     prose-code:before:content-none prose-code:after:content-none
+                     prose-pre:bg-zinc-900 prose-pre:text-zinc-100"
+          dangerouslySetInnerHTML={{ __html: concept.bodyHtml }}
+        />
+      )}
 
       <ContentNavigation
         sectionLabel="Navegar conceitos"
