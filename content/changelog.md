@@ -1,30 +1,27 @@
-Histórico editorial e técnico da Algoria. Actualizado quando há novas rotas, conteúdo ou melhorias visíveis para quem estuda.
+Acompanha a evolução da Algoria. Aqui encontras as novas funcionalidades, problemas adicionados e melhorias criadas para acelerar a tua preparação técnica.
 
-## 2026-05-04
+## 2026-05-07 — Acesso Pro & Experiência de Membro
 
-- **Execution trace (MVP)** — Painel «Estado da execução» sincronizado com o player em soluções que tenham `trace.json` (arrays, mapas, escalares).
-- **Trilhos curados** — Rotas `/tracks` com listas como *Fundamentos — ordem recomendada* e *Arrays & hashing*.
-- **Progresso** — Última linha guardada por solução; exportar/importar JSON no catálogo.
-- **Qualidade** — Testes Vitest em filtros do catálogo, trace e schema de progresso; workflow CI com validação de conteúdo, lint, testes e build.
-- **Changelog público** — Esta página e entradas no rodapé para acompanhar mudanças.
+- **Novo Portal de Assinatura** — Agora podes gerir a tua subscrição diretamente na plataforma. Clica em "Gerir Assinatura" na página de preços para ver faturas ou cancelar a qualquer momento via Stripe.
+- **Notificações Inteligentes** — Implementámos um sistema de avisos (Toasts) para te manter informado sobre o estado das tuas ações, como erros de pagamento ou sincronização, com um design industrial e limpo.
+- **Página de Preços Renovada** — Um novo layout que clarifica exatamente o que ganhas em cada nível, facilitando a decisão de upgrade para quem quer dominar o catálogo completo.
 
-## Próximas áreas
+## 2026-05-05 — Sincronização & Identidade
 
-- Mais `trace.json` por problema / solução óptima.
+- **Sincronização na Nuvem** — O teu progresso já não está preso apenas ao browser. Ao criares conta, os problemas que leste no telemóvel aparecem automaticamente no teu computador.
+- **Perfis Profissionais** — Agora tens um espaço para ver o teu histórico e progresso consolidado.
+- **Segurança Reforçada** — Autenticação moderna e segura para garantir que o teu percurso de aprendizagem está sempre protegido.
 
-## 2026-05-05 — Freemium e infraestrutura comercial
+## 2026-05-04 — Ferramentas de Estudo Avançadas
 
-- **Pacotes Free / Pro** — Campo `access` nos problemas (`free`: 10 exercícios hero; restantes `pro`).
-- **Conta** — Better Auth + Postgres (Drizzle): registo, sessão, merge de progresso local para servidor.
-- **Pagamentos** — Stripe Checkout + webhook para tabela `subscription`.
-- **Preços e legal** — `/pricing`, termos, privacidade, cookies e reembolsos.
-- **Analytics de funil** — Eventos PostHog `pricing_view`, `checkout_start`, `paywall_hit`, `subscription_active`.
+- **Estado da Execução em Tempo Real** — Agora podes visualizar o que acontece "dentro" do código. Vê arrays a serem ordenados e mapas a serem preenchidos enquanto lês a solução, linha a linha.
+- **Trilhos de Aprendizagem** — Não sabes por onde começar? Criámos "Trilhos" (Tracks) que te guiam desde os fundamentos até estruturas de dados complexas numa ordem lógica.
+- **Modo Revisão** — O catálogo agora permite filtrar problemas que já concluíste, ajudando-te a praticar a repetição espaçada.
 
 ---
 
-## Rol seguinte (implementação)
+## O que vem a seguir?
 
-- Secção **Modo revisão** no catálogo (`/problems`): lista problemas marcados como concluídos há ≥ 7 / 14 / 30 dias.
-- Novos **execution traces** em Contains Duplicate (hash-set), Valid Anagram (frequency), Merge Sorted Array (merge-from-tail), Move Zeroes (copy-nonzero-fill), Intersection II (hash-frequency).
-- Guia **`docs/contributing-code-player.md`** para idiomas do player e `trace.json`.
-- **Lightbox** de artigos de engenharia: imagens focáveis com Enter/Espaço e foco inicial no botão Fechar.
+- **Mais Visualizações de Código** — Estamos a adicionar diagramas de estado para todos os problemas de "Arrays & Hashing".
+- **Revisão Inteligente** — Notificações para te lembrar de rever problemas concluídos há mais de 15 dias.
+- **Novos Problemas Pro** — Expansão do catálogo com foco em algoritmos de Grafos e Programação Dinâmica.

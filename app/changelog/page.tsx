@@ -1,6 +1,6 @@
+import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -20,9 +20,16 @@ export default async function ChangelogPage() {
 
   return (
     <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-3xl px-6 py-24">
-        <Button asChild variant="outline" size="sm" className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
-          <Link href="/"><ArrowLeft className="h-3.5 w-3.5" /> Início</Link>
+      <div className="mx-auto max-w-7xl px-6 py-24">
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
+        >
+          <Link href="/">
+            <ArrowLeft className="h-3.5 w-3.5" /> Início
+          </Link>
         </Button>
         <main>
           <header className="mb-10 border-l-4 border-primary pl-8">
@@ -33,8 +40,8 @@ export default async function ChangelogPage() {
               Novidades
             </h1>
             <p className="text-muted-foreground text-sm leading-relaxed">
-              Este registo complementa o repositório Git — útil para saberes o
-              que mudou sem ler commits.
+              Descobre as últimas melhorias, novos conteúdos e funcionalidades
+              desenhadas para levar o teu conhecimento técnico ao próximo nível.
             </p>
           </header>
 
