@@ -11,6 +11,7 @@ import { SiteFooter } from '@/components/layout/site-footer';
 import { SiteHeader } from '@/components/layout/site-header';
 import { SidebarProvider } from '@/components/layout/sidebar';
 import { getMetadataBase, getSiteOrigin } from '@/lib/seo/site';
+import { ToastContainer } from '@/components/ui/toast';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
 const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
@@ -79,6 +80,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
               </main>
             </SidebarProvider>
             <SiteFooter />
+            <ToastContainer />
           </AlgoriaPostHogProvider>
         </ThemeProvider>
       </body>

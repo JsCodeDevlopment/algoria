@@ -27,7 +27,7 @@ export function formatPricingDisplay(): {
   return {
     monthly: formatBrlAmount(monthly, '/mês'),
     yearly: formatBrlAmount(yearly, '/ano'),
-    yearlyNote: 'Cerca de 2 meses grátis vs. mensal',
+    yearlyNote: 'Não perca essa oportunidade!',
   };
 }
 

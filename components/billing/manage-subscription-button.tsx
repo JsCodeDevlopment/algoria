@@ -1,29 +1,21 @@
 "use client";
 
 import { useState } from "react";
-
-import { analyticsCapture } from "@/components/analytics/posthog-provider";
+import { Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToastStore } from "@/lib/store/use-toast-store";
 
-export function CheckoutButton({ disabled }: { disabled?: boolean }) {
+export function ManageSubscriptionButton() {
   const [loading, setLoading] = useState(false);
-
   const addToast = useToastStore((s) => s.addToast);
 
   async function onClick() {
     setLoading(true);
-    analyticsCapture("checkout_start");
     try {
-      const res = await fetch("/api/checkout", {
+      const res = await fetch("/api/customer-portal", {
         method: "POST",
         credentials: "include",
       });
-
-      if (res.status === 401) {
-        window.location.href = "/auth/sign-in?callbackUrl=/pricing";
-        return;
-      }
 
       const data = (await res.json().catch(() => ({}))) as {
         url?: string;
@@ -31,11 +23,15 @@ export function CheckoutButton({ disabled }: { disabled?: boolean }) {
       };
 
       if (!res.ok) {
-        addToast(data.error ?? "Erro no servidor ao iniciar o checkout.", "error");
+        addToast(data.error ?? "Erro ao abrir o portal de gestão.", "error");
         return;
       }
 
-      if (data.url) window.location.href = data.url;
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (err) {
+      addToast("Erro de rede ao tentar aceder ao portal.", "error");
     } finally {
       setLoading(false);
     }
@@ -43,12 +39,13 @@ export function CheckoutButton({ disabled }: { disabled?: boolean }) {
 
   return (
     <Button
-      type="button"
-      className="rounded-none font-black cursor-pointer uppercase"
-      disabled={disabled || loading}
+      variant="outline"
+      className="w-full rounded-none font-black uppercase flex items-center justify-center gap-2"
+      disabled={loading}
       onClick={() => void onClick()}
     >
-      {loading ? "A redirecionar…" : "Subscrever Pro"}
+      <Settings className="h-4 w-4" />
+      {loading ? "A carregar..." : "Gerir Assinatura"}
     </Button>
   );
 }

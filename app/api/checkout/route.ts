@@ -38,19 +38,27 @@ export async function POST(req: Request) {
   const origin =
     process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || new URL(req.url).origin;
 
-  const checkoutSession = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    customer_email: session.user.email ?? undefined,
-    line_items: [{ price: priceId, quantity: 1 }],
-    success_url: `${origin}/pricing?checkout=success`,
-    cancel_url: `${origin}/pricing?checkout=cancel`,
-    metadata: { userId: session.user.id },
-    client_reference_id: session.user.id,
-  });
+  try {
+    const checkoutSession = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      customer_email: session.user.email ?? undefined,
+      line_items: [{ price: priceId, quantity: 1 }],
+      success_url: `${origin}/pricing?checkout=success`,
+      cancel_url: `${origin}/pricing?checkout=cancel`,
+      metadata: { userId: session.user.id },
+      client_reference_id: session.user.id,
+    });
 
-  if (!checkoutSession.url) {
-    return Response.json({ error: 'URL de checkout indisponível.' }, { status: 500 });
+    if (!checkoutSession.url) {
+      return Response.json({ error: 'URL de checkout indisponível.' }, { status: 500 });
+    }
+
+    return Response.json({ url: checkoutSession.url });
+  } catch (err: any) {
+    console.error('Checkout error:', err);
+    return Response.json(
+      { error: err.message ?? 'Erro ao criar sessão de checkout.' },
+      { status: 500 },
+    );
   }
-
-  return Response.json({ url: checkoutSession.url });
 }
