@@ -65,7 +65,7 @@ export function SignInForm() {
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/problems',
+        callbackURL: '/',
       });
     } catch {
       setError('Não foi possível iniciar sessão com Google.');

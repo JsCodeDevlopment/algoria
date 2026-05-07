@@ -70,7 +70,7 @@ export function SignUpForm() {
     try {
       await authClient.signIn.social({
         provider: 'google',
-        callbackURL: '/problems',
+        callbackURL: '/',
       });
     } catch {
       setError('Não foi possível criar conta com Google.');
