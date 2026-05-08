@@ -15,6 +15,7 @@ export const technicalAssessmentResults = pgTable('technical_assessment_results'
   codePassed: boolean('codePassed').notNull(),
   resolutionCode: text('resolutionCode'),
   isPublic: boolean('isPublic').notNull().default(false),
+  explanation: text('explanation'),
   completedAt: timestamp('completedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });
 

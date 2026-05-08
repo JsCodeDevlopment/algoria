@@ -145,6 +145,7 @@ export default async function PublicProfilePage({
               {assessmentRows.map((result) => (
                 <AssessmentCard
                   key={result.id}
+                  testSlug={result.testSlug}
                   testTitle={result.testTitle}
                   track={result.track}
                   level={result.level}
@@ -153,8 +154,10 @@ export default async function PublicProfilePage({
                   totalQuestions={result.totalQuestions}
                   codePassed={result.codePassed}
                   resolutionCode={result.resolutionCode}
+                  explanation={result.explanation}
                   completedAt={result.completedAt.toISOString()}
                 />
+
 
               ))}
             </div>

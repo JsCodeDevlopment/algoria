@@ -11,7 +11,11 @@ import Editor from "@monaco-editor/react";
 import { Code } from "lucide-react";
 import { useState } from "react";
 
+import { TECHNICAL_TESTS } from "@/lib/content/tests-data";
+import { cn } from "@/lib/utils";
+
 interface Props {
+  testSlug: string;
   testTitle: string;
   track: string;
   level: string;
@@ -20,10 +24,12 @@ interface Props {
   totalQuestions: number;
   codePassed: boolean;
   resolutionCode: string | null;
+  explanation: string | null;
   completedAt: string;
 }
 
 export function AssessmentCard({
+  testSlug,
   testTitle,
   track,
   level,
@@ -32,9 +38,11 @@ export function AssessmentCard({
   totalQuestions,
   codePassed,
   resolutionCode,
+  explanation,
   completedAt,
 }: Props) {
   const [showResolution, setShowResolution] = useState(false);
+  const testData = TECHNICAL_TESTS.find((t) => t.slug === testSlug);
 
   return (
     <>
@@ -94,29 +102,62 @@ export function AssessmentCard({
                 Resolução: {testTitle}
               </DialogTitle>
               <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
-                Linguagem: {language}
+                Linguagem: {language.toUpperCase()} • Nível: {level}
               </p>
             </div>
           </DialogHeader>
-          <div className="bg-[#1e1e1e] border-t-2 border-primary/10">
-            <Editor
-              height={Math.max(200, Math.min(((resolutionCode?.split("\n").length || 0) * 24) + 80, 600)) + "px"}
-              defaultLanguage={language}
-              language={language}
-              theme="vs-dark"
-              value={resolutionCode || ""}
-              options={{
-                readOnly: true,
-                minimap: { enabled: false },
-                fontSize: 14,
-                lineNumbers: "on",
-                scrollBeyondLastLine: false,
-                automaticLayout: true,
-                padding: { top: 24, bottom: 24 },
-                fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-              }}
-            />
+
+          <div className="flex-1 overflow-y-auto">
+            {/* Challenge Description */}
+            <div className="p-6 border-b border-border bg-muted/5">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3">
+                Enunciado do Desafio
+              </h3>
+              <p className="text-sm leading-relaxed font-medium text-foreground/80 whitespace-pre-wrap">
+                {testData?.challenge.description || "Descrição não disponível."}
+              </p>
+            </div>
+
+            {/* User Explanation (if present) */}
+            {explanation && (
+              <div className="p-6 border-b border-border bg-primary/5">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3">
+                  Explicação da Resolução
+                </h3>
+                <p className="text-sm leading-relaxed font-medium text-foreground whitespace-pre-wrap italic">
+                  &ldquo;{explanation}&rdquo;
+                </p>
+              </div>
+            )}
+
+            {/* Code Editor */}
+            <div className="p-6">
+              <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-primary mb-3">
+                Código Implementado
+              </h3>
+              <div className="bg-[#1e1e1e] border-2 border-border shadow-inner">
+                <Editor
+                  height={Math.max(200, Math.min(((resolutionCode?.split("\n").length || 0) * 24) + 80, 500)) + "px"}
+                  defaultLanguage={language === "csharp" ? "csharp" : language === "javascript" ? "javascript" : language}
+                  language={language === "csharp" ? "csharp" : language === "javascript" ? "javascript" : language}
+                  theme="vs-dark"
+                  value={resolutionCode || ""}
+                  options={{
+                    readOnly: true,
+                    minimap: { enabled: false },
+                    fontSize: 13,
+                    lineNumbers: "on",
+                    scrollBeyondLastLine: false,
+                    automaticLayout: true,
+                    padding: { top: 16, bottom: 16 },
+                    fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
+                    cursorSmoothCaretAnimation: "on",
+                  }}
+                />
+              </div>
+            </div>
           </div>
+
 
         </DialogContent>
       </Dialog>

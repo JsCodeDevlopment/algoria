@@ -27,6 +27,7 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import Image from "next/image";
 import { ProfileActionsClient } from "@/components/profile/profile-actions-client";
 import { ProfileAssessmentVisibilityToggle } from "@/components/profile/profile-assessment-visibility-toggle";
+import { AssessmentCard } from "@/components/profile/public/assessment-card";
 import { cn } from "@/lib/utils";
 
 
@@ -271,37 +272,7 @@ export default async function ProfilePage() {
                   key={result.id}
                   className="border-2 border-border bg-background p-6 relative group overflow-hidden"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="font-black uppercase tracking-tight text-lg leading-tight">
-                        {result.testTitle}
-                      </h3>
-                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
-                        {result.track} • {result.level} • {result.language} • {new Date(result.completedAt).toLocaleDateString('pt-PT')}
-                      </p>
-
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <div className="text-2xl font-black tabular-nums text-primary">
-                        {result.quizScore}/{result.totalQuestions}
-                      </div>
-                      <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
-                        Teoria
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
-                    <div className="flex items-center gap-2">
-                      <div className={cn(
-                        "h-2 w-2 rounded-full",
-                        result.codePassed ? "bg-emerald-500" : "bg-destructive"
-                      )} />
-                      <span className="text-[10px] font-black uppercase tracking-widest">
-                        Prática: {result.codePassed ? "Passou" : "Falhou"}
-                      </span>
-                    </div>
-                    
+                  <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
                       <ProfileAssessmentVisibilityToggle 
                         testSlug={result.testSlug} 
@@ -309,7 +280,25 @@ export default async function ProfilePage() {
                       />
                     </div>
                   </div>
+                  
+                  <div className="mt-4 pt-4 border-t border-border/50">
+                    <AssessmentCard
+                      testSlug={result.testSlug}
+                      testTitle={result.testTitle}
+                      track={result.track}
+                      level={result.level}
+                      language={result.language}
+                      quizScore={result.quizScore}
+                      totalQuestions={result.totalQuestions}
+                      codePassed={result.codePassed}
+                      resolutionCode={result.resolutionCode}
+                      explanation={result.explanation}
+                      completedAt={result.completedAt.toISOString()}
+                    />
+                  </div>
                 </div>
+
+
               ))}
             </div>
           ) : (

@@ -58,6 +58,7 @@ export function TestClient({ test }: Props) {
     { id: string; passed: boolean; error?: string }[]
   >([]);
   const [isEvaluating, setIsEvaluating] = useState(false);
+  const [explanation, setExplanation] = useState("");
 
   // Results State
   const [quizScore, setQuizScore] = useState(0);
@@ -279,6 +280,7 @@ export function TestClient({ test }: Props) {
         totalQuestions: test.questions.length,
         codePassed: allTestsPassed,
         resolutionCode: codes[language],
+        explanation: explanation,
       });
     }
 
@@ -299,7 +301,6 @@ export function TestClient({ test }: Props) {
       {/* HEADER INTRO & RESULTS */}
       {step !== "testing" && (
         <div className="mx-auto max-w-7xl mb-10 flex items-center justify-between border-b-4 border-primary pb-4">
-
           <div>
             <h1 className="text-3xl font-black uppercase tracking-tight">
               {test.title}
@@ -322,7 +323,6 @@ export function TestClient({ test }: Props) {
       {/* INTRO STEP */}
       {step === "intro" && (
         <div className="mx-auto max-w-7xl space-y-8 animate-in fade-in slide-in-from-bottom-4">
-
           <div className="bg-muted/20 border-2 border-border p-8">
             <h2 className="mb-4 text-xl font-black uppercase tracking-widest">
               Instruções
@@ -524,41 +524,33 @@ export function TestClient({ test }: Props) {
                         Desafio Prático
                       </h2>
                     </div>
-
-                    <div className="flex items-center gap-3 bg-muted p-1 border-2 border-border">
-                      {Object.keys(test.challenge.templates).map((lang) => (
-                        <button
-                          key={lang}
-                          onClick={() => {
-                            setLanguage(lang);
-                            setTestResults([]);
-                            // Garantir que o código inicial seja carregado se ainda não estiver no estado
-                            if (!codes[lang]) {
-                              setCodes((prev) => ({
-                                ...prev,
-                                [lang]:
-                                  test.challenge.templates[lang].initialCode,
-                              }));
-                            }
-                          }}
-                          className={cn(
-                            "px-4 py-1.5 text-[10px] font-black uppercase tracking-widest transition-all cursor-pointer",
-                            language === lang
-                              ? "bg-primary text-primary-foreground shadow-[2px_2px_0_0_rgba(0,0,0,0.1)]"
-                              : "text-muted-foreground hover:text-foreground",
-                          )}
-                        >
-                          {lang}
-                        </button>
-                      ))}
-                    </div>
                   </div>
+
                   <h1 className="mb-6 text-3xl font-black uppercase tracking-tighter">
                     {test.challenge.title}
                   </h1>
                   <p className="text-base leading-relaxed text-muted-foreground whitespace-pre-wrap font-medium max-w-5xl">
                     {test.challenge.description}
                   </p>
+                </div>
+
+                {/* 1.5 Explanation (Optional) */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <div className="h-4 w-4 bg-primary" />
+                    <h3 className="text-xs font-black uppercase tracking-[0.2em]">
+                      Explicação da Resolução
+                      <span className="text-muted-foreground ml-2 text-xs">
+                        (Opcional)
+                      </span>
+                    </h3>
+                  </div>
+                  <textarea
+                    value={explanation}
+                    onChange={(e) => setExplanation(e.target.value)}
+                    placeholder="Descreve brevemente o teu raciocínio ou a lógica utilizada para chegar a esta solução..."
+                    className="w-full min-h-[120px] p-4 bg-background border-2 border-border focus:border-primary outline-none transition-all text-sm leading-relaxed font-medium resize-y"
+                  />
                 </div>
 
                 {/* 2. Editor */}
@@ -570,23 +562,32 @@ export function TestClient({ test }: Props) {
                         <div className="h-3 w-3 rounded-full bg-amber-500/20 border border-amber-500/40" />
                         <div className="h-3 w-3 rounded-full bg-emerald-500/20 border border-emerald-500/40" />
                       </div>
-                      <span className="text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest">
-                        {test.challenge.functionName}
-                        {language === "javascript"
-                          ? ".js"
-                          : language === "python"
-
-                              ? ".py"
-                              : language === "go"
-                                ? ".go"
-                                : language === "rust"
-                                  ? ".rs"
-                                  : language === "java"
-                                    ? ".java"
-                                    : language === "csharp"
-                                      ? ".cs"
-                                      : ".js"}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                          Linguagem:
+                        </span>
+                        <select
+                          value={language}
+                          onChange={(e) => {
+                            const lang = e.target.value;
+                            setLanguage(lang);
+                            setTestResults([]);
+                            if (!codes[lang]) {
+                              setCodes((prev) => ({
+                                ...prev,
+                                [lang]: test.challenge.templates[lang].initialCode,
+                              }));
+                            }
+                          }}
+                          className="bg-transparent border-none text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest outline-none transition-all cursor-pointer hover:text-foreground"
+                        >
+                          {Object.keys(test.challenge.templates).map((lang) => (
+                            <option key={lang} value={lang} className="bg-[#2d2d2d] text-white">
+                              {lang.toUpperCase()}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
 
                     </div>
                     <Button
@@ -626,7 +627,6 @@ export function TestClient({ test }: Props) {
                               ? "javascript"
                               : language
                       }
-
                       theme="vs-dark"
                       value={codes[language]}
                       onChange={(value) =>
@@ -710,7 +710,6 @@ export function TestClient({ test }: Props) {
       {/* RESULTS STEP */}
       {step === "results" && (
         <div className="mx-auto max-w-7xl space-y-10 animate-in zoom-in-95 duration-500">
-
           <div className="text-center py-12 border-4 border-primary bg-primary/5">
             <h2 className="mb-6 text-4xl font-black uppercase tracking-tighter text-primary">
               Avaliação Concluída!

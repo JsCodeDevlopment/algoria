@@ -17,6 +17,7 @@ export async function saveAssessmentResult(data: {
   totalQuestions: number;
   codePassed: boolean;
   resolutionCode: string;
+  explanation?: string;
 }) {
 
   const session = await auth.api.getSession({
