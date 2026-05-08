@@ -5,6 +5,8 @@ import { Loader2, Save } from 'lucide-react';
 import { updateProfile } from '@/app/profile/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { ProfileSections } from './profile-sections';
+import { TechSelect } from './tech-select';
 
 interface UserProfile {
   id?: string;
@@ -14,6 +16,8 @@ interface UserProfile {
   githubUrl?: string | null;
   linkedinUrl?: string | null;
   technologies?: string[] | null;
+  experiences?: string | null;
+  projects?: string | null;
 }
 
 export function EditProfileForm({ profile }: { profile: UserProfile | null | undefined }) {
@@ -84,13 +88,15 @@ export function EditProfileForm({ profile }: { profile: UserProfile | null | und
       </div>
 
       <div className="space-y-2">
-        <label htmlFor="technologies" className="text-xs font-bold uppercase text-muted-foreground tracking-wide">Tecnologias (separadas por vírgula)</label>
-        <Input 
-          id="technologies" 
-          name="technologies" 
-          placeholder="React, TypeScript, Node.js, Go" 
-          defaultValue={profile?.technologies?.join(', ') || ''}
-          className="rounded-none border-border"
+        <label className="text-xs font-bold uppercase text-muted-foreground tracking-wide">Tecnologias</label>
+        <TechSelect initialTechs={profile?.technologies} />
+      </div>
+
+      <div className="py-6">
+        <ProfileSections 
+          initialExperiences={profile?.experiences} 
+          initialProjects={profile?.projects}
+          githubUrl={profile?.githubUrl}
         />
       </div>
 

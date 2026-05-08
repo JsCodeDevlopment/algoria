@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { ArrowLeft, BookOpen, Code2, Trash2, User } from "lucide-react";
+import { ArrowLeft, Trash2, User } from "lucide-react";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -19,10 +19,11 @@ import {
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { subscription, userProgress, userProfile } from "@/lib/db/schema";
+import { subscription, userProfile, userProgress } from "@/lib/db/schema";
 import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import Image from "next/image";
+import { ProfileActionsClient } from "@/components/profile/profile-actions-client";
 
 export const metadata = buildPublicMetadata({
   title: "Meu Perfil",
@@ -99,7 +100,7 @@ export default async function ProfilePage() {
         <div className="absolute right-0 top-1/4 h-96 w-96 rounded-full bg-primary/10 blur-3xl" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-5xl px-6 py-12">
+      <div className="relative z-10 mx-auto max-w-7xl px-6 py-12">
         <Button
           asChild
           variant="outline"
@@ -111,132 +112,165 @@ export default async function ProfilePage() {
           </Link>
         </Button>
 
-        <header className="mb-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="flex items-center gap-6">
-            <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-none border-4 border-background bg-primary/10 text-3xl font-black text-primary shadow-xl">
-              {user.image ? (
-                <Image
-                  src={user.image}
-                  alt={user.name}
-                  width={24}
-                  height={24}
-                  className="h-full w-full object-cover"
-                />
-              ) : (
-                initials
-              )}
+        <header className="mb-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-8 border-b-2 border-border pb-12">
+          <div className="flex items-center gap-8">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 opacity-25 group-hover:opacity-50 transition duration-500 blur" />
+              <div className="relative flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden border-4 border-primary bg-background text-4xl font-black text-primary shadow-[8px_8px_0_0_rgba(var(--primary-rgb),0.2)]">
+                {user.image ? (
+                  <Image
+                    src={user.image}
+                    alt={user.name}
+                    width={128}
+                    height={128}
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  initials
+                )}
+              </div>
             </div>
-            <div>
-              <h1 className="text-4xl font-black tracking-tighter uppercase">
+            <div className="space-y-3">
+              <h1 className="text-5xl font-black tracking-tighter uppercase leading-none">
                 {user.name}
               </h1>
-              <p className="mt-1 font-mono text-sm text-muted-foreground">
-                {user.email}
-              </p>
-              <div className="mt-3 flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-4 text-muted-foreground">
+                <span className="font-mono text-xs uppercase tracking-widest">
+                  {user.email}
+                </span>
+                <span className="h-1 w-1 rounded-full bg-border" />
+                <span className="text-[10px] font-bold uppercase tracking-widest">
+                  Desde {new Date(user.createdAt).getFullYear()}
+                </span>
+              </div>
+              <div className="flex items-center gap-3 pt-2">
                 <Badge
                   variant={isPro ? "default" : "secondary"}
-                  className="uppercase font-bold tracking-widest text-[10px]"
+                  className="rounded-none uppercase font-black tracking-[0.2em] px-4 py-1 text-[9px]"
                 >
-                  {isPro ? "Plano Pro" : "Plano Free"}
+                  {isPro ? "ALGORIA PRO" : "ALGORIA FREE"}
                 </Badge>
-                <span className="text-xs text-muted-foreground">
-                  Membro desde{" "}
-                  {new Date(user.createdAt).toLocaleDateString("pt-PT")}
-                </span>
-                <Button asChild variant="link" className="h-auto p-0 text-xs font-bold uppercase tracking-widest text-primary">
-                  <Link href={`/user/${user.id}`}>Ver Perfil Público →</Link>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="h-7 rounded-none text-[9px] uppercase font-black tracking-widest border-primary/20"
+                >
+                  <Link href={`/user/${user.id}`}>
+                    Visualizar Perfil Público
+                  </Link>
                 </Button>
+                <ProfileActionsClient userId={user.id} />
               </div>
             </div>
           </div>
-          <SignOutButton />
+          <div className="flex flex-col gap-3 w-full md:w-auto">
+            <SignOutButton />
+            <form action="/api/customer-portal" method="POST">
+              <Button
+                type="submit"
+                variant="outline"
+                className="w-full rounded-none font-black uppercase tracking-widest text-[10px] border-2 border-border h-12"
+              >
+                Gerir Assinatura
+              </Button>
+            </form>
+          </div>
         </header>
 
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {/* Card de Edição de Perfil */}
-          <Card className="col-span-full border-2 border-border shadow-sm bg-background/60 backdrop-blur-sm lg:col-span-2">
-            <CardHeader className="border-b border-border bg-muted/20 pb-4">
-              <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-widest text-primary">
-                <User className="h-4 w-4" /> Personalizar Perfil Público
-              </CardTitle>
-              <CardDescription>
-                Adiciona informações sobre a tua carreira como developer para o teu perfil.
-              </CardDescription>
+        {/* METRICS DASHBOARD */}
+        <section className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="border-2 border-border p-6 bg-muted/5 flex flex-col gap-1">
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              Problemas Resolvidos
+            </span>
+            <div className="flex items-baseline gap-2">
+              <span className="text-4xl font-black tabular-nums">
+                {completedProblems}
+              </span>
+              <span className="text-[10px] font-bold text-primary uppercase">
+                Unidades
+              </span>
+            </div>
+            <div className="mt-2 h-1 w-full bg-border">
+              <div
+                className="h-full bg-primary"
+                style={{
+                  width: `${Math.min((completedProblems / 100) * 100, 100)}%`,
+                }}
+              />
+            </div>
+          </div>
+          <div className="border-2 border-border p-6 bg-muted/5 flex flex-col gap-1">
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              Em Progresso
+            </span>
+            <span className="text-4xl font-black tabular-nums text-primary/70">
+              {inProgressProblems}
+            </span>
+            <div className="mt-2 flex gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`h-1 flex-1 ${i < inProgressProblems ? "bg-primary/40" : "bg-border"}`}
+                />
+              ))}
+            </div>
+          </div>
+          <div className="border-2 border-border p-6 bg-muted/5 flex flex-col gap-1">
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+              Soluções Lidas
+            </span>
+            <span className="text-4xl font-black tabular-nums text-muted-foreground/60">
+              {solutionsOpened}
+            </span>
+            <span className="text-[9px] font-medium text-muted-foreground uppercase">
+              Insights de Engenharia
+            </span>
+          </div>
+          <div className="border-2 border-border p-6 bg-primary/5 flex flex-col justify-between border-primary/20">
+            <div>
+              <span className="text-[9px] font-black uppercase tracking-[0.2em] text-primary">
+                Plano Atual
+              </span>
+              <p className="font-black uppercase tracking-tight text-xl">
+                {isPro ? "PRO ACCESS" : "FREE TIER"}
+              </p>
+            </div>
+            <Link
+              href="/pricing"
+              className="text-[9px] font-black uppercase tracking-widest text-primary hover:underline underline-offset-4"
+            >
+              {isPro ? "Ver Benefícios" : "Upgrade para Pro →"}
+            </Link>
+          </div>
+        </section>
+
+        {/* MAIN PROFILE FORM */}
+        <div className="space-y-12">
+          <Card className="border-2 border-border bg-background/60 backdrop-blur-sm overflow-hidden rounded-none shadow-[12px_12px_0_0_rgba(0,0,0,0.05)]">
+            <CardHeader className="border-b-2 border-border bg-muted/30 p-8">
+              <div className="flex items-center gap-4">
+                <div className="h-10 w-10 bg-primary flex items-center justify-center text-white">
+                  <User className="h-5 w-5" />
+                </div>
+                <div>
+                  <CardTitle className="text-xl font-black uppercase tracking-tighter">
+                    Personalizar Perfil Profissional
+                  </CardTitle>
+                  <CardDescription className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
+                    Este formulário controla como o mundo te vê na Algoria.
+                  </CardDescription>
+                </div>
+              </div>
             </CardHeader>
-            <CardContent className="p-6">
+            <CardContent className="p-8">
               <EditProfileForm profile={profileRows ? profileRows[0] : null} />
             </CardContent>
           </Card>
 
-          {/* Card de Desempenho */}
-          <Card className="col-span-full border-2 border-border shadow-sm bg-background/60 backdrop-blur-sm lg:col-span-2">
-            <CardHeader className="border-b border-border bg-muted/20 pb-4">
-              <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-widest text-primary">
-                <Code2 className="h-4 w-4" /> Desempenho e Progresso
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid grid-cols-1 sm:grid-cols-3 gap-6 p-6">
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Problemas Resolvidos
-                </span>
-                <span className="text-5xl font-black tabular-nums">
-                  {completedProblems}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Em Progresso
-                </span>
-                <span className="text-5xl font-black tabular-nums text-primary/70">
-                  {inProgressProblems}
-                </span>
-              </div>
-              <div className="flex flex-col gap-2">
-                <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  Soluções Lidas
-                </span>
-                <span className="text-5xl font-black tabular-nums text-muted-foreground/60">
-                  {solutionsOpened}
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* Card de Subscrição */}
-          <Card className="col-span-full lg:col-span-1 border-2 border-primary/20 bg-primary/5 shadow-sm">
-            <CardHeader className="border-b border-primary/10 pb-4">
-              <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-widest text-primary">
-                <BookOpen className="h-4 w-4" /> O Teu Plano
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-6 flex flex-col gap-6">
-              <div>
-                <h3 className="text-2xl font-black uppercase tracking-tight">
-                  {isPro ? "Pro" : "Free"}
-                </h3>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  {isPro
-                    ? "Tens acesso completo ao catálogo, code player passo-a-passo e funcionalidades premium."
-                    : "Acesso a rotas públicas, changelog e problemas limitados (10 marcados como hero)."}
-                </p>
-              </div>
-
-              {!isPro && (
-                <Button
-                  asChild
-                  variant="default"
-                  className="w-full rounded-none font-black uppercase"
-                >
-                  <Link href="/pricing">Fazer Upgrade</Link>
-                </Button>
-              )}
-            </CardContent>
-          </Card>
-
           {/* Danger Zone */}
-          <Card className="col-span-full border-2 border-destructive/20 bg-destructive/5 shadow-none mt-8">
+          <Card className="border-2 border-destructive/20 bg-destructive/5 shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm uppercase tracking-widest text-destructive flex items-center gap-2">
                 <Trash2 className="h-4 w-4" /> Danger Zone

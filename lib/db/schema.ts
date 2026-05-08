@@ -88,5 +88,7 @@ export const userProfile = pgTable('user_profile', {
   technologies: text('technologies').array(),
   githubUrl: text('githubUrl'),
   linkedinUrl: text('linkedinUrl'),
+  experiences: text('experiences'), // JSON string of professional experiences
+  projects: text('projects'), // JSON string of projects
   updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });

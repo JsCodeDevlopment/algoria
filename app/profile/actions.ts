@@ -35,12 +35,24 @@ export async function updateProfile(formData: FormData) {
   
   const techString = formData.get('technologies') as string;
   const technologies = techString ? techString.split(',').map(s => s.trim()).filter(Boolean) : [];
+  
+  const experiences = formData.get('experiences') as string;
+  const projects = formData.get('projects') as string;
 
   const existingProfile = await db.select().from(userProfile).where(eq(userProfile.userId, userId)).limit(1);
 
   if (existingProfile.length > 0) {
     await db.update(userProfile)
-      .set({ headline, bio, githubUrl, linkedinUrl, technologies, updatedAt: new Date() })
+      .set({ 
+        headline, 
+        bio, 
+        githubUrl, 
+        linkedinUrl, 
+        technologies, 
+        experiences,
+        projects,
+        updatedAt: new Date() 
+      })
       .where(eq(userProfile.userId, userId));
   } else {
     await db.insert(userProfile).values({
@@ -50,6 +62,8 @@ export async function updateProfile(formData: FormData) {
       githubUrl,
       linkedinUrl,
       technologies,
+      experiences,
+      projects,
     });
   }
 
