@@ -19,11 +19,16 @@ import {
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { subscription, userProfile, userProgress } from "@/lib/db/schema";
+import { technicalAssessmentResults, subscription, userProfile, userProgress } from "@/lib/db/schema";
+import { desc } from "drizzle-orm";
+
 import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import Image from "next/image";
 import { ProfileActionsClient } from "@/components/profile/profile-actions-client";
+import { ProfileAssessmentVisibilityToggle } from "@/components/profile/profile-assessment-visibility-toggle";
+import { cn } from "@/lib/utils";
+
 
 export const metadata = buildPublicMetadata({
   title: "Meu Perfil",
@@ -42,7 +47,7 @@ export default async function ProfilePage() {
   const { user } = session;
 
   // Buscar progressos e subscrição
-  const [progressRows, subRows, profileRows] = await Promise.all([
+  const [progressRows, subRows, profileRows, assessmentRows] = await Promise.all([
     db
       .select()
       .from(userProgress)
@@ -58,7 +63,13 @@ export default async function ProfilePage() {
       .from(userProfile)
       .where(eq(userProfile.userId, user.id))
       .limit(1),
+    db
+      .select()
+      .from(technicalAssessmentResults)
+      .where(eq(technicalAssessmentResults.userId, user.id))
+      .orderBy(desc(technicalAssessmentResults.completedAt)),
   ]);
+
 
   const activeSub = subRows[0];
   const isPro = activeSub?.status === "active";
@@ -246,7 +257,75 @@ export default async function ProfilePage() {
           </div>
         </section>
 
+        {/* TECHNICAL ASSESSMENTS SECTION */}
+        <section className="mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="h-6 w-2 bg-primary" />
+            <h2 className="text-xl font-black uppercase tracking-widest">Resultados de Assessments</h2>
+          </div>
+          
+          {assessmentRows.length > 0 ? (
+            <div className="grid gap-4 md:grid-cols-2">
+              {assessmentRows.map((result) => (
+                <div 
+                  key={result.id}
+                  className="border-2 border-border bg-background p-6 relative group overflow-hidden"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-black uppercase tracking-tight text-lg leading-tight">
+                        {result.testTitle}
+                      </h3>
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
+                        {result.track} • {result.level} • {result.language} • {new Date(result.completedAt).toLocaleDateString('pt-PT')}
+                      </p>
+
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <div className="text-2xl font-black tabular-nums text-primary">
+                        {result.quizScore}/{result.totalQuestions}
+                      </div>
+                      <div className="text-[8px] font-black uppercase tracking-widest text-muted-foreground">
+                        Teoria
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between mt-6 pt-4 border-t border-border/50">
+                    <div className="flex items-center gap-2">
+                      <div className={cn(
+                        "h-2 w-2 rounded-full",
+                        result.codePassed ? "bg-emerald-500" : "bg-destructive"
+                      )} />
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        Prática: {result.codePassed ? "Passou" : "Falhou"}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <ProfileAssessmentVisibilityToggle 
+                        testSlug={result.testSlug} 
+                        initialIsPublic={result.isPublic} 
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="border-2 border-dashed border-border p-12 text-center">
+              <p className="text-sm font-medium text-muted-foreground mb-4">
+                Ainda não completaste nenhum assessment técnico.
+              </p>
+              <Button asChild variant="outline" className="rounded-none font-black uppercase tracking-widest text-[10px]">
+                <Link href="/tests">Explorar Simulados</Link>
+              </Button>
+            </div>
+          )}
+        </section>
+
         {/* MAIN PROFILE FORM */}
+
         <div className="space-y-12">
           <Card className="border-2 border-border bg-background/60 backdrop-blur-sm overflow-hidden rounded-none shadow-[12px_12px_0_0_rgba(0,0,0,0.05)]">
             <CardHeader className="border-b-2 border-border bg-muted/30 p-8">

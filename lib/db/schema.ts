@@ -1,4 +1,24 @@
-import { boolean, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+
+export const technicalAssessmentResults = pgTable('technical_assessment_results', {
+  id: text('id').primaryKey(),
+  userId: text('userId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  testSlug: text('testSlug').notNull(),
+  testTitle: text('testTitle').notNull(),
+  track: text('track').notNull(),
+  level: text('level').notNull(),
+  language: text('language').notNull().default('javascript'),
+  quizScore: integer('quizScore').notNull(),
+  totalQuestions: integer('totalQuestions').notNull(),
+  codePassed: boolean('codePassed').notNull(),
+  resolutionCode: text('resolutionCode'),
+  isPublic: boolean('isPublic').notNull().default(false),
+  completedAt: timestamp('completedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+});
+
+
 
 /** Tabelas core do Better Auth (nomes de campos alinhados ao adapter Drizzle). */
 export const user = pgTable('user', {

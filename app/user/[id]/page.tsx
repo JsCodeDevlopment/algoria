@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -13,13 +13,15 @@ import { ProfileHeader } from "@/components/profile/public/profile-header";
 import { ProjectsSection } from "@/components/profile/public/projects-section";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
-import { user, userProfile, userProgress } from "@/lib/db/schema";
+import { user, userProfile, userProgress, technicalAssessmentResults } from "@/lib/db/schema";
 import {
   calculateTotalExperienceMonths,
   formatExperienceString,
   processUserProgress,
 } from "@/lib/profile/profile-utils";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
+import { AssessmentCard } from "@/components/profile/public/assessment-card";
+
 
 interface PublicProfileProps {
   params: Promise<{ id: string }>;
@@ -49,11 +51,18 @@ export default async function PublicProfilePage({
 }: PublicProfileProps) {
   const { id } = await params;
 
-  const [userRows, profileRows, progressRows] = await Promise.all([
+  const [userRows, profileRows, progressRows, assessmentRows] = await Promise.all([
     db.select().from(user).where(eq(user.id, id)).limit(1),
     db.select().from(userProfile).where(eq(userProfile.userId, id)).limit(1),
     db.select().from(userProgress).where(eq(userProgress.userId, id)).limit(1),
+    db.select().from(technicalAssessmentResults).where(
+      and(
+        eq(technicalAssessmentResults.userId, id),
+        eq(technicalAssessmentResults.isPublic, true)
+      )
+    ).orderBy(desc(technicalAssessmentResults.completedAt)),
   ]);
+
 
   const userData = userRows[0];
   if (!userData) {
@@ -124,7 +133,36 @@ export default async function PublicProfilePage({
         <ExperienceSection experiences={experiences} />
 
         <ProjectsSection projects={externalProjects} />
+
+        {assessmentRows.length > 0 && (
+          <section className="mt-16">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="h-6 w-2 bg-primary" />
+              <h2 className="text-2xl font-black uppercase tracking-widest">Avaliações Técnicas</h2>
+            </div>
+            
+            <div className="grid gap-6 md:grid-cols-2">
+              {assessmentRows.map((result) => (
+                <AssessmentCard
+                  key={result.id}
+                  testTitle={result.testTitle}
+                  track={result.track}
+                  level={result.level}
+                  language={result.language}
+                  quizScore={result.quizScore}
+                  totalQuestions={result.totalQuestions}
+                  codePassed={result.codePassed}
+                  resolutionCode={result.resolutionCode}
+                  completedAt={result.completedAt.toISOString()}
+                />
+
+              ))}
+            </div>
+
+          </section>
+        )}
       </div>
+
     </div>
   );
 }
