@@ -5,5 +5,6 @@
   "difficulty": "medium",
   "estimatedMinutes": 14,
   "prerequisites": ["two-pointers", "big-o"],
-  "summary": "Mantêm-se duas margens sobre um intervalo dinâmico que avança em tempo linear quando a condição alvo permite descartes monótonos."
+  "summary": "Mantêm-se duas margens sobre um intervalo dinâmico que avança em tempo linear quando a condição alvo permite descartes monótonos.",
+  "access": "free"
 }

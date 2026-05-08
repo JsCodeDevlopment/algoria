@@ -1,6 +1,6 @@
 import { ProgressBlobSchema, type ProgressBlob, type StudyStatus } from './local-progress-schema';
 
-const STORAGE_KEY = 'algoria:progress:v1';
+export const PROGRESS_STORAGE_KEY = 'algoria:progress:v1';
 
 function emptyBlob(): ProgressBlob {
   return { version: 1, problems: {} };
@@ -9,7 +9,7 @@ function emptyBlob(): ProgressBlob {
 export function loadProgressBlob(): ProgressBlob {
   if (typeof window === 'undefined') return emptyBlob();
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(PROGRESS_STORAGE_KEY);
     if (!raw) return emptyBlob();
     const parsed = JSON.parse(raw) as unknown;
     return ProgressBlobSchema.parse(parsed);
@@ -20,7 +20,7 @@ export function loadProgressBlob(): ProgressBlob {
 
 export function saveProgressBlob(blob: ProgressBlob): void {
   if (typeof window === 'undefined') return;
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(blob));
+  localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(blob));
   window.dispatchEvent(new CustomEvent('algoria-progress'));
 }
 

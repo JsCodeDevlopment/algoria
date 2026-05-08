@@ -5,5 +5,6 @@
   "difficulty": "easy",
   "estimatedMinutes": 12,
   "prerequisites": [],
-  "summary": "Big O é a forma standard de descrever quão rápido (ou lento) um algoritmo cresce à medida que o input aumenta. Sem isto, é impossível comparar duas soluções."
+  "summary": "Big O é a forma standard de descrever quão rápido (ou lento) um algoritmo cresce à medida que o input aumenta. Sem isto, é impossível comparar duas soluções.",
+  "access": "free"
 }

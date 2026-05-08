@@ -225,3 +225,71 @@ export async function getSolution(problemSlug: string, solutionSlug: string): Pr
     return null;
   }
 }
+
+/* ── Adjacent-content helpers (for prev/next navigation) ── */
+
+interface AdjacentItem {
+  slug: string;
+  title: string;
+}
+
+interface AdjacentResult {
+  prev: AdjacentItem | null;
+  next: AdjacentItem | null;
+}
+
+async function getAdjacentFromDir(
+  dir: string,
+  currentSlug: string,
+  loadTitle: (slug: string) => Promise<string | null>,
+): Promise<AdjacentResult> {
+  const slugs = (await listDirs(dir)).sort();
+  const idx = slugs.indexOf(currentSlug);
+  if (idx === -1) return { prev: null, next: null };
+
+  let prev: AdjacentItem | null = null;
+  let next: AdjacentItem | null = null;
+
+  if (idx > 0) {
+    const s = slugs[idx - 1]!;
+    const title = await loadTitle(s);
+    if (title) prev = { slug: s, title };
+  }
+
+  if (idx < slugs.length - 1) {
+    const s = slugs[idx + 1]!;
+    const title = await loadTitle(s);
+    if (title) next = { slug: s, title };
+  }
+
+  return { prev, next };
+}
+
+export async function getAdjacentProblems(currentSlug: string): Promise<AdjacentResult> {
+  return getAdjacentFromDir(PROBLEMS_DIR, currentSlug, async (s) => {
+    const p = await getProblem(s);
+    return p?.meta.title ?? null;
+  });
+}
+
+export async function getAdjacentConcepts(currentSlug: string): Promise<AdjacentResult> {
+  return getAdjacentFromDir(CONCEPTS_DIR, currentSlug, async (s) => {
+    const c = await getConcept(s);
+    return c?.meta.title ?? null;
+  });
+}
+
+export async function getAdjacentInterviewEnglish(currentSlug: string): Promise<AdjacentResult> {
+  return getAdjacentFromDir(INTERVIEW_EN_DIR, currentSlug, async (s) => {
+    const t = await getInterviewEnglishTopic(s);
+    return t?.meta.title ?? null;
+  });
+}
+
+export async function getAdjacentEngineeringWork(currentSlug: string): Promise<AdjacentResult> {
+  return getAdjacentFromDir(ENGENHARIA_TRABALHO_DIR, currentSlug, async (s) => {
+    const g = await getEngineeringWorkGuide(s);
+    return g?.meta.title ?? null;
+  });
+}
+

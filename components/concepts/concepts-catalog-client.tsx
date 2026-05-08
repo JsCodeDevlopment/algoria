@@ -9,7 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { Input } from '@/components/ui/input';
 import { DIFFICULTY_LABEL_PT } from '@/lib/catalog/problem-filters';
-import type { Difficulty } from '@/lib/content/schemas';
+import type { Difficulty, ContentAccess } from '@/lib/content/schemas';
 
 export interface ConceptCatalogItem {
   slug: string;
@@ -18,6 +18,7 @@ export interface ConceptCatalogItem {
   category: string;
   estimatedMinutes: number;
   difficulty: Difficulty;
+  access: ContentAccess;
 }
 
 type SortMode = 'title_az' | 'difficulty_asc';
@@ -146,8 +147,13 @@ export function ConceptsCatalogClient({ concepts }: Props) {
                       {c.category.replace('-', '_')}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary">
+                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary flex items-center justify-between gap-4">
                     {c.title}
+                    {c.access === 'pro' && (
+                      <Badge className="rounded-none bg-primary px-1.5 py-0 font-mono text-[9px] uppercase text-primary-foreground">
+                        Pro
+                      </Badge>
+                    )}
                   </CardTitle>
                   <CardDescription className="mt-2 flex items-center gap-2 font-mono text-[10px] uppercase">
                     <Clock className="h-3 w-3" aria-hidden /> {c.estimatedMinutes}m Reading

@@ -1,9 +1,7 @@
-import Link from 'next/link';
 import type { Metadata } from 'next';
-import { Clock, Languages } from 'lucide-react';
+import { Languages } from 'lucide-react';
 
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { InterviewCatalogClient } from '@/components/interview-en/interview-catalog-client';
 import { INTERVIEW_EN_TRACKS, type InterviewEnglishTrack } from '@/lib/content/schemas';
 import { getAllInterviewEnglishTopics } from '@/lib/content/loader';
@@ -29,13 +27,6 @@ export const metadata: Metadata = buildPublicMetadata({
 const TRACK_ORDER = new Map<InterviewEnglishTrack, number>(
   INTERVIEW_EN_TRACKS.map((t, i) => [t, i]),
 );
-
-const TRACK_BADGE: Record<InterviewEnglishTrack, string> = {
-  vocabulary: 'Vocabulary',
-  communication: 'Live coding talk track',
-  behavioral: 'Behavioral',
-  'system-design': 'System design',
-};
 
 export default async function InterviewEnglishIndexPage() {
   const topics = await getAllInterviewEnglishTopics();

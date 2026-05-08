@@ -13,6 +13,7 @@
   ],
   "estimatedMinutes": 12,
   "recommendedOrder": 5,
+  "access": "free",
   "examples": [
     {
       "input": "prices = [7,1,5,3,6,4]",

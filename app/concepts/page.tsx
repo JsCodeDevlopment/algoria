@@ -30,6 +30,7 @@ export default async function ConceptsPage() {
     category: c.meta.category,
     estimatedMinutes: c.meta.estimatedMinutes,
     difficulty: c.meta.difficulty,
+    access: c.meta.access,
   }));
 
   return (

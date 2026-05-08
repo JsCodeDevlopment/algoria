@@ -15,6 +15,7 @@
   ],
   "estimatedMinutes": 12,
   "recommendedOrder": 3,
+  "access": "free",
   "examples": [
     {
       "input": "s = anagram , t = nagaram",

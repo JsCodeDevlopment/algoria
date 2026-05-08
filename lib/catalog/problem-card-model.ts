@@ -1,3 +1,4 @@
+import { getProblemAccess } from '@/lib/billing/tiering';
 import type { Problem } from '@/lib/content/schemas';
 import { stripHtmlLoose } from '@/lib/seo/strip-html';
 
@@ -7,6 +8,7 @@ export type ProblemsCatalogProblem = Pick<
 > & {
   solutionCount: number;
   excerpt: string;
+  access: Problem['meta']['access'];
 };
 
 export function problemToCatalogModel(p: Problem): ProblemsCatalogProblem {
@@ -21,6 +23,7 @@ export function problemToCatalogModel(p: Problem): ProblemsCatalogProblem {
     recommendedOrder: p.meta.recommendedOrder ?? undefined,
     solutionCount: p.solutions.length,
     excerpt: plain.length > 220 ? `${plain.slice(0, 220)}…` : plain,
+    access: getProblemAccess(p.meta),
   };
 }
 

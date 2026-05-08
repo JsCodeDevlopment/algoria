@@ -1,9 +1,11 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 
+import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -14,6 +16,9 @@ import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { SolutionLanguageSelect } from '@/components/solution/solution-language-select';
 import { SolutionVisitTracker } from '@/components/solution/solution-visit-tracker';
+import { auth } from '@/lib/auth';
+import { userHasPro } from '@/lib/billing/entitlements';
+import { getProblemAccess, isProblemUnlockedForUser } from '@/lib/billing/tiering';
 import { getAllProblems, getConcept, getProblem } from '@/lib/content/loader';
 import {
   LANGUAGE_LABEL_PT,
@@ -85,6 +90,11 @@ export default async function SolutionPage({
   const solution = problem.solutions.find((s) => s.meta.slug === solutionSlug);
   if (!solution) notFound();
 
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const access = getProblemAccess(problem.meta);
+  const unlocked = isProblemUnlockedForUser(access, hasPro);
+
   const availableLanguages = LANGUAGE_ORDER_FOR_UI.filter(
     (l) => Boolean(solution.codeByLanguage[l]?.trim()),
   ) as Language[];
@@ -127,6 +137,21 @@ export default async function SolutionPage({
     introPlain ||
     `Solução com explicação linha-a-linha para «${problem.meta.title}» (${solution.meta.name}). Complexidade ${solution.meta.complexity.time} tempo, ${solution.meta.complexity.space} espaço.`;
 
+  if (!unlocked) {
+    return (
+      <div className="mx-auto max-w-7xl px-6 py-16">
+        <Button asChild variant="outline" size="sm" className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+          <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
+        </Button>
+        <UpgradePrompt
+          context="Player e soluções Pro"
+          problemSlug={problem.meta.slug}
+          hideLogin={!!session}
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-6 py-8">
       <JsonLdScript
@@ -138,12 +163,9 @@ export default async function SolutionPage({
       />
       <SolutionVisitTracker problemSlug={problem.meta.slug} solutionSlug={solutionSlug} />
 
-      <Link
-        href={`/problems/${problem.meta.slug}`}
-        className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 inline-flex items-center gap-1 mb-4"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}
-      </Link>
+      <Button asChild variant="outline" size="sm" className="mb-4 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+        <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
+      </Button>
 
       <div className="flex items-baseline gap-3 flex-wrap mb-2">
         <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">{solution.meta.name}</h1>

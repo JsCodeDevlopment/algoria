@@ -1,9 +1,12 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import { notFound } from 'next/navigation';
-import { ArrowRight, BookOpen } from 'lucide-react';
+import { ArrowLeft, ArrowRight, BookOpen } from 'lucide-react';
 
+import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { JsonLdScript } from '@/components/seo/json-ld';
@@ -11,8 +14,12 @@ import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { ProblemStudyCompletionBar } from '@/components/problem/problem-study-completion-bar';
 import { ProblemStudyTabs } from '@/components/problem/problem-study-tabs';
+import { ContentNavigation } from '@/components/layout/content-navigation';
 import { ProblemVisitTracker } from '@/components/problem/problem-visit-tracker';
-import { getAllProblemSlugs, getProblem, getConcept } from '@/lib/content/loader';
+import { auth } from '@/lib/auth';
+import { userHasPro } from '@/lib/billing/entitlements';
+import { getProblemAccess, isProblemUnlockedForUser } from '@/lib/billing/tiering';
+import { getAllProblemSlugs, getProblem, getConcept, getAdjacentProblems } from '@/lib/content/loader';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 import { stripHtmlLoose } from '@/lib/seo/strip-html';
@@ -58,6 +65,12 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
   const { slug } = await params;
   const problem = await getProblem(slug);
   if (!problem) notFound();
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const access = getProblemAccess(problem.meta);
+  const strategiesLocked = !isProblemUnlockedForUser(access, hasPro);
+  const adjacent = await getAdjacentProblems(slug);
 
   const prereqs = (
     await Promise.all(problem.meta.prerequisites.map((s) => getConcept(s).then((c) => (c ? { slug: s, title: c.meta.title } : null))))
@@ -184,9 +197,9 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
       />
       <ProblemVisitTracker slug={slug} />
 
-      <Link href="/problems" className="text-sm text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-50 mb-6 inline-block">
-        ← Todos os problemas
-      </Link>
+      <Button asChild variant="outline" size="sm" className="mb-6 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
+        <Link href="/problems"><ArrowLeft className="h-3.5 w-3.5" /> Todos os problemas</Link>
+      </Button>
 
       <div className="flex items-center gap-2 flex-wrap mb-3">
         <DifficultyBadge difficulty={problem.meta.difficulty} />
@@ -201,9 +214,28 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
 
       <Separator className="mb-10" />
 
-      <ProblemStudyTabs statement={statement} strategies={strategies} />
+      <ProblemStudyTabs
+        statement={statement}
+        strategies={
+          strategiesLocked ? (
+            <UpgradePrompt
+              context="Soluções comentadas e player"
+              problemSlug={slug}
+              hideLogin={!!session}
+            />
+          ) : (
+            strategies
+          )
+        }
+      />
 
       <ProblemStudyCompletionBar problemSlug={slug} solutionCount={problem.solutions.length} />
+
+      <ContentNavigation
+        sectionLabel="Navegar problemas"
+        prev={adjacent.prev ? { slug: adjacent.prev.slug, title: adjacent.prev.title, href: `/problems/${adjacent.prev.slug}` } : null}
+        next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/problems/${adjacent.next.slug}` } : null}
+      />
     </div>
   );
 }

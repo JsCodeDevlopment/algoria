@@ -37,32 +37,32 @@ export function McqLesson({ exercise, alreadySolved, onCorrect, variant = 'pract
 
   const frameClasses = useMemo(() => {
     if (variant === 'capstone') {
-      return 'border-amber-300/70 bg-gradient-to-br from-amber-50 to-white dark:border-amber-400/40 dark:from-zinc-900 dark:to-zinc-950';
+      return 'border-amber-500/50 bg-amber-500/5';
     }
-    return 'border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950';
+    return 'border-border bg-background';
   }, [variant]);
 
   return (
-    <div className={`rounded-xl border ${frameClasses} p-5 space-y-4`}>
-      <div className="flex flex-wrap items-center gap-2 text-xs uppercase tracking-[0.2em] text-zinc-500">
-        <span>{variant === 'capstone' ? 'Avaliação final' : 'Exercício'}</span>
+    <div className={`border-2 ${frameClasses} p-6 space-y-6`}>
+      <div className="flex flex-wrap items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+        <span>{variant === 'capstone' ? 'Avaliação Final' : 'Exercício de Fixação'}</span>
         {showExplain ? (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 px-2 py-0.5">
-            <CheckCircle2 className="h-3.5 w-3.5" /> Resposta certa
+          <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-600 px-2 py-0.5 border border-emerald-500/20">
+            <CheckCircle2 className="h-3 w-3" /> Resposta Correta
           </span>
         ) : null}
       </div>
-      <p className="text-base leading-relaxed text-zinc-900 dark:text-zinc-100 font-medium">{exercise.stem}</p>
+      <p className="text-lg leading-relaxed text-foreground font-bold tracking-tight">{exercise.stem}</p>
 
-      <div className="space-y-2">
+      <div className="grid gap-3">
         {exercise.choices.map((c, idx) => {
           const sel = choice === idx;
           const locked = solved || hasSucceededLocally;
-          let ring = 'border-transparent bg-zinc-100/80 hover:bg-zinc-100 dark:bg-zinc-900 dark:hover:bg-zinc-900/70';
+          let ring = 'border-border bg-muted/20 hover:border-primary/50 hover:bg-muted/40';
           if (locked && idx === exercise.correctIndex) {
             ring = 'border-emerald-500 bg-emerald-500/10';
           } else if (!locked && sel && wrongPick) {
-            ring = 'border-red-400 bg-red-500/10';
+            ring = 'border-destructive bg-destructive/10';
           } else if (!locked && sel) {
             ring = 'border-primary bg-primary/5';
           }
@@ -73,9 +73,9 @@ export function McqLesson({ exercise, alreadySolved, onCorrect, variant = 'pract
               type="button"
               disabled={locked}
               onClick={() => pick(idx)}
-              className={`w-full text-left px-4 py-3 rounded-lg border-2 transition-colors text-sm leading-snug cursor-pointer ${ring} disabled:cursor-default`}
+              className={`w-full text-left px-6 py-4 border-2 transition-all text-sm font-bold leading-snug cursor-pointer rounded-none ${ring} disabled:cursor-default`}
             >
-              <span className="font-mono mr-3 text-[11px] text-zinc-500">{String.fromCharCode(65 + idx)}.</span>
+              <span className="font-black mr-4 text-[11px] text-muted-foreground/60">{String.fromCharCode(65 + idx)}.</span>
               {c}
             </button>
           );
@@ -83,38 +83,45 @@ export function McqLesson({ exercise, alreadySolved, onCorrect, variant = 'pract
       </div>
 
       {!showExplain && wrongPick ? (
-        <div className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400 bg-red-500/10 border border-red-300/60 rounded-lg p-3">
-          <XCircle className="h-4 w-4 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-3 text-xs font-bold uppercase tracking-wide text-destructive bg-destructive/5 border border-destructive/20 p-4">
+          <XCircle className="h-4 w-4 shrink-0" />
           <p>
-            Ainda não está certo — pensa no que esse enunciado exige antes de clicar na opção seguinte (podes trocar
-            quantas vezes precisares).
+            Ainda não está certo. Analisa melhor as opções antes de tentar novamente.
           </p>
         </div>
       ) : null}
 
       {showExplain ? (
-        <Tabs defaultValue="simple">
-          <TabsList className="w-full justify-start">
-            <TabsTrigger value="simple" className="text-[11px] uppercase tracking-wide">
-              Porquê · simples
-            </TabsTrigger>
-            <TabsTrigger value="deep" className="text-[11px] uppercase tracking-wide">
-              Porquê · a fundo
-            </TabsTrigger>
-          </TabsList>
-          <TabsContent value="simple" className="mt-3">
-            <div
-              className="prose prose-sm prose-zinc dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: exercise.explanationSimpleHtml }}
-            />
-          </TabsContent>
-          <TabsContent value="deep" className="mt-3">
-            <div
-              className="prose prose-sm prose-zinc dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: exercise.explanationDeepHtml }}
-            />
-          </TabsContent>
-        </Tabs>
+        <div className="pt-4 border-t border-border/50">
+          <Tabs defaultValue="simple">
+            <TabsList className="w-full justify-start rounded-none h-auto p-0 bg-transparent border-b border-border">
+              <TabsTrigger
+                value="simple"
+                className="text-[10px] font-black uppercase tracking-widest rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-2"
+              >
+                Porquê · Simples
+              </TabsTrigger>
+              <TabsTrigger
+                value="deep"
+                className="text-[10px] font-black uppercase tracking-widest rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent px-4 py-2"
+              >
+                Porquê · A Fundo
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="simple" className="mt-6">
+              <div
+                className="prose prose-sm prose-zinc dark:prose-invert max-w-none prose-p:leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: exercise.explanationSimpleHtml }}
+              />
+            </TabsContent>
+            <TabsContent value="deep" className="mt-6">
+              <div
+                className="prose prose-sm prose-zinc dark:prose-invert max-w-none prose-p:leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: exercise.explanationDeepHtml }}
+              />
+            </TabsContent>
+          </Tabs>
+        </div>
       ) : null}
     </div>
   );

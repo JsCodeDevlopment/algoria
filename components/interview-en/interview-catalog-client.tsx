@@ -8,7 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { Input } from '@/components/ui/input';
-import { DIFFICULTY_LABEL_PT } from '@/lib/catalog/problem-filters';
 import type { Difficulty, InterviewEnglishTrack } from '@/lib/content/schemas';
 
 export interface InterviewCatalogItem {
