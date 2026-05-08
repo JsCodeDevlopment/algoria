@@ -1,5 +1,7 @@
 export type Track = 'frontend' | 'backend' | 'devops';
 export type Level = 'junior' | 'pleno' | 'senior';
+export type Difficulty = 'fácil' | 'médio' | 'difícil';
+
 
 export interface QuizQuestion {
   id: string;
@@ -39,7 +41,9 @@ export interface TechnicalTest {
   slug: string;
   track: Track;
   level: Level;
+  difficulty: Difficulty;
   topic: string;
+
   title: string;
   description: string;
   timeLimitMinutes: number;
@@ -53,7 +57,9 @@ export const TECHNICAL_TESTS: TechnicalTest[] = [
     slug: 'frontend-pleno-geral',
     track: 'frontend',
     level: 'pleno',
-    topic: 'Geral',
+    difficulty: 'médio',
+    topic: 'Javascript',
+
     title: 'Simulado Frontend Pleno (Geral)',
     description: 'Avalia conhecimentos avançados de React, JavaScript assíncrono, CSS e capacidade de resolução de problemas algorítmicos práticos no browser.',
     timeLimitMinutes: 45,
@@ -417,6 +423,45 @@ public class Program {
       ]
     }
 
+  },
+  {
+    id: 'backend-junior-sql',
+    slug: 'backend-junior-sql',
+    track: 'backend',
+    level: 'junior',
+    difficulty: 'difícil',
+    topic: 'Bases de Dados',
+    title: 'Simulado Backend Junior (SQL)',
+    description: 'Teste focado em modelagem de dados, normalização e otimização de queries SQL complexas para performance.',
+    timeLimitMinutes: 30,
+    questions: [
+      {
+        id: 'q1',
+        question: 'Qual é a principal diferença entre um INNER JOIN e um LEFT JOIN?',
+        options: [
+          { id: 'a', text: 'INNER JOIN retorna apenas registos com correspondência em ambas as tabelas; LEFT JOIN retorna todos os registos da tabela da esquerda.' },
+          { id: 'b', text: 'LEFT JOIN é mais rápido que INNER JOIN.' },
+          { id: 'c', text: 'INNER JOIN apaga registos duplicados automaticamente.' },
+          { id: 'd', text: 'Não há diferença em bases de dados relacionais modernas.' },
+        ],
+        correctOptionId: 'a',
+        explanation: 'O INNER JOIN filtra apenas as interseções, enquanto o LEFT JOIN preserva toda a tabela à esquerda, preenchendo com NULL onde não há par.',
+      }
+    ],
+    challenge: {
+      title: 'Otimizar Query SQL',
+      description: 'Escreve uma query que retorne o total de vendas por categoria de produto no último mês.',
+      functionName: 'optimizeQuery',
+      templates: {
+        javascript: {
+          initialCode: '// Escreve a lógica da query simulada aqui',
+          testRunner: 'console.log(JSON.stringify([{id: "tc1", passed: true}]));'
+        }
+      },
+      testCases: [
+        { id: 'tc1', description: 'A query deve filtrar pelo último mês', assertion: '' }
+      ]
+    }
   }
 ];
 

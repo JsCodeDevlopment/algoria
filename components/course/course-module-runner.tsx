@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpenCheck, CheckCircle2, ChevronRight, Lock, Trophy } from 'lucide-react';
+import { ArrowRight, BookOpenCheck, CheckCircle2, ChevronRight, Lock, Trophy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { analyticsCapture } from '@/components/analytics/posthog-provider';
@@ -203,6 +203,15 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
                   Obter Certificado <ChevronRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
+
+              {pack.modules[moduleIndex + 1] && (
+                <Button asChild className="rounded-none font-black uppercase tracking-widest h-12 px-8 shadow-[4px_4px_0_0_rgba(var(--primary-rgb),0.2)]">
+                  <Link href={`/course/${pack.slug}/module/${encodeURIComponent(pack.modules[moduleIndex + 1].id)}`}>
+                    Próximo Módulo <ArrowRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+              )}
+
               <Button asChild variant="ghost" className="rounded-none font-black uppercase tracking-widest">
                 <Link href={`/course/${pack.slug}`}>
                   Voltar ao Programa

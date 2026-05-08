@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getTestsByTrack, Track } from "@/lib/content/tests-data";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
+import { cn } from "@/lib/utils";
 
 interface Params {
   track: string;
@@ -21,6 +22,7 @@ interface Params {
 interface SearchParams {
   level?: string;
   topic?: string;
+  difficulty?: string;
 }
 
 export async function generateMetadata({
@@ -46,7 +48,7 @@ export default async function TrackTestsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const { track } = await params;
-  const { level, topic } = await searchParams;
+  const { level, topic, difficulty } = await searchParams;
   const validTracks: Track[] = ["frontend", "backend", "devops"];
 
   if (!validTracks.includes(track as Track)) {
@@ -55,9 +57,10 @@ export default async function TrackTestsPage({
 
   let tests = getTestsByTrack(track as Track);
 
-  // Extract unique levels and topics for the track
+  // Extract unique levels, topics and difficulties for the track
   const availableLevels = Array.from(new Set(tests.map((t) => t.level)));
   const availableTopics = Array.from(new Set(tests.map((t) => t.topic)));
+  const availableDifficulties = Array.from(new Set(tests.map((t) => t.difficulty)));
 
   // Filter tests based on searchParams
   if (level) {
@@ -65,6 +68,9 @@ export default async function TrackTestsPage({
   }
   if (topic) {
     tests = tests.filter((t) => t.topic === topic);
+  }
+  if (difficulty) {
+    tests = tests.filter((t) => t.difficulty === difficulty);
   }
 
   const trackTitle = track.charAt(0).toUpperCase() + track.slice(1);
@@ -97,24 +103,24 @@ export default async function TrackTestsPage({
             <Filter className="h-4 w-4" /> Filtros:
           </div>
 
-          <div className="flex flex-wrap gap-4 flex-1">
+          <div className="flex flex-wrap gap-8 flex-1">
             {/* Level Filter */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Nível:
+                Sénioridade:
               </span>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Link
-                  href={`/tests/${track}${topic ? `?topic=${topic}` : ""}`}
-                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!level ? "bg-primary border-primary text-primary-foreground" : "border-border hover:border-primary/50"}`}
+                  href={`/tests/${track}${topic || difficulty ? `?${topic ? `topic=${topic}` : ""}${topic && difficulty ? "&" : ""}${difficulty ? `difficulty=${difficulty}` : ""}` : ""}`}
+                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!level ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
                 >
                   Todos
                 </Link>
                 {availableLevels.map((l) => (
                   <Link
                     key={l}
-                    href={`/tests/${track}?level=${l}${topic ? `&topic=${topic}` : ""}`}
-                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${level === l ? "bg-primary border-primary text-primary-foreground" : "border-border hover:border-primary/50"}`}
+                    href={`/tests/${track}?level=${l}${topic ? `&topic=${topic}` : ""}${difficulty ? `&difficulty=${difficulty}` : ""}`}
+                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${level === l ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
                   >
                     {l}
                   </Link>
@@ -123,31 +129,55 @@ export default async function TrackTestsPage({
             </div>
 
             {/* Topic Filter */}
-            <div className="flex items-center gap-2">
+            <div className="flex flex-col gap-2">
               <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
                 Tópico:
               </span>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Link
-                  href={`/tests/${track}${level ? `?level=${level}` : ""}`}
-                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!topic ? "bg-primary border-primary text-primary-foreground" : "border-border hover:border-primary/50"}`}
+                  href={`/tests/${track}${level || difficulty ? `?${level ? `level=${level}` : ""}${level && difficulty ? "&" : ""}${difficulty ? `difficulty=${difficulty}` : ""}` : ""}`}
+                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!topic ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
                 >
                   Todos
                 </Link>
                 {availableTopics.map((t) => (
                   <Link
                     key={t}
-                    href={`/tests/${track}?topic=${t}${level ? `&level=${level}` : ""}`}
-                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${topic === t ? "bg-primary border-primary text-primary-foreground" : "border-border hover:border-primary/50"}`}
+                    href={`/tests/${track}?topic=${t}${level ? `&level=${level}` : ""}${difficulty ? `&difficulty=${difficulty}` : ""}`}
+                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${topic === t ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
                   >
                     {t}
                   </Link>
                 ))}
               </div>
             </div>
+
+            {/* Difficulty Filter */}
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+                Dificuldade:
+              </span>
+              <div className="flex flex-wrap gap-2">
+                <Link
+                  href={`/tests/${track}${level || topic ? `?${level ? `level=${level}` : ""}${level && topic ? "&" : ""}${topic ? `topic=${topic}` : ""}` : ""}`}
+                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!difficulty ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
+                >
+                  Todos
+                </Link>
+                {availableDifficulties.map((d) => (
+                  <Link
+                    key={d}
+                    href={`/tests/${track}?difficulty=${d}${level ? `&level=${level}` : ""}${topic ? `&topic=${topic}` : ""}`}
+                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${difficulty === d ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
+                  >
+                    {d}
+                  </Link>
+                ))}
+              </div>
+            </div>
           </div>
 
-          {(level || topic) && (
+          {(level || topic || difficulty) && (
             <Link
               href={`/tests/${track}`}
               className="text-[10px] font-black uppercase tracking-widest text-destructive hover:underline cursor-pointer"
@@ -156,6 +186,7 @@ export default async function TrackTestsPage({
             </Link>
           )}
         </div>
+
 
         {tests.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -166,12 +197,26 @@ export default async function TrackTestsPage({
               >
                 <div>
                   <div className="mb-4 flex items-center justify-between">
-                    <Badge
-                      variant="outline"
-                      className="rounded-none text-[10px] uppercase font-black tracking-widest border-primary/30 text-primary"
-                    >
-                      {test.level}
-                    </Badge>
+                    <div className="flex gap-2">
+                      <Badge
+                        variant="outline"
+                        className="rounded-none text-[10px] uppercase font-black tracking-widest border-primary/30 text-primary"
+                      >
+                        {test.level}
+                      </Badge>
+                      <Badge
+                        variant="secondary"
+                        className={cn(
+                          "rounded-none text-[10px] uppercase font-black tracking-widest border-none",
+                          test.difficulty === "fácil" && "bg-emerald-500/10 text-emerald-600",
+                          test.difficulty === "médio" && "bg-amber-500/10 text-amber-600",
+                          test.difficulty === "difícil" && "bg-destructive/10 text-destructive",
+                        )}
+                      >
+                        {test.difficulty}
+                      </Badge>
+                    </div>
+
                     <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-wider">
                       <Clock className="h-3 w-3" /> {test.timeLimitMinutes}m
                     </div>
