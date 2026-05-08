@@ -7,6 +7,7 @@ Acompanha a evolução da Algoria. Aqui encontras as novas funcionalidades, prob
 - **Portfólio de Projetos Renovado** — Exibe os teus projetos pessoais e contribuições Open Source com um novo layout mais visual, com suporte para imagens de capa, links de demonstração e tecnologias utilizadas.
 - **Navegação Ultra-Fluida** — Otimizámos o carregamento do perfil para ser instantâneo e suave, garantindo uma experiência premium para quem visita o teu portfólio.
 - **Design Industrial Refinado** — Melhorámos a legibilidade da bio e das métricas de desempenho, integrando todos os teus dados profissionais num design coeso e profissional.
+- **Explorador de Talentos** — Lançamos uma nova página para descobrires outros membros da comunidade Algoria. Filtra por nome, cargo ou tecnologias e conecta-te com engenheiros que partilham os teus interesses técnicos.
 
 ## 2026-05-07 — Acesso Pro & Experiência de Membro
 
