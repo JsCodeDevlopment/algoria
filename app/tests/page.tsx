@@ -1,7 +1,8 @@
-import { ArrowRight, Code2, Layout, Database, Server } from "lucide-react";
+import { ArrowRight, Database, Layout, Server } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 
 export const metadata: Metadata = buildPublicMetadata({
@@ -13,21 +14,22 @@ export const metadata: Metadata = buildPublicMetadata({
 
 export default function TechnicalTestsIndexPage() {
   const tracks = [
-    { 
-      id: "frontend", 
-      title: "Frontend", 
-      description: "React, Next.js, Performance, Acessibilidade e Ecossistema Web.",
+    {
+      id: "frontend",
+      title: "Frontend",
+      description:
+        "React, Next.js, Performance, Acessibilidade e Ecossistema Web.",
       icon: Layout,
     },
-    { 
-      id: "backend", 
-      title: "Backend", 
+    {
+      id: "backend",
+      title: "Backend",
       description: "Node.js, APIs, Bases de Dados, Segurança e Arquitetura.",
       icon: Database,
     },
-    { 
-      id: "devops", 
-      title: "DevOps", 
+    {
+      id: "devops",
+      title: "DevOps",
       description: "Docker, CI/CD, Cloud, Monitorização e Infraestrutura.",
       icon: Server,
     },
@@ -36,26 +38,20 @@ export default function TechnicalTestsIndexPage() {
   return (
     <div className="relative bg-grid-pattern flex flex-col flex-1">
       <div className="mx-auto w-full max-w-7xl px-6 py-12 md:py-20 flex-1">
-        <header className="mb-10 rounded-xl border border-primary/35 bg-background/95 p-6 md:p-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-primary text-primary">
-                <Code2 className="h-6 w-6" aria-hidden />
-              </div>
-              <div className="space-y-3 max-w-2xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">
-                  Assessment
-                </p>
-                <h1 className="text-2xl font-black uppercase tracking-tight md:text-3xl">
-                  Escolhe a tua Trilha
-                </h1>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  Seleciona a tua área de especialização para ver os simulados disponíveis. 
-                  Cada trilha contém testes de diferentes níveis e tópicos específicos.
-                </p>
-              </div>
-            </div>
-          </div>
+        <header className="mb-16 border-l-4 border-primary pl-8">
+          <Badge
+            variant="secondary"
+            className="mb-4 rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[10px] uppercase text-primary"
+          >
+            Trilhas de Testes Técnicos
+          </Badge>
+          <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
+            Avaliações Técnicas
+          </h1>
+          <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
+            Simulados reais para vagas de Frontend, Backend e DevOps. Escolhe a
+            tua trilha e começa a tua avaliação profissional.
+          </p>
         </header>
 
         <div className="grid gap-6 md:grid-cols-3">

@@ -2,6 +2,7 @@ import { Pagination } from "@/components/explorer/pagination";
 import { SearchBar } from "@/components/explorer/search-bar";
 import { TechFilter } from "@/components/explorer/tech-filter";
 import { UserCard } from "@/components/explorer/user-card";
+import { Badge } from "@/components/ui/badge";
 import { db } from "@/lib/db";
 import { user, userProfile } from "@/lib/db/schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
@@ -80,22 +81,19 @@ export default async function ExplorerPage({
   return (
     <div className="relative flex-1 bg-grid-pattern pb-20">
       <div className="relative z-10 mx-auto max-w-7xl px-6 py-12 md:py-20">
-        <header className="mb-16">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="h-8 w-8 bg-primary flex items-center justify-center text-primary-foreground shadow-[4px_4px_0_0_rgba(var(--primary-rgb),0.2)]">
-              <Users size={18} />
-            </div>
-            <p className="text-[10px] font-black uppercase tracking-[0.4em] text-primary">
-              Comunidade Algoria
-            </p>
-          </div>
-          <h1 className="text-4xl md:text-6xl font-black tracking-tighter uppercase mb-6 leading-none">
-            Explorar <span className="text-primary">Talentos</span>
+        <header className="mb-16 border-l-4 border-primary pl-8">
+          <Badge
+            variant="secondary"
+            className="mb-4 rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[10px] uppercase text-primary"
+          >
+            Comunidade Algoria
+          </Badge>
+          <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
+            Explorar Talentos
           </h1>
-          <p className="text-muted-foreground max-w-2xl text-sm md:text-base leading-relaxed font-medium">
-            Conecta-te com outros engenheiros da plataforma. Filtra por stack
-            tecnológica, percurso profissional ou procura diretamente por nomes
-            e especialidades.
+          <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
+            Conecta-te com outros engenheiros da plataforma. Filtra por stack tecnológica,
+            percurso profissional ou procura diretamente por nomes e especialidades.
           </p>
         </header>
 
