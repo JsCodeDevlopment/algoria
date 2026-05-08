@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { getGithubProjectsAction } from "@/app/profile/github-actions";
 import type { Experience, Project, Role, CompanyProject } from "./types";
 
@@ -21,10 +21,10 @@ export function useProfileEditor({
     try {
       if (!initialExperiences) return [];
       const parsed = JSON.parse(initialExperiences);
-      return parsed.map((exp: any) => ({
+      return parsed.map((exp: Experience) => ({
         company: exp.company || "",
         location: exp.location || "",
-        roles: (exp.roles || []).map((role: any) => ({
+        roles: (exp.roles || []).map((role: Role) => ({
           title: role.title || "",
           startDate: role.startDate || "",
           endDate: role.endDate || "",
@@ -41,19 +41,19 @@ export function useProfileEditor({
   const [projects, setProjects] = useState<Project[]>(() => {
     try {
       if (!initialProjects) return [];
-      const parsed = JSON.parse(initialProjects);
-      return parsed.map((p: any) => ({
-        title: p.title || "",
-        description: p.description || "",
-        deployUrl:
-          p.deployUrl ||
-          (p.link && !p.link.includes("github.com") ? p.link : ""),
-        githubUrl:
-          p.githubUrl ||
-          (p.link && p.link.includes("github.com") ? p.link : ""),
-        technologies: p.technologies || [],
-        imageUrl: p.imageUrl || "",
-      }));
+    const parsed = JSON.parse(initialProjects);
+    return parsed.map((p: Project & { link?: string }) => ({
+      title: p.title || "",
+      description: p.description || "",
+      deployUrl:
+        p.deployUrl ||
+        (p.link && !p.link.includes("github.com") ? p.link : ""),
+      githubUrl:
+        p.githubUrl ||
+        (p.link && p.link.includes("github.com") ? p.link : ""),
+      technologies: p.technologies || [],
+      imageUrl: p.imageUrl || "",
+    }));
     } catch {
       return [];
     }
@@ -89,13 +89,13 @@ export function useProfileEditor({
     setExperiences(experiences.filter((_, i) => i !== index));
   };
 
-  const updateExperience = (
+  const updateExperience = <K extends keyof Experience>(
     index: number,
-    field: keyof Experience,
-    value: any,
+    field: K,
+    value: Experience[K],
   ) => {
     const newExp = [...experiences];
-    (newExp[index] as any)[field] = value;
+    newExp[index] = { ...newExp[index], [field]: value };
     setExperiences(newExp);
   };
 
@@ -119,14 +119,17 @@ export function useProfileEditor({
     setExperiences(newExp);
   };
 
-  const updateRole = (
+  const updateRole = <K extends keyof Role>(
     expIndex: number,
     roleIndex: number,
-    field: keyof Role,
-    value: string | boolean,
+    field: K,
+    value: Role[K],
   ) => {
     const newExp = [...experiences];
-    (newExp[expIndex].roles[roleIndex] as any)[field] = value;
+    newExp[expIndex].roles[roleIndex] = {
+      ...newExp[expIndex].roles[roleIndex],
+      [field]: value,
+    };
     setExperiences(newExp);
   };
 
@@ -236,9 +239,13 @@ export function useProfileEditor({
     setProjects(projects.filter((_, i) => i !== index));
   };
 
-  const updateProject = (index: number, field: keyof Project, value: any) => {
+  const updateProject = <K extends keyof Project>(
+    index: number,
+    field: K,
+    value: Project[K],
+  ) => {
     const newProj = [...projects];
-    (newProj[index] as any)[field] = value;
+    newProj[index] = { ...newProj[index], [field]: value };
     setProjects(newProj);
   };
 
@@ -252,8 +259,9 @@ export function useProfileEditor({
       const imported = await getGithubProjectsAction(githubUrl);
       setGithubRepos(imported);
       setShowGithubModal(true);
-    } catch (err: any) {
-      alert(err.message);
+    } catch (err) {
+      const error = err as Error;
+      alert(error.message);
     } finally {
       setLoadingGithub(false);
     }

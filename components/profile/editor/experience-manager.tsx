@@ -9,18 +9,18 @@ interface ExperienceManagerProps {
   experiences: Experience[];
   onAddExperience: () => void;
   onRemoveExperience: (index: number) => void;
-  onUpdateExperience: (
+  onUpdateExperience: <K extends keyof Experience>(
     index: number,
-    field: keyof Experience,
-    value: any,
+    field: K,
+    value: Experience[K],
   ) => void;
   onAddRole: (expIndex: number) => void;
   onRemoveRole: (expIndex: number, roleIndex: number) => void;
-  onUpdateRole: (
+  onUpdateRole: <K extends keyof Role>(
     expIndex: number,
     roleIndex: number,
-    field: keyof Role,
-    value: string | boolean,
+    field: K,
+    value: Role[K],
   ) => void;
   onAddCompanyProject: (expIndex: number) => void;
   onRemoveCompanyProject: (expIndex: number, projIndex: number) => void;

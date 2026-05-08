@@ -10,7 +10,11 @@ interface ProjectsManagerProps {
   loadingGithub: boolean;
   onAddProject: () => void;
   onRemoveProject: (index: number) => void;
-  onUpdateProject: (index: number, field: keyof Project, value: any) => void;
+  onUpdateProject: <K extends keyof Project>(
+    index: number,
+    field: K,
+    value: Project[K],
+  ) => void;
   onFetchGithub: () => void;
 }
 

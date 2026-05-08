@@ -54,10 +54,11 @@ export async function POST(req: Request) {
     }
 
     return Response.json({ url: checkoutSession.url });
-  } catch (err: any) {
-    console.error('Checkout error:', err);
+  } catch (err) {
+    const error = err as Error;
+    console.error('Checkout error:', error);
     return Response.json(
-      { error: err.message ?? 'Erro ao criar sessão de checkout.' },
+      { error: error.message ?? 'Erro ao criar sessão de checkout.' },
       { status: 500 },
     );
   }

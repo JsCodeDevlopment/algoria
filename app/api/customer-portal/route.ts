@@ -47,10 +47,11 @@ export async function POST(req: Request) {
     });
 
     return Response.json({ url: portalSession.url });
-  } catch (err: any) {
-    console.error('Portal error:', err);
+  } catch (err) {
+    const error = err as Error;
+    console.error('Portal error:', error);
     return Response.json(
-      { error: err.message ?? 'Erro ao abrir o portal de gestão.' },
+      { error: error.message ?? 'Erro ao abrir o portal de gestão.' },
       { status: 500 },
     );
   }

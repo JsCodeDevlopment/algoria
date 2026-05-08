@@ -30,7 +30,7 @@ export function ManageSubscriptionButton() {
       if (data.url) {
         window.location.href = data.url;
       }
-    } catch (err) {
+    } catch {
       addToast("Erro de rede ao tentar aceder ao portal.", "error");
     } finally {
       setLoading(false);

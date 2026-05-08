@@ -24,7 +24,8 @@ export async function getGithubProjectsAction(githubUrl: string) {
       ])),
       imageUrl: "",
     }));
-  } catch (err: any) {
-    throw new Error(err.message || "Erro ao importar do GitHub");
+  } catch (err) {
+    const error = err as Error;
+    throw new Error(error.message || "Erro ao importar do GitHub");
   }
 }

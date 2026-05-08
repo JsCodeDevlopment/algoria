@@ -76,7 +76,7 @@ export default async function EngineeringWorkGuidePage({
     authorData = (await db.query.user.findFirst({
       where: eq(user.name, "Jonatas Silva"),
     })) ?? null;
-  } catch (e) {
+  } catch {
     console.warn("Could not fetch author data from DB during build. Using fallback.");
   }
 

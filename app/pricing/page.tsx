@@ -26,7 +26,7 @@ export const metadata: Metadata = buildPublicMetadata({
 });
 
 export default async function PricingPage() {
-  const { monthly, yearly, yearlyNote } = formatPricingDisplay();
+  const { monthly, yearlyNote } = formatPricingDisplay();
   const canPay = checkoutAvailable();
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
