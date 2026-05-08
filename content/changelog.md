@@ -1,5 +1,13 @@
 Acompanha a evolução da Algoria. Aqui encontras as novas funcionalidades, problemas adicionados e melhorias criadas para acelerar a tua preparação técnica.
 
+## 2026-05-08 — Perfil Profissional Avançado
+
+- **Novo Showcase de Experiência** — Agora podes detalhar o teu percurso profissional com suporte para múltiplas funções na mesma empresa, promoções e descrição detalhada de conquistas.
+- **Destaque de Projetos por Empresa** — Adicionámos a capacidade de associares projetos específicos a cada experiência profissional, permitindo demonstrar o impacto real do teu trabalho em cada etapa da carreira.
+- **Portfólio de Projetos Renovado** — Exibe os teus projetos pessoais e contribuições Open Source com um novo layout mais visual, com suporte para imagens de capa, links de demonstração e tecnologias utilizadas.
+- **Navegação Ultra-Fluida** — Otimizámos o carregamento do perfil para ser instantâneo e suave, garantindo uma experiência premium para quem visita o teu portfólio.
+- **Design Industrial Refinado** — Melhorámos a legibilidade da bio e das métricas de desempenho, integrando todos os teus dados profissionais num design coeso e profissional.
+
 ## 2026-05-07 — Acesso Pro & Experiência de Membro
 
 - **Novo Portal de Assinatura** — Agora podes gerir a tua subscrição diretamente na plataforma. Clica em "Gerir Assinatura" na página de preços para ver faturas ou cancelar a qualquer momento via Stripe.
