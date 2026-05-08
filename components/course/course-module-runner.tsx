@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
-import { BookOpenCheck, ChevronRight, Lock, Trophy } from 'lucide-react';
+import { BookOpenCheck, CheckCircle2, ChevronRight, Lock, Trophy } from 'lucide-react';
 
+import { Button } from '@/components/ui/button';
 import { analyticsCapture } from '@/components/analytics/posthog-provider';
 import type { CourseModuleHydrated, CoursePackHydrated } from '@/lib/content/schemas';
 import { Badge } from '@/components/ui/badge';
@@ -83,117 +84,134 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
       : `/concepts/${module.linkedConceptSlug}?course=${encodeURIComponent(pack.slug)}&module=${encodeURIComponent(module.id)}`;
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-10 space-y-12">
-      <header className="space-y-3 border-l-4 border-primary pl-5">
-        <div className="flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.3em] text-primary">
-          <Badge variant="secondary" className="rounded-none text-[10px]">
-            Capítulo&nbsp;{moduleIndex + 1}/{pack.modules.length}
-          </Badge>
-          <span>Progresso local {pct}%</span>
-        </div>
-        <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-          {module.certificateTitle.replace(/^Certificado — /, '')}
-        </h1>
-        {module.certificateTagline ? (
-          <p className="text-muted-foreground text-sm leading-relaxed max-w-xl">{module.certificateTagline}</p>
-        ) : null}
-        <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">{module.conceptSummary}</p>
-      </header>
-
-      <section className="rounded-xl border border-border bg-muted/40 p-5 space-y-4">
-        <div className="flex items-start gap-3">
-          <BookOpenCheck className="h-5 w-5 text-primary shrink-0 mt-0.5" />
-          <div className="space-y-2">
-            <h2 className="text-lg font-semibold tracking-tight">Passo 1 — ler o conceito</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              O texto longo está no catálogo de conceitos. Abre quando quiseres, depois confirma aqui para registar o teu progresso só neste dispositivo.
-            </p>
+    <div className="relative bg-grid-pattern flex flex-col flex-1">
+      <div className="mx-auto w-full max-w-7xl px-6 py-10 flex-1 space-y-12">
+        <header className="space-y-4 border-l-4 border-primary pl-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge variant="secondary" className="rounded-none uppercase text-[10px] font-black tracking-[0.3em]">
+              Capítulo {moduleIndex + 1}/{pack.modules.length}
+            </Badge>
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground bg-muted px-2 py-0.5">
+              Progresso Local {pct}%
+            </span>
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-4 pt-2">
-          <Link
-            href={studyHref}
-            className="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 shadow-sm uppercase tracking-[0.12em]"
-          >
-            {module.linkedResourceKind === 'interview-en' ? 'Abrir artigo base (Interview EN)' : 'Abrir página do conceito'}
-            <ChevronRight className="h-4 w-4" />
-          </Link>
-          <label className="flex items-center gap-2 cursor-pointer select-none">
-            <input
-              id="lesson-mark"
-              type="checkbox"
-              className="h-4 w-4 rounded border-input accent-primary"
-              checked={!!slice.lessonReadAt}
-              onChange={(ev) => setLesson(pack.slug, module.id, ev.target.checked)}
-            />
-            <span className="text-sm leading-snug">Marquei a leitura do conceito</span>
-          </label>
-        </div>
-      </section>
+          <h1 className="text-3xl md:text-4xl font-black tracking-tight uppercase text-foreground">
+            {module.certificateTitle.replace(/^Certificado — /, '')}
+          </h1>
+          {module.certificateTagline && (
+            <p className="text-sm font-bold uppercase tracking-widest text-primary/80">{module.certificateTagline}</p>
+          )}
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-3xl">{module.conceptSummary}</p>
+        </header>
 
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">Passo 2 — exemplos guiados em duas densidades</h2>
-        <p className="text-sm text-muted-foreground">
-          Começa no separador simples e só depois abre o profundo quando tiveres carga cognitiva livre.
-        </p>
-        <div className="space-y-6">
-          {module.examples.map((ex) => (
-            <ExampleDualDepth
-              key={ex.title}
-              title={ex.title}
-              simpleHtml={ex.simpleHtml}
-              deepHtml={ex.deepHtml}
-              code={ex.code}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-4">
-        <h2 className="text-xl font-semibold tracking-tight">Passo 3 — exercícios rápidos de fixação</h2>
-        <div className="space-y-5">
-          {module.exercises.map((exercise) => (
-            <McqLesson
-              key={exercise.id}
-              variant="practice"
-              exercise={exercise}
-              alreadySolved={!!slice.solvedExerciseIds[exercise.id]}
-              onCorrect={() => markExercise(exercise.id)}
-            />
-          ))}
-        </div>
-      </section>
-
-      <section className="space-y-5">
-        <div className="flex items-start gap-2">
-          <Trophy className="h-5 w-5 text-amber-500 shrink-0 mt-1" />
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold tracking-tight">Passo 4 — prova deste capítulo liberta o certificado</h2>
-            <p className="text-sm text-muted-foreground leading-relaxed">
-              Depois da resposta correcta aparece aqui mesmo o certificado — guardado apenas localmente até mudares navegador/máquina.
-            </p>
+        <section className="border-2 border-border bg-background p-6 md:p-8 space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center border-2 border-primary text-primary">
+              <BookOpenCheck className="h-5 w-5" />
+            </div>
+            <div className="space-y-4 flex-1">
+              <div>
+                <h3 className="text-sm font-black uppercase tracking-widest mb-1">Passo 1 — Ler o Conceito</h3>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  O texto teórico completo está disponível no catálogo de conceitos. Estuda ao teu ritmo e depois marca a leitura abaixo.
+                </p>
+              </div>
+              
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <Button asChild className="rounded-none font-black uppercase tracking-widest h-11">
+                  <Link href={studyHref}>
+                    {module.linkedResourceKind === 'interview-en' ? 'Abrir Artigo (Interview EN)' : 'Abrir Conceito Teórico'}
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Link>
+                </Button>
+                
+                <label className="flex items-center gap-3 cursor-pointer select-none group">
+                  <div className="relative flex items-center justify-center">
+                    <input
+                      id="lesson-mark"
+                      type="checkbox"
+                      className="peer h-5 w-5 appearance-none border-2 border-border bg-background checked:bg-primary checked:border-primary transition-all cursor-pointer"
+                      checked={!!slice.lessonReadAt}
+                      onChange={(ev) => setLesson(pack.slug, module.id, ev.target.checked)}
+                    />
+                    <CheckCircle2 className="absolute h-3.5 w-3.5 text-primary-foreground opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" />
+                  </div>
+                  <span className="text-xs font-black uppercase tracking-widest group-hover:text-primary transition-colors">
+                    Concluí a Leitura
+                  </span>
+                </label>
+              </div>
+            </div>
           </div>
-        </div>
-        <McqLesson variant="capstone" exercise={module.capstone} alreadySolved={capOk} onCorrect={onCapstoneSuccess} />
-        {capOk ? (
-          <div className="flex flex-wrap items-center gap-3">
-            <Link
-              href={`/course/${pack.slug}/module/${encodeURIComponent(module.id)}/certificate`}
-              className="inline-flex items-center gap-2 rounded-lg border-2 border-amber-500/70 bg-amber-500/10 px-5 py-2.5 font-semibold text-sm uppercase tracking-[0.12em]"
-            >
-              Ver certificado
-              <ChevronRight className="h-4 w-4" />
-            </Link>
-            <Link href={`/course/${pack.slug}`} className="text-sm text-muted-foreground underline-offset-4 hover:underline">
-              ← Índice do curso
-            </Link>
+        </section>
+
+        <section className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="h-2 w-2 bg-primary" />
+            <h2 className="text-xl font-black uppercase tracking-tight">Passo 2 — Exemplos Guiados</h2>
           </div>
-        ) : (
-          <p className="text-xs text-muted-foreground">
-            Esta prova fecha o ciclo antes de poderes iniciar oficialmente o módulo seguinte desta série.
-          </p>
-        )}
-      </section>
+          <div className="grid gap-6">
+            {module.examples.map((ex) => (
+              <ExampleDualDepth
+                key={ex.title}
+                title={ex.title}
+                simpleHtml={ex.simpleHtml}
+                deepHtml={ex.deepHtml}
+                code={ex.code}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="space-y-6">
+          <div className="flex items-center gap-3">
+            <div className="h-2 w-2 bg-primary" />
+            <h2 className="text-xl font-black uppercase tracking-tight">Passo 3 — Fixação de Conhecimento</h2>
+          </div>
+          <div className="grid gap-6">
+            {module.exercises.map((exercise) => (
+              <McqLesson
+                key={exercise.id}
+                variant="practice"
+                exercise={exercise}
+                alreadySolved={!!slice.solvedExerciseIds[exercise.id]}
+                onCorrect={() => markExercise(exercise.id)}
+              />
+            ))}
+          </div>
+        </section>
+
+        <section className="border-t-4 border-primary bg-muted/20 p-8 space-y-8">
+          <div className="flex items-start gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-amber-500 text-amber-500">
+              <Trophy className="h-6 w-6" />
+            </div>
+            <div className="space-y-2">
+              <h2 className="text-xl font-black uppercase tracking-tight">Passo 4 — Prova Final</h2>
+              <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+                Supera este último desafio para desbloqueares o certificado oficial deste capítulo.
+              </p>
+            </div>
+          </div>
+
+          <McqLesson variant="capstone" exercise={module.capstone} alreadySolved={capOk} onCorrect={onCapstoneSuccess} />
+          
+          {capOk && (
+            <div className="flex flex-wrap items-center gap-4 pt-4 border-t border-border/50">
+              <Button asChild className="rounded-none bg-amber-600 hover:bg-amber-700 text-white font-black uppercase tracking-widest h-12 px-8">
+                <Link href={`/course/${pack.slug}/module/${encodeURIComponent(module.id)}/certificate`}>
+                  Obter Certificado <ChevronRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+              <Button asChild variant="ghost" className="rounded-none font-black uppercase tracking-widest">
+                <Link href={`/course/${pack.slug}`}>
+                  Voltar ao Programa
+                </Link>
+              </Button>
+            </div>
+          )}
+        </section>
+      </div>
     </div>
   );
 }
