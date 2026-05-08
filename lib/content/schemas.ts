@@ -218,6 +218,7 @@ export const EngineeringWorkMeta = z.object({
   summary: z.string().min(1),
   estimatedMinutes: z.number().int().positive().default(15),
   pillar: EngineeringWorkPillar,
+  image: z.string().optional(),
 });
 export type EngineeringWorkMeta = z.infer<typeof EngineeringWorkMeta>;
 

@@ -10,6 +10,7 @@ export type BuildPublicMetadataInput = {
   description: string;
   pathname: string;
   image?: string;
+  imageIsSquare?: boolean;
   keywords?: string[];
   openGraphLocale?: string;
   openGraphType?: 'website' | 'article';
@@ -39,6 +40,8 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
   const defaultImage = `${origin}/algoria-logo.png`;
   const shareImage = opts.image ? (opts.image.startsWith('http') ? opts.image : `${origin}${opts.image.startsWith('/') ? '' : '/'}${opts.image}`) : defaultImage;
 
+  const isSquare = opts.imageIsSquare || !opts.image;
+
   return {
     title: titleMeta,
     description,
@@ -63,14 +66,13 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
       images: [
         {
           url: shareImage,
-          width: 1200,
-          height: 630,
           alt: ogTitle,
+          ...(isSquare ? { width: 400, height: 400 } : { width: 1200, height: 630 }),
         },
       ],
     },
     twitter: {
-      card: 'summary_large_image',
+      card: isSquare ? 'summary' : 'summary_large_image',
       title: ogTitle,
       description,
       images: [shareImage],

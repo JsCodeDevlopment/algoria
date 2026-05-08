@@ -45,6 +45,7 @@ export async function generateMetadata(): Promise<Metadata> {
       "Gerencia o teu perfil, progresso de estudo e subscrições na Algoria.",
     pathname: "/profile",
     image: user?.image || undefined,
+    imageIsSquare: !!user?.image,
   });
 }
 

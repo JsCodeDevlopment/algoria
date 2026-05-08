@@ -56,6 +56,7 @@ export async function generateMetadata({
       "boas práticas produção",
       "Algoria guia",
     ],
+    image: guide.meta.image,
     openGraphType: "article",
   });
 }

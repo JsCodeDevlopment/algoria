@@ -48,6 +48,7 @@ export async function generateMetadata({ params }: PublicProfileProps) {
     description: `Vê o perfil público, tecnologias e progresso de ${userData[0].name} na Algoria.`,
     pathname: `/user/${id}`,
     image: userData[0].image || undefined,
+    imageIsSquare: !!userData[0].image,
   });
 }
 
