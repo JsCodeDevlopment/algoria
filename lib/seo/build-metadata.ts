@@ -9,6 +9,7 @@ export type BuildPublicMetadataInput = {
   titleAbsolute?: string;
   description: string;
   pathname: string;
+  image?: string;
   keywords?: string[];
   openGraphLocale?: string;
   openGraphType?: 'website' | 'article';
@@ -35,6 +36,9 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
     opts.titleAbsolute ??
     (typeof opts.title === 'string' ? opts.title : 'Algoria');
 
+  const defaultImage = `${origin}/algoria-logo.png`;
+  const shareImage = opts.image ? (opts.image.startsWith('http') ? opts.image : `${origin}${opts.image.startsWith('/') ? '' : '/'}${opts.image}`) : defaultImage;
+
   return {
     title: titleMeta,
     description,
@@ -43,10 +47,10 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
       canonical,
       ...(opts.openGraphLocale?.startsWith('en')
         ? {
-            languages: {
-              en: canonical,
-            },
-          }
+          languages: {
+            en: canonical,
+          },
+        }
         : {}),
     },
     openGraph: {
@@ -56,11 +60,20 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
       siteName: 'Algoria',
       locale: opts.openGraphLocale ?? 'pt_BR',
       type: opts.openGraphType ?? 'website',
+      images: [
+        {
+          url: shareImage,
+          width: 1200,
+          height: 630,
+          alt: ogTitle,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: ogTitle,
       description,
+      images: [shareImage],
     },
     robots: {
       index: true,

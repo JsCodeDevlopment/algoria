@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
@@ -21,26 +22,20 @@ export default async function CoursesIndexPage() {
   return (
     <div className="relative bg-grid-pattern flex flex-col flex-1">
       <div className="mx-auto w-full max-w-7xl px-6 py-12 md:py-20 flex-1">
-        <header className="mb-14 rounded-xl border border-primary/35 bg-background/95 p-6 md:p-8">
-          <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center border-2 border-primary text-primary">
-                <Code2 className="h-6 w-6" aria-hidden />
-              </div>
-              <div className="space-y-3 max-w-2xl">
-                <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">
-                  Algoria.curriculum
-                </p>
-                <h1 className="text-2xl font-black uppercase tracking-tight md:text-3xl">
-                  Cursos Guiados
-                </h1>
-                <p className="text-sm leading-relaxed text-muted-foreground">
-                  Cada curso combina leitura, exemplos práticos e exercícios no browser.
-                  Obtém certificados modulares ao concluir as avaliações de cada capítulo.
-                </p>
-              </div>
-            </div>
-          </div>
+        <header className="mb-16 border-l-4 border-primary pl-8">
+          <Badge
+            variant="secondary"
+            className="mb-4 rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[10px] uppercase text-primary"
+          >
+            Trilhas de Aprendizagem
+          </Badge>
+          <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
+            Cursos Guiados
+          </h1>
+          <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
+            Percursos estruturados com leitura curada, exercícios no browser e certificado modular
+            ao concluir cada avaliação.
+          </p>
         </header>
 
         <div className="grid gap-6">

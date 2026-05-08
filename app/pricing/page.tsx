@@ -6,6 +6,7 @@ import { CheckoutButton } from "@/components/billing/checkout-button";
 import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
 import { PricingPageAnalytics } from "@/components/billing/pricing-analytics";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
 import { userHasPro } from "@/lib/billing/entitlements";
 import {
@@ -46,17 +47,19 @@ export default async function PricingPage() {
             <ArrowLeft className="h-3.5 w-3.5" /> Início
           </Link>
         </Button>
-        <header className="mb-12 border-l-4 border-primary pl-8">
-          <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">
-            Monetização transparente
-          </p>
-          <h1 className="mt-2 text-4xl font-black uppercase tracking-tighter md:text-5xl">
-            Planos
+        <header className="mb-16 border-l-4 border-primary pl-8">
+          <Badge
+            variant="secondary"
+            className="mb-4 rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[10px] uppercase text-primary"
+          >
+            Monetização Transparente
+          </Badge>
+          <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
+            Planos e Preços
           </h1>
-          <p className="mt-4 max-w-2xl text-muted-foreground">
-            Dez problemas e funcionalidades essenciais gratuitos. Pro
-            desbloqueia o catálogo completo, sincronização de progresso e
-            investimento contínuo em conteúdo.
+          <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
+            Compara o plano gratuito com a subscrição Pro: desbloqueia o catálogo completo,
+            sincronização de progresso e investimento contínuo em conteúdo.
           </p>
         </header>
 

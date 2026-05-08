@@ -1,5 +1,6 @@
 import { eq } from "drizzle-orm";
 import { ArrowLeft, Trash2, User } from "lucide-react";
+import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -19,24 +20,33 @@ import {
 } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { technicalAssessmentResults, subscription, userProfile, userProgress } from "@/lib/db/schema";
+import {
+  subscription,
+  technicalAssessmentResults,
+  userProfile,
+  userProgress,
+} from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
 
-import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
-import { buildPublicMetadata } from "@/lib/seo/build-metadata";
-import Image from "next/image";
 import { ProfileActionsClient } from "@/components/profile/profile-actions-client";
 import { ProfileAssessmentVisibilityToggle } from "@/components/profile/profile-assessment-visibility-toggle";
 import { AssessmentCard } from "@/components/profile/public/assessment-card";
-import { cn } from "@/lib/utils";
+import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
+import { buildPublicMetadata } from "@/lib/seo/build-metadata";
+import Image from "next/image";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  const user = session?.user;
 
-export const metadata = buildPublicMetadata({
-  title: "Meu Perfil",
-  description:
-    "Gerencia o teu perfil, progresso de estudo e subscrições na Algoria.",
-  pathname: "/profile",
-});
+  return buildPublicMetadata({
+    title: "Meu Perfil",
+    description:
+      "Gerencia o teu perfil, progresso de estudo e subscrições na Algoria.",
+    pathname: "/profile",
+    image: user?.image || undefined,
+  });
+}
 
 export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -48,29 +58,29 @@ export default async function ProfilePage() {
   const { user } = session;
 
   // Buscar progressos e subscrição
-  const [progressRows, subRows, profileRows, assessmentRows] = await Promise.all([
-    db
-      .select()
-      .from(userProgress)
-      .where(eq(userProgress.userId, user.id))
-      .limit(1),
-    db
-      .select()
-      .from(subscription)
-      .where(eq(subscription.userId, user.id))
-      .limit(1),
-    db
-      .select()
-      .from(userProfile)
-      .where(eq(userProfile.userId, user.id))
-      .limit(1),
-    db
-      .select()
-      .from(technicalAssessmentResults)
-      .where(eq(technicalAssessmentResults.userId, user.id))
-      .orderBy(desc(technicalAssessmentResults.completedAt)),
-  ]);
-
+  const [progressRows, subRows, profileRows, assessmentRows] =
+    await Promise.all([
+      db
+        .select()
+        .from(userProgress)
+        .where(eq(userProgress.userId, user.id))
+        .limit(1),
+      db
+        .select()
+        .from(subscription)
+        .where(eq(subscription.userId, user.id))
+        .limit(1),
+      db
+        .select()
+        .from(userProfile)
+        .where(eq(userProfile.userId, user.id))
+        .limit(1),
+      db
+        .select()
+        .from(technicalAssessmentResults)
+        .where(eq(technicalAssessmentResults.userId, user.id))
+        .orderBy(desc(technicalAssessmentResults.completedAt)),
+    ]);
 
   const activeSub = subRows[0];
   const isPro = activeSub?.status === "active";
@@ -262,25 +272,27 @@ export default async function ProfilePage() {
         <section className="mb-12">
           <div className="flex items-center gap-3 mb-6">
             <div className="h-6 w-2 bg-primary" />
-            <h2 className="text-xl font-black uppercase tracking-widest">Resultados de Assessments</h2>
+            <h2 className="text-xl font-black uppercase tracking-widest">
+              Resultados de Assessments
+            </h2>
           </div>
-          
+
           {assessmentRows.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2">
               {assessmentRows.map((result) => (
-                <div 
+                <div
                   key={result.id}
                   className="border-2 border-border bg-background p-6 relative group overflow-hidden"
                 >
                   <div className="flex justify-between items-start mb-6">
                     <div className="flex items-center gap-2">
-                      <ProfileAssessmentVisibilityToggle 
-                        testSlug={result.testSlug} 
-                        initialIsPublic={result.isPublic} 
+                      <ProfileAssessmentVisibilityToggle
+                        testSlug={result.testSlug}
+                        initialIsPublic={result.isPublic}
                       />
                     </div>
                   </div>
-                  
+
                   <div className="mt-4 pt-4 border-t border-border/50">
                     <AssessmentCard
                       testSlug={result.testSlug}
@@ -297,8 +309,6 @@ export default async function ProfilePage() {
                     />
                   </div>
                 </div>
-
-
               ))}
             </div>
           ) : (
@@ -306,7 +316,11 @@ export default async function ProfilePage() {
               <p className="text-sm font-medium text-muted-foreground mb-4">
                 Ainda não completaste nenhum assessment técnico.
               </p>
-              <Button asChild variant="outline" className="rounded-none font-black uppercase tracking-widest text-[10px]">
+              <Button
+                asChild
+                variant="outline"
+                className="rounded-none font-black uppercase tracking-widest text-[10px]"
+              >
                 <Link href="/tests">Explorar Simulados</Link>
               </Button>
             </div>

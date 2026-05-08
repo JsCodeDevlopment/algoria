@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 import { getChangelogHtml } from "@/lib/content/loader";
@@ -32,14 +33,17 @@ export default async function ChangelogPage() {
           </Link>
         </Button>
         <main>
-          <header className="mb-10 border-l-4 border-primary pl-8">
-            <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary mb-2">
-              Atualizações
-            </p>
-            <h1 className="text-4xl font-black tracking-tighter uppercase mb-3">
+          <header className="mb-16 border-l-4 border-primary pl-8">
+            <Badge
+              variant="secondary"
+              className="mb-4 rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[10px] uppercase text-primary"
+            >
+              Últimas Atualizações
+            </Badge>
+            <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
               Novidades
             </h1>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+            <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
               Descobre as últimas melhorias, novos conteúdos e funcionalidades
               desenhadas para levar o teu conhecimento técnico ao próximo nível.
             </p>
