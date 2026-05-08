@@ -16,6 +16,9 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
 - 🎓 **Curso guiado** — trilha modular com exemplos, MCQs e certificado por capítulo (progresso no browser)
 - 🌍 **Interview English** — hub `/interview-en` com vocabulário e scripts 100% em inglês para entrevistas
 - 💼 **Engenharia no trabalho** — guias didáticos `/engineering-work` (frontend, backend, DevOps)
+- 🧪 **Testes Técnicos** — hub `/tests` com simulados reais (escolha múltipla + live coding) por trilha e nível
+- 👤 **Perfis Profissionais** — portfólio público `/profile` com experiência detalhada, projetos e tecnologias
+- 🔍 **Explorador de Talentos** — hub `/explorer` para descobrir e conectar-te com outros engenheiros da comunidade
 - 🌓 **Tema claro/escuro** (`next-themes`)
 - 📊 **Analytics opcional** — PostHog quando `NEXT_PUBLIC_POSTHOG_KEY` está definido
 - 🔍 **SEO** — `sitemap.ts` e `robots.ts` com gate por ambiente (`NEXT_PUBLIC_ENVIRONMENT` + `NODE_ENV`)
@@ -35,7 +38,10 @@ algoria/
 │   ├── concepts/                     # Índice + página por conceito
 │   ├── curso/                        # Programas e módulos guiados
 │   ├── interview-en/                 # Hub EN + artigos
-│   └── engenharia-trabalho/          # Hub + guias por slug
+│   ├── engenharia-trabalho/          # Hub + guias por slug
+│   ├── tests/                        # Hub de testes + execução por slug
+│   ├── explorer/                     # Explorador de talentos / engenheiros
+│   └── profile/                      # Perfil profissional (pessoal e público)
 ├── components/
 │   ├── ui/                           # Button, Card, Tabs, Badge, …
 │   ├── layout/                       # Site header / footer
@@ -45,6 +51,9 @@ algoria/
 │   ├── problem/                    # Tabs / barras de estudo
 │   ├── solution/                   # Seletor de linguagem, trackers
 │   ├── course/                     # Runner do curso, MCQ, certificado
+│   ├── tests/                      # Motor de testes técnicos, avaliação de código
+│   ├── profile/                    # Componentes de portfólio e editor de perfil
+│   ├── explorer/                   # Filtros e cards de talentos
 │   ├── concepts/                   # Tracker de visitas
 │   ├── complexity/                 # Badges Big O
 │   ├── analytics/                  # PostHog provider

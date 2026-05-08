@@ -55,10 +55,10 @@ export const NAVIGATION_ITEMS = [
     Icon: Users,
   },
   {
-    href: "/#technical-job-tests",
+    href: "/tests",
     label: "Testes técnicos",
     description: "Preparação para vagas",
-    Icon: Target,
+    Icon: Code2,
   },
   {
     href: "/pricing",

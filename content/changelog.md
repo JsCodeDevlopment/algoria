@@ -1,5 +1,14 @@
 Acompanha a evolução da Algoria. Aqui encontras as novas funcionalidades, problemas adicionados e melhorias criadas para acelerar a tua preparação técnica.
 
+## 2026-05-08 — Simulados Técnicos de Engenharia
+
+- **Módulo de Testes Técnicos** — Lançámos um novo motor de avaliação `/tests` para simular processos de recrutamento reais. Escolhe entre as trilhas de Frontend, Backend ou DevOps.
+- **Teoria + Prática** — Cada simulado combina 6 perguntas teóricas de alta dificuldade com um desafio prático de código.
+- **Avaliação em Tempo Real** — Implementámos um Playground de código com execução no browser e validação automática de casos de teste para medir a tua performance algorítmica.
+- **Especialização por Tópico** — Agora podes filtrar testes não só por nível (Júnior, Pleno, Sênior), mas também por tópicos específicos como SEO, Segurança ou Fundamentos.
+- **Navegação Não-Linear** — Liberdade total para saltares entre perguntas e o desafio de código, permitindo que geres o teu tempo de teste como preferires.
+- **UX Industrial Refinada** — Substituímos alertas de sistema por Diálogos de confirmação integrados e otimizámos o layout para visualização completa em desktops.
+
 ## 2026-05-08 — Perfil Profissional Avançado
 
 - **Novo Showcase de Experiência** — Agora podes detalhar o teu percurso profissional com suporte para múltiplas funções na mesma empresa, promoções e descrição detalhada de conquistas.
