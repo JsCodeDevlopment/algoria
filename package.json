@@ -9,10 +9,7 @@
     "lint": "eslint",
     "test": "vitest run",
     "test:e2e": "playwright test",
-    "validate:content": "tsx scripts/validate-content.ts",
-    "db:push": "drizzle-kit push",
-    "sync:player-annotations": "tsx scripts/sync-annotation-three-levels.ts",
-    "bootstrap:phase1": "tsx scripts/bootstrap-phase1-problems.ts"
+    "db:push": "drizzle-kit push"
   },
   "dependencies": {
     "@monaco-editor/react": "^4.7.0",

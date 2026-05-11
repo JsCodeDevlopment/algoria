@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { EditProfileForm } from "@/components/profile/edit-profile-form";
 
 import { DeleteAccountForm } from "@/components/auth/delete-account-form";
+import { BecomeCreatorButton } from "@/components/profile/become-creator-button";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -58,8 +59,8 @@ export default async function ProfilePage() {
 
   const { user } = session;
 
-  // Buscar progressos e subscrição
-  const [progressRows, subRows, profileRows, assessmentRows] =
+  // Buscar progressos, subscrição e dados do user (role/status pedido)
+  const [progressRows, subRows, profileRows, assessmentRows, dbUserRows] =
     await Promise.all([
       db
         .select()
@@ -81,8 +82,17 @@ export default async function ProfilePage() {
         .from(technicalAssessmentResults)
         .where(eq(technicalAssessmentResults.userId, user.id))
         .orderBy(desc(technicalAssessmentResults.completedAt)),
+      db
+        .select({ 
+          role: user.role, 
+          creatorRequestStatus: user.creatorRequestStatus 
+        })
+        .from(user)
+        .where(eq(user.id, session.user.id))
+        .limit(1),
     ]);
 
+  const dbUser = dbUserRows[0];
   const activeSub = subRows[0];
   const isPro = activeSub?.status === "active";
 
@@ -189,6 +199,9 @@ export default async function ProfilePage() {
           </div>
           <div className="flex flex-col gap-3 w-full md:w-auto">
             <SignOutButton />
+            {dbUser?.role === 'USER' && (
+              <BecomeCreatorButton status={dbUser.creatorRequestStatus} />
+            )}
             <form action="/api/customer-portal" method="POST">
               <Button
                 type="submit"

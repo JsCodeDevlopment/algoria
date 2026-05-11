@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
+import { admin } from 'better-auth/plugins';
 
 import { db } from '@/lib/db';
 import { authSchema } from '@/lib/db/schema';
@@ -38,4 +39,10 @@ export const auth = betterAuth({
     process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || '',
   ].filter(Boolean),
   plugins: [nextCookies()],
+  user: {
+    additionalFields: {
+      role: { type: 'string' },
+      creatorRequestStatus: { type: 'string' },
+    },
+  },
 });
