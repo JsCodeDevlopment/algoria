@@ -1,229 +1,74 @@
-import { promises as fs } from 'node:fs';
-import path from 'node:path';
-
-import { renderMarkdown, type RenderMarkdownOptions } from './markdown';
-import {
-  AnnotationsFile,
-  ConceptMeta,
-  EngineeringWorkMeta,
-  ExecutionTraceFileSchema,
-  InterviewEnglishMeta,
-  LANGUAGES,
-  ProblemMeta,
-  SolutionMeta,
-  type Concept,
-  type EngineeringWorkGuide,
-  type InterviewEnglishTopic,
-  type Language,
-  type Problem,
-  type Solution,
+import { getContentRepository } from './content-repository';
+import type {
+  Concept,
+  EngineeringWorkGuide,
+  InterviewEnglishTopic,
+  Problem,
+  Solution,
 } from './schemas';
 
-const CONTENT_ROOT = path.join(process.cwd(), 'content');
-
-const PROBLEMS_DIR = path.join(CONTENT_ROOT, 'problems');
-const CONCEPTS_DIR = path.join(CONTENT_ROOT, 'concepts');
-const INTERVIEW_EN_DIR = path.join(CONTENT_ROOT, 'interview-en');
-const ENGENHARIA_TRABALHO_DIR = path.join(CONTENT_ROOT, 'engenharia-trabalho');
-const CHANGELOG_MD = path.join(CONTENT_ROOT, 'changelog.md');
-
-const SOLUTION_FILES: Record<Language, string> = {
-  typescript: 'solution.ts',
-  javascript: 'solution.js',
-  python: 'solution.py',
-  java: 'solution.java',
-  rust: 'solution.rs',
-  go: 'solution.go',
-  csharp: 'solution.cs',
-};
-
-async function fileExists(filePath: string): Promise<boolean> {
-  try {
-    await fs.access(filePath);
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-async function readJson<T>(file: string): Promise<T> {
-  const raw = await fs.readFile(file, 'utf8');
-  return JSON.parse(raw) as T;
-}
-
-async function readMarkdown(file: string, options?: RenderMarkdownOptions): Promise<string> {
-  try {
-    const raw = await fs.readFile(file, 'utf8');
-    return renderMarkdown(raw, options);
-  } catch {
-    return '';
-  }
-}
-
-async function listDirs(parent: string): Promise<string[]> {
-  try {
-    const entries = await fs.readdir(parent, { withFileTypes: true });
-    return entries.filter((e) => e.isDirectory()).map((e) => e.name);
-  } catch {
-    return [];
-  }
-}
+const repo = getContentRepository();
 
 export async function getAllProblemSlugs(): Promise<string[]> {
-  return listDirs(PROBLEMS_DIR);
+  const problems = await repo.getAllProblems();
+  return problems.map(p => p.meta.slug);
 }
 
 export async function getAllConceptSlugs(): Promise<string[]> {
-  return listDirs(CONCEPTS_DIR);
+  const concepts = await repo.getAllConcepts();
+  return concepts.map(c => c.meta.slug);
 }
 
 export async function getAllInterviewEnglishSlugs(): Promise<string[]> {
-  return listDirs(INTERVIEW_EN_DIR);
+  const topics = await repo.getAllInterviewEnglishTopics();
+  return topics.map(t => t.meta.slug);
 }
 
 export async function getAllEngineeringWorkSlugs(): Promise<string[]> {
-  return listDirs(ENGENHARIA_TRABALHO_DIR);
-}
-
-async function loadSolution(problemDir: string, solutionSlug: string): Promise<Solution> {
-  const dir = path.join(problemDir, 'solutions', solutionSlug);
-  const meta = SolutionMeta.parse(await readJson<unknown>(path.join(dir, 'meta.json')));
-  const codeByLanguage: Partial<Record<Language, string>> = {};
-  for (const lang of LANGUAGES) {
-    const fileName = SOLUTION_FILES[lang];
-    const fp = path.join(dir, fileName);
-    if (await fileExists(fp)) {
-      codeByLanguage[lang] = await fs.readFile(fp, 'utf8');
-    }
-  }
-  if (!codeByLanguage[meta.language]) {
-    throw new Error(
-      `Missing solution file for canonical language "${meta.language}" in ${solutionSlug} (expected ${SOLUTION_FILES[meta.language]})`,
-    );
-  }
-  const introHtml = await readMarkdown(path.join(dir, 'intro.md'));
-  const annotationsRaw = await readJson<unknown>(path.join(dir, 'annotations.json'));
-  const annotations = AnnotationsFile.parse(annotationsRaw).annotations;
-
-  let executionTrace: Solution['executionTrace'];
-  const tracePath = path.join(dir, 'trace.json');
-  if (await fileExists(tracePath)) {
-    const traceRaw = await readJson<unknown>(tracePath);
-    executionTrace = ExecutionTraceFileSchema.parse(traceRaw).steps;
-  }
-
-  return { meta, codeByLanguage, introHtml, annotations, executionTrace };
+  const guides = await repo.getAllEngineeringWorkGuides();
+  return guides.map(g => g.meta.slug);
 }
 
 export async function getProblem(slug: string): Promise<Problem | null> {
-  const dir = path.join(PROBLEMS_DIR, slug);
-  let metaRaw: unknown;
-  try {
-    metaRaw = await readJson<unknown>(path.join(dir, 'meta.json'));
-  } catch {
-    return null;
-  }
-  const meta = ProblemMeta.parse(metaRaw);
-  const descriptionHtml = await readMarkdown(path.join(dir, 'description.md'));
-  const solutionSlugs = await listDirs(path.join(dir, 'solutions'));
-  const solutions = await Promise.all(solutionSlugs.map((s) => loadSolution(dir, s)));
-  // Stable ordering: brute-force first, then optimal, then alternatives.
-  solutions.sort((a, b) => orderForKind(a.meta.kind) - orderForKind(b.meta.kind));
-  return { meta, descriptionHtml, solutions };
-}
-
-function orderForKind(kind: string): number {
-  switch (kind) {
-    case 'brute-force':
-      return 0;
-    case 'optimal':
-      return 1;
-    case 'alternative':
-      return 2;
-    default:
-      return 99;
-  }
+  return repo.getProblem(slug);
 }
 
 export async function getAllProblems(): Promise<Problem[]> {
-  const slugs = await getAllProblemSlugs();
-  const problems = await Promise.all(slugs.map((slug) => getProblem(slug)));
-  return problems.filter((p): p is Problem => p !== null);
+  return repo.getAllProblems();
 }
 
 export async function getConcept(slug: string): Promise<Concept | null> {
-  const dir = path.join(CONCEPTS_DIR, slug);
-  let metaRaw: unknown;
-  try {
-    metaRaw = await readJson<unknown>(path.join(dir, 'meta.json'));
-  } catch {
-    return null;
-  }
-  const meta = ConceptMeta.parse(metaRaw);
-  const bodyHtml = await readMarkdown(path.join(dir, 'body.md'));
-  return { meta, bodyHtml };
+  return repo.getConcept(slug);
 }
 
 export async function getAllConcepts(): Promise<Concept[]> {
-  const slugs = await getAllConceptSlugs();
-  const concepts = await Promise.all(slugs.map((slug) => getConcept(slug)));
-  return concepts.filter((c): c is Concept => c !== null);
+  return repo.getAllConcepts();
 }
 
 export async function getInterviewEnglishTopic(slug: string): Promise<InterviewEnglishTopic | null> {
-  const dir = path.join(INTERVIEW_EN_DIR, slug);
-  let metaRaw: unknown;
-  try {
-    metaRaw = await readJson<unknown>(path.join(dir, 'meta.json'));
-  } catch {
-    return null;
-  }
-  const meta = InterviewEnglishMeta.parse(metaRaw);
-  const bodyHtml = await readMarkdown(path.join(dir, 'body.md'));
-  return { meta, bodyHtml };
+  return repo.getInterviewEnglishTopic(slug);
 }
 
 export async function getAllInterviewEnglishTopics(): Promise<InterviewEnglishTopic[]> {
-  const slugs = await getAllInterviewEnglishSlugs();
-  const topics = await Promise.all(slugs.map((slug) => getInterviewEnglishTopic(slug)));
-  return topics.filter((t): t is InterviewEnglishTopic => t !== null);
+  return repo.getAllInterviewEnglishTopics();
 }
 
 export async function getEngineeringWorkGuide(slug: string): Promise<EngineeringWorkGuide | null> {
-  const dir = path.join(ENGENHARIA_TRABALHO_DIR, slug);
-  let metaRaw: unknown;
-  try {
-    metaRaw = await readJson<unknown>(path.join(dir, 'meta.json'));
-  } catch {
-    return null;
-  }
-  const meta = EngineeringWorkMeta.parse(metaRaw);
-  const bodyHtml = await readMarkdown(path.join(dir, 'body.md'), { didacticBlocks: true });
-  return { meta, bodyHtml };
+  return repo.getEngineeringWorkGuide(slug);
 }
 
 export async function getAllEngineeringWorkGuides(): Promise<EngineeringWorkGuide[]> {
-  const slugs = await getAllEngineeringWorkSlugs();
-  const guides = await Promise.all(slugs.map((slug) => getEngineeringWorkGuide(slug)));
-  return guides.filter((g): g is EngineeringWorkGuide => g !== null);
+  return repo.getAllEngineeringWorkGuides();
 }
 
-/** Markdown editorial da página Novidades (`content/changelog.md`). */
 export async function getChangelogHtml(): Promise<string | null> {
-  try {
-    const raw = await fs.readFile(CHANGELOG_MD, 'utf8');
-    return renderMarkdown(raw);
-  } catch {
-    return null;
-  }
+  return repo.getChangelogHtml();
 }
 
 export async function getSolution(problemSlug: string, solutionSlug: string): Promise<Solution | null> {
-  try {
-    return await loadSolution(path.join(PROBLEMS_DIR, problemSlug), solutionSlug);
-  } catch {
-    return null;
-  }
+  const problem = await repo.getProblem(problemSlug);
+  if (!problem) return null;
+  return problem.solutions.find(s => s.meta.slug === solutionSlug) ?? null;
 }
 
 /* ── Adjacent-content helpers (for prev/next navigation) ── */
@@ -238,26 +83,26 @@ interface AdjacentResult {
   next: AdjacentItem | null;
 }
 
-async function getAdjacentFromDir(
-  dir: string,
+async function getAdjacentFromRepo(
+  slugs: string[],
   currentSlug: string,
   loadTitle: (slug: string) => Promise<string | null>,
 ): Promise<AdjacentResult> {
-  const slugs = (await listDirs(dir)).sort();
-  const idx = slugs.indexOf(currentSlug);
+  const sortedSlugs = [...slugs].sort();
+  const idx = sortedSlugs.indexOf(currentSlug);
   if (idx === -1) return { prev: null, next: null };
 
   let prev: AdjacentItem | null = null;
   let next: AdjacentItem | null = null;
 
   if (idx > 0) {
-    const s = slugs[idx - 1]!;
+    const s = sortedSlugs[idx - 1]!;
     const title = await loadTitle(s);
     if (title) prev = { slug: s, title };
   }
 
-  if (idx < slugs.length - 1) {
-    const s = slugs[idx + 1]!;
+  if (idx < sortedSlugs.length - 1) {
+    const s = sortedSlugs[idx + 1]!;
     const title = await loadTitle(s);
     if (title) next = { slug: s, title };
   }
@@ -266,28 +111,32 @@ async function getAdjacentFromDir(
 }
 
 export async function getAdjacentProblems(currentSlug: string): Promise<AdjacentResult> {
-  return getAdjacentFromDir(PROBLEMS_DIR, currentSlug, async (s) => {
+  const slugs = await getAllProblemSlugs();
+  return getAdjacentFromRepo(slugs, currentSlug, async (s) => {
     const p = await getProblem(s);
     return p?.meta.title ?? null;
   });
 }
 
 export async function getAdjacentConcepts(currentSlug: string): Promise<AdjacentResult> {
-  return getAdjacentFromDir(CONCEPTS_DIR, currentSlug, async (s) => {
+  const slugs = await getAllConceptSlugs();
+  return getAdjacentFromRepo(slugs, currentSlug, async (s) => {
     const c = await getConcept(s);
     return c?.meta.title ?? null;
   });
 }
 
 export async function getAdjacentInterviewEnglish(currentSlug: string): Promise<AdjacentResult> {
-  return getAdjacentFromDir(INTERVIEW_EN_DIR, currentSlug, async (s) => {
+  const slugs = await getAllInterviewEnglishSlugs();
+  return getAdjacentFromRepo(slugs, currentSlug, async (s) => {
     const t = await getInterviewEnglishTopic(s);
     return t?.meta.title ?? null;
   });
 }
 
 export async function getAdjacentEngineeringWork(currentSlug: string): Promise<AdjacentResult> {
-  return getAdjacentFromDir(ENGENHARIA_TRABALHO_DIR, currentSlug, async (s) => {
+  const slugs = await getAllEngineeringWorkSlugs();
+  return getAdjacentFromRepo(slugs, currentSlug, async (s) => {
     const g = await getEngineeringWorkGuide(s);
     return g?.meta.title ?? null;
   });

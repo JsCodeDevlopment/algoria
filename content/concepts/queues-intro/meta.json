@@ -1,9 +1,0 @@
-{
-  "slug": "queues-intro",
-  "title": "Queues (filas)",
-  "category": "fundamentals",
-  "difficulty": "easy",
-  "estimatedMinutes": 20,
-  "prerequisites": ["big-o"],
-  "summary": "Domine o conceito de FIFO, implementações otimizadas em O(1) e como as filas são a base para algoritmos como BFS e sistemas de mensageria modernos."
-}

@@ -1,1 +1,0 @@
-# Abordagem de arrays auxiliares

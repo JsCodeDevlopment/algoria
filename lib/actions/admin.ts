@@ -13,6 +13,7 @@ import { and, count, desc, eq, ilike, sql } from 'drizzle-orm';
 import { createHash } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
+import { SYSTEM_TYPES } from '@/lib/content/schemas';
 
 type UserRole = (typeof userRoleEnum.enumValues)[number];
 type ContentStatus = (typeof contentStatusEnum.enumValues)[number];
@@ -168,6 +169,7 @@ export async function listContents(params: {
   type?: string;
   status?: string;
   search?: string;
+  tab?: 'editorial' | 'sistema';
 }) {
   const admin = await getAuthenticatedStaff();
   if (!admin) return { error: 'Não autorizado', contents: [], total: 0 };
@@ -178,7 +180,17 @@ export async function listContents(params: {
 
   try {
     const conditions = [];
-    if (params.type) conditions.push(eq(contents.type, params.type as never));
+    if (params.type) {
+      conditions.push(eq(contents.type, params.type as never));
+    } else if (params.tab) {
+      const { inArray, notInArray } = await import('drizzle-orm');
+      if (params.tab === 'sistema') {
+        conditions.push(inArray(contents.type, SYSTEM_TYPES as any));
+      } else {
+        conditions.push(notInArray(contents.type, SYSTEM_TYPES as any));
+      }
+    }
+    
     if (params.status) conditions.push(eq(contents.status, params.status as never));
     if (params.search) {
       conditions.push(

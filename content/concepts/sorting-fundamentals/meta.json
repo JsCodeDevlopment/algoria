@@ -1,9 +1,0 @@
-{
-  "slug": "sorting-fundamentals",
-  "title": "Ordenação — custo, estabilidade e escolha prática",
-  "category": "sorting",
-  "difficulty": "medium",
-  "estimatedMinutes": 20,
-  "prerequisites": ["big-o", "two-pointers"],
-  "summary": "Ordenar não é só chamar sort: entenda custo assintótico, estabilidade, memória auxiliar e critérios de escolha entre algoritmos clássicos."
-}

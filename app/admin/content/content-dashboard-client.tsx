@@ -5,11 +5,10 @@ import { useEffect, useState, useTransition } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 import { listContents, updateContentStatus } from '@/lib/actions/admin';
+import { SYSTEM_TYPES } from '@/lib/content/schemas';
 
 type ContentStatus = 'DRAFT' | 'PENDING_REVIEW' | 'CHANGES_REQUESTED' | 'APPROVED' | 'PUBLISHED' | 'REJECTED';
 type TabView = 'editorial' | 'sistema';
-
-const SYSTEM_TYPES = ['changelog', 'legal-page', 'landing-section', 'pricing-copy', 'navigation', 'taxonomy'];
 
 interface ContentRow {
   id: string;
@@ -87,17 +86,10 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
         type: typeFilter || undefined,
         status: statusFilter || undefined,
         search: s || undefined,
+        tab: tab,
       });
       if (!result.error) {
-        let filteredContents = result.contents as ContentRow[];
-        if (!typeFilter) {
-          if (tab === 'sistema') {
-            filteredContents = filteredContents.filter(r => SYSTEM_TYPES.includes(r.type));
-          } else {
-            filteredContents = filteredContents.filter(r => !SYSTEM_TYPES.includes(r.type));
-          }
-        }
-        setRows(filteredContents);
+        setRows(result.contents as ContentRow[]);
         setTotal(result.total as number);
       }
     });

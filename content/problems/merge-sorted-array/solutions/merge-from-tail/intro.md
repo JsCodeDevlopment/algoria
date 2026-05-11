@@ -1,1 +1,0 @@
-# Ponteiros inversos clássicos

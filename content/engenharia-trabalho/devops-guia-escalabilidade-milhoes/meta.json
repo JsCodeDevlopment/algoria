@@ -1,7 +1,0 @@
-{
-  "slug": "devops-guia-escalabilidade-milhoes",
-  "title": "Escalando para Milhões de Usuários: O Guia Completo",
-  "summary": "Do MVP à escala global: um roteiro técnico sobre como evoluir sua arquitetura, resolver gargalos de banco de dados e implementar estratégias de cache e mensageria.",
-  "estimatedMinutes": 60,
-  "pillar": "devops"
-}

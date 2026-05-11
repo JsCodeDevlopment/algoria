@@ -24,6 +24,7 @@ import { db } from "@/lib/db";
 import {
   subscription,
   technicalAssessmentResults,
+  user,
   userProfile,
   userProgress,
 } from "@/lib/db/schema";
@@ -34,6 +35,7 @@ import { ProfileAssessmentVisibilityToggle } from "@/components/profile/profile-
 import { AssessmentCard } from "@/components/profile/public/assessment-card";
 import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
+import { getContentRepository } from "@/lib/content/content-repository";
 import Image from "next/image";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -57,7 +59,7 @@ export default async function ProfilePage() {
     redirect("/auth/sign-in");
   }
 
-  const { user } = session;
+  const { user: sessionUser } = session;
 
   // Buscar progressos, subscrição e dados do user (role/status pedido)
   const [progressRows, subRows, profileRows, assessmentRows, dbUserRows] =
@@ -65,22 +67,22 @@ export default async function ProfilePage() {
       db
         .select()
         .from(userProgress)
-        .where(eq(userProgress.userId, user.id))
+        .where(eq(userProgress.userId, sessionUser.id))
         .limit(1),
       db
         .select()
         .from(subscription)
-        .where(eq(subscription.userId, user.id))
+        .where(eq(subscription.userId, sessionUser.id))
         .limit(1),
       db
         .select()
         .from(userProfile)
-        .where(eq(userProfile.userId, user.id))
+        .where(eq(userProfile.userId, sessionUser.id))
         .limit(1),
       db
         .select()
         .from(technicalAssessmentResults)
-        .where(eq(technicalAssessmentResults.userId, user.id))
+        .where(eq(technicalAssessmentResults.userId, sessionUser.id))
         .orderBy(desc(technicalAssessmentResults.completedAt)),
       db
         .select({ 
@@ -88,7 +90,7 @@ export default async function ProfilePage() {
           creatorRequestStatus: user.creatorRequestStatus 
         })
         .from(user)
-        .where(eq(user.id, session.user.id))
+        .where(eq(user.id, sessionUser.id))
         .limit(1),
     ]);
 
@@ -118,9 +120,12 @@ export default async function ProfilePage() {
     }
   }
 
+  const allTests = await getContentRepository().getAllTechnicalTests();
+  const testMap = new Map(allTests.map(t => [t.slug, t]));
+
   const initials =
-    user.name?.substring(0, 2).toUpperCase() ||
-    user.email?.substring(0, 2).toUpperCase() ||
+    sessionUser.name?.substring(0, 2).toUpperCase() ||
+    sessionUser.email?.substring(0, 2).toUpperCase() ||
     "U";
 
   return (
@@ -150,10 +155,10 @@ export default async function ProfilePage() {
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-primary to-primary/50 opacity-25 group-hover:opacity-50 transition duration-500 blur" />
               <div className="relative flex h-32 w-32 shrink-0 items-center justify-center overflow-hidden border-4 border-primary bg-background text-4xl font-black text-primary shadow-[8px_8px_0_0_rgba(var(--primary-rgb),0.2)]">
-                {user.image ? (
+                {sessionUser.image ? (
                   <Image
-                    src={user.image}
-                    alt={user.name}
+                    src={sessionUser.image}
+                    alt={sessionUser.name}
                     width={128}
                     height={128}
                     className="h-full w-full object-cover"
@@ -165,15 +170,15 @@ export default async function ProfilePage() {
             </div>
             <div className="space-y-3">
               <h1 className="text-5xl font-black tracking-tighter uppercase leading-none">
-                {user.name}
+                {sessionUser.name}
               </h1>
               <div className="flex items-center gap-4 text-muted-foreground">
                 <span className="font-mono text-xs uppercase tracking-widest">
-                  {user.email}
+                  {sessionUser.email}
                 </span>
                 <span className="h-1 w-1 rounded-full bg-border" />
                 <span className="text-[10px] font-bold uppercase tracking-widest">
-                  Desde {new Date(user.createdAt).getFullYear()}
+                  Desde {new Date(sessionUser.createdAt).getFullYear()}
                 </span>
               </div>
               <div className="flex items-center gap-3 pt-2">
@@ -189,11 +194,11 @@ export default async function ProfilePage() {
                   size="sm"
                   className="h-7 rounded-none text-[9px] uppercase font-black tracking-widest border-primary/20"
                 >
-                  <Link href={`/user/${user.id}`}>
+                  <Link href={`/user/${sessionUser.id}`}>
                     Visualizar Perfil Público
                   </Link>
                 </Button>
-                <ProfileActionsClient userId={user.id} />
+                <ProfileActionsClient userId={sessionUser.id} />
               </div>
             </div>
           </div>
@@ -320,6 +325,7 @@ export default async function ProfilePage() {
                       resolutionCode={result.resolutionCode}
                       explanation={result.explanation}
                       completedAt={result.completedAt.toISOString()}
+                      challengeDescription={testMap.get(result.testSlug)?.challenge?.description}
                     />
                   </div>
                 </div>

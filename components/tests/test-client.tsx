@@ -25,7 +25,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { TechnicalTest } from "@/lib/content/tests-data";
+import { TechnicalTest } from "@/lib/content/schemas";
 import { cn } from "@/lib/utils";
 
 interface Props {

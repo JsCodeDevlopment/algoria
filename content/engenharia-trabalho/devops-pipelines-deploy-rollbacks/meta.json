@@ -1,7 +1,0 @@
-{
-  "slug": "devops-pipelines-deploy-rollbacks",
-  "title": "Pipelines, deploys e rollbacks que não são fé cega",
-  "summary": "O que um pipeline deve provar antes de produção, estratégias de libertação gradual e como desfazer mudanças sem pânico nem dados inconsistentes.",
-  "estimatedMinutes": 21,
-  "pillar": "devops"
-}

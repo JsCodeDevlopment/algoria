@@ -11,7 +11,7 @@ import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { getTestsByTrack, Track } from "@/lib/content/tests-data";
+import { getContentRepository } from "@/lib/content/content-repository";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import { cn } from "@/lib/utils";
 
@@ -49,13 +49,14 @@ export default async function TrackTestsPage({
 }) {
   const { track } = await params;
   const { level, topic, difficulty } = await searchParams;
-  const validTracks: Track[] = ["frontend", "backend", "devops"];
+  const repo = getContentRepository();
+  const validTracks = ["frontend", "backend", "devops"];
 
-  if (!validTracks.includes(track as Track)) {
+  if (!validTracks.includes(track)) {
     notFound();
   }
 
-  let tests = getTestsByTrack(track as Track);
+  let tests = await repo.getTechnicalTestsByTrack(track);
 
   // Extract unique levels, topics and difficulties for the track
   const availableLevels = Array.from(new Set(tests.map((t) => t.level)));

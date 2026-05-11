@@ -146,16 +146,43 @@ async function importProblems() {
       const solutionMetas: Record<string, unknown>[] = [];
 
       for (const solSlug of solutionSlugs) {
+        const solDir = path.join(solutionsDir, solSlug);
         try {
           const solMeta = await readJson<Record<string, unknown>>(
-            path.join(solutionsDir, solSlug, 'meta.json'),
+            path.join(solDir, 'meta.json'),
           );
-          const intro = await readText(
-            path.join(solutionsDir, solSlug, 'intro.md'),
-          );
-          solutionMetas.push({ ...solMeta, introMd: intro });
-        } catch {
-          // skip broken solution
+          const introMd = await readText(path.join(solDir, 'intro.md'));
+          
+          // Code files
+          const codeByLanguage: Record<string, string> = {};
+          const files = await fs.readdir(solDir);
+          for (const f of files) {
+            const ext = path.extname(f);
+            const content = await readText(path.join(solDir, f));
+            if (ext === '.ts') codeByLanguage['typescript'] = content;
+            if (ext === '.js') codeByLanguage['javascript'] = content;
+            if (ext === '.py') codeByLanguage['python'] = content;
+            if (ext === '.go') codeByLanguage['go'] = content;
+            if (ext === '.java') codeByLanguage['java'] = content;
+            if (ext === '.cs') codeByLanguage['csharp'] = content;
+            if (ext === '.cpp') codeByLanguage['cpp'] = content;
+          }
+
+          // Annotations & Trace
+          const annPath = path.join(solDir, 'annotations.json');
+          const tracePath = path.join(solDir, 'trace.json');
+          const annotationsData = await readJson<{ annotations: any[] }>(annPath).catch(() => ({ annotations: [] }));
+          const traceData = await readJson<any[]>(tracePath).catch(() => undefined);
+
+          solutionMetas.push({
+            meta: solMeta,
+            codeByLanguage,
+            introMd,
+            annotations: annotationsData.annotations,
+            executionTrace: traceData,
+          });
+        } catch (err) {
+          console.warn(`    ⚠ broken solution ${slug}/${solSlug}:`, err);
         }
       }
 

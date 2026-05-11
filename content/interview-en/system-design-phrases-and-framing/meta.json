@@ -1,8 +1,0 @@
-{
-  "slug": "system-design-phrases-and-framing",
-  "title": "System design: technical framing and tradeoffs",
-  "summary": "Master the vocabulary of scalability, availability, and database choices. Learn how to drive the conversation while drawing on the board.",
-  "estimatedMinutes": 45,
-  "track": "system-design",
-  "difficulty": "hard"
-}

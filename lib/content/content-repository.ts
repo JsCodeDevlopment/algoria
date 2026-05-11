@@ -30,123 +30,258 @@ export interface ContentRepository {
   getStudyTrack(slug: string): Promise<StudyTrackFile | null>;
 
   getChangelogHtml(): Promise<string | null>;
+
+  getAllTechnicalTests(): Promise<any[]>;
+  getTechnicalTestsByTrack(track: string): Promise<any[]>;
+  getTechnicalTest(slug: string): Promise<any | null>;
+
+  getAllCourses(): Promise<any[]>;
+  getCourse(slug: string): Promise<any | null>;
 }
 
-/* ── File-based provider (legado — wraps existing loaders) ─────── */
+/* ── DB-based provider (Phase 1 reads from contents table) ─ */
 
-import * as fileLoader from './loader';
-import * as trackLoader from './track-loader';
-
-class FileContentRepository implements ContentRepository {
-  getAllProblems = fileLoader.getAllProblems;
-  getProblem = fileLoader.getProblem;
-
-  getAllConcepts = fileLoader.getAllConcepts;
-  getConcept = fileLoader.getConcept;
-
-  getAllInterviewEnglishTopics = fileLoader.getAllInterviewEnglishTopics;
-  getInterviewEnglishTopic = fileLoader.getInterviewEnglishTopic;
-
-  getAllEngineeringWorkGuides = fileLoader.getAllEngineeringWorkGuides;
-  getEngineeringWorkGuide = fileLoader.getEngineeringWorkGuide;
-
-  getAllStudyTracks = trackLoader.getAllStudyTracks;
-  getStudyTrack = trackLoader.getStudyTrack;
-
-  getChangelogHtml = fileLoader.getChangelogHtml;
-}
-
-/* ── DB-based provider (stub — Phase 1 reads from contents table) ─ */
-
+import { renderMarkdown } from './markdown';
 import { db } from '@/lib/db';
 import { contents } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
 
 class DbContentRepository implements ContentRepository {
-  // Phase 1: Stub — will be fleshed out as content is migrated
   async getAllProblems(): Promise<Problem[]> {
-    // TODO: query contents table where type='problem' and status='PUBLISHED'
-    return [];
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'problem'), eq(contents.status, 'PUBLISHED')));
+
+    return rows.map((r) => this.hydrateProblem(r));
   }
-  async getProblem(_slug: string): Promise<Problem | null> {
-    const row = await db.select().from(contents)
-      .where(and(eq(contents.slug, _slug), eq(contents.type, 'problem'), eq(contents.status, 'PUBLISHED')))
+
+  async getProblem(slug: string): Promise<Problem | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'problem'), eq(contents.status, 'PUBLISHED')))
       .limit(1);
-    if (!row[0]) return null;
-    // TODO: hydrate full Problem from row + metadata JSON
-    return null;
-  }
-  async getAllConcepts(): Promise<Concept[]> { return []; }
-  async getConcept(_slug: string): Promise<Concept | null> { return null; }
-  async getAllInterviewEnglishTopics(): Promise<InterviewEnglishTopic[]> { return []; }
-  async getInterviewEnglishTopic(_slug: string): Promise<InterviewEnglishTopic | null> { return null; }
-  async getAllEngineeringWorkGuides(): Promise<EngineeringWorkGuide[]> { return []; }
-  async getEngineeringWorkGuide(_slug: string): Promise<EngineeringWorkGuide | null> { return null; }
-  async getAllStudyTracks(): Promise<StudyTrackFile[]> { return []; }
-  async getStudyTrack(_slug: string): Promise<StudyTrackFile | null> { return null; }
-  async getChangelogHtml(): Promise<string | null> { return null; }
-}
 
-/* ── Hybrid provider (tries DB first, falls back to file) ──────── */
-
-class HybridContentRepository implements ContentRepository {
-  private dbRepo = new DbContentRepository();
-  private fileRepo = new FileContentRepository();
-
-  async getAllProblems() {
-    const dbResults = await this.dbRepo.getAllProblems();
-    if (dbResults.length > 0) return dbResults;
-    return this.fileRepo.getAllProblems();
+    if (!row) return null;
+    return this.hydrateProblem(row);
   }
 
-  async getProblem(slug: string) {
-    const dbResult = await this.dbRepo.getProblem(slug);
-    if (dbResult) return dbResult;
-    return this.fileRepo.getProblem(slug);
+  async getAllConcepts(): Promise<Concept[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'concept'), eq(contents.status, 'PUBLISHED')));
+    return rows.map((r) => this.hydrateConcept(r));
   }
 
-  async getAllConcepts() {
-    const dbResults = await this.dbRepo.getAllConcepts();
-    if (dbResults.length > 0) return dbResults;
-    return this.fileRepo.getAllConcepts();
+  async getConcept(slug: string): Promise<Concept | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'concept'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? this.hydrateConcept(row) : null;
   }
 
-  async getConcept(slug: string) {
-    return (await this.dbRepo.getConcept(slug)) ?? this.fileRepo.getConcept(slug);
+  async getAllInterviewEnglishTopics(): Promise<InterviewEnglishTopic[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'interview-en'), eq(contents.status, 'PUBLISHED')));
+    return rows.map((r) => this.hydrateInterviewEn(r));
   }
 
-  async getAllInterviewEnglishTopics() {
-    const dbResults = await this.dbRepo.getAllInterviewEnglishTopics();
-    if (dbResults.length > 0) return dbResults;
-    return this.fileRepo.getAllInterviewEnglishTopics();
+  async getInterviewEnglishTopic(slug: string): Promise<InterviewEnglishTopic | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'interview-en'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? this.hydrateInterviewEn(row) : null;
   }
 
-  async getInterviewEnglishTopic(slug: string) {
-    return (await this.dbRepo.getInterviewEnglishTopic(slug)) ?? this.fileRepo.getInterviewEnglishTopic(slug);
+  async getAllEngineeringWorkGuides(): Promise<EngineeringWorkGuide[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'engineering-work'), eq(contents.status, 'PUBLISHED')));
+    return rows.map((r) => this.hydrateEngineeringWork(r));
   }
 
-  async getAllEngineeringWorkGuides() {
-    const dbResults = await this.dbRepo.getAllEngineeringWorkGuides();
-    if (dbResults.length > 0) return dbResults;
-    return this.fileRepo.getAllEngineeringWorkGuides();
+  async getEngineeringWorkGuide(slug: string): Promise<EngineeringWorkGuide | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'engineering-work'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? this.hydrateEngineeringWork(row) : null;
   }
 
-  async getEngineeringWorkGuide(slug: string) {
-    return (await this.dbRepo.getEngineeringWorkGuide(slug)) ?? this.fileRepo.getEngineeringWorkGuide(slug);
+  async getAllStudyTracks(): Promise<StudyTrackFile[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'track'), eq(contents.status, 'PUBLISHED')));
+    return rows.map((r) => r.metadata as unknown as StudyTrackFile);
   }
 
-  async getAllStudyTracks() {
-    const dbResults = await this.dbRepo.getAllStudyTracks();
-    if (dbResults.length > 0) return dbResults;
-    return this.fileRepo.getAllStudyTracks();
+  async getStudyTrack(slug: string): Promise<StudyTrackFile | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'track'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? (row.metadata as unknown as StudyTrackFile) : null;
   }
 
-  async getStudyTrack(slug: string) {
-    return (await this.dbRepo.getStudyTrack(slug)) ?? this.fileRepo.getStudyTrack(slug);
+  async getChangelogHtml(): Promise<string | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(eq(contents.type, 'changelog'))
+      .limit(1);
+    return row ? renderMarkdown(row.body) : null;
   }
 
-  async getChangelogHtml() {
-    return (await this.dbRepo.getChangelogHtml()) ?? this.fileRepo.getChangelogHtml();
+  async getAllTechnicalTests(): Promise<any[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')));
+    return rows.map(r => this.hydrateTechnicalTest(r));
+  }
+  async getTechnicalTestsByTrack(track: string): Promise<any[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')));
+    return rows.map(r => this.hydrateTechnicalTest(r)).filter(t => t.track === track);
+  }
+
+  async getAllCourses(): Promise<CoursePackParsed[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'course'), eq(contents.status, 'PUBLISHED')));
+    return rows.map((r) => JSON.parse(r.body));
+  }
+
+  async getCourse(slug: string): Promise<CoursePackParsed | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'course'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? JSON.parse(row.body) : null;
+  }
+
+  async getTechnicalTest(slug: string): Promise<any | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? this.hydrateTechnicalTest(row) : null;
+  }
+
+  private hydrateTechnicalTest(row: any) {
+    const metadata = row.metadata as any;
+    const body = JSON.parse(row.body); // Technical tests body stores the full JSON
+    return {
+      ...body,
+      id: row.id,
+      slug: row.slug,
+      title: row.title,
+      track: metadata.track,
+      level: metadata.level,
+      difficulty: metadata.difficulty,
+      topic: metadata.topic,
+    };
+  }
+
+  async getAllCourses(): Promise<any[]> {
+    const rows = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.type, 'course'), eq(contents.status, 'PUBLISHED')));
+    return rows.map(r => JSON.parse(r.body));
+  }
+
+  async getCourse(slug: string): Promise<any | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'course'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? JSON.parse(row.body) : null;
+  }
+
+  private hydrateProblem(row: any): Problem {
+    const meta = row.metadata;
+    return {
+      meta: {
+        slug: row.slug,
+        title: row.title,
+        difficulty: meta.difficulty,
+        categories: meta.categories,
+        prerequisites: meta.prerequisites ?? [],
+        examples: meta.examples ?? [],
+        constraints: meta.constraints ?? [],
+        tags: meta.tags ?? [],
+        estimatedMinutes: meta.estimatedMinutes ?? 15,
+        recommendedOrder: meta.recommendedOrder,
+        access: meta.access ?? 'pro',
+      },
+      descriptionHtml: renderMarkdown(row.body),
+      solutions: (meta.solutions ?? []).map((s: any) => ({
+        meta: {
+          slug: s.meta?.slug || s.slug,
+          name: s.meta?.name || s.name,
+          kind: s.meta?.kind || s.kind,
+          language: s.meta?.language || s.language,
+          complexity: s.meta?.complexity || s.complexity,
+          entryFunction: s.meta?.entryFunction || s.entryFunction,
+        },
+        codeByLanguage: s.codeByLanguage ?? {},
+        introHtml: s.introHtml || renderMarkdown(s.introMd ?? ''),
+        annotations: s.annotations ?? [],
+        executionTrace: s.executionTrace,
+      })),
+    };
+  }
+
+  private hydrateConcept(row: any): Concept {
+    return {
+      meta: {
+        ...row.metadata,
+        slug: row.slug,
+        title: row.title,
+      },
+      bodyHtml: renderMarkdown(row.body),
+    };
+  }
+
+  private hydrateInterviewEn(row: any): InterviewEnglishTopic {
+    return {
+      meta: {
+        ...row.metadata,
+        slug: row.slug,
+        title: row.title,
+      },
+      bodyHtml: renderMarkdown(row.body),
+    };
+  }
+
+  private hydrateEngineeringWork(row: any): EngineeringWorkGuide {
+    return {
+      meta: {
+        ...row.metadata,
+        slug: row.slug,
+        title: row.title,
+      },
+      bodyHtml: renderMarkdown(row.body, { didacticBlocks: true }),
+    };
   }
 }
 
@@ -158,21 +293,6 @@ let _instance: ContentRepository | null = null;
 
 export function getContentRepository(): ContentRepository {
   if (_instance) return _instance;
-
-  const source = (process.env.CONTENT_SOURCE ?? 'file') as ContentSource;
-
-  switch (source) {
-    case 'db':
-      _instance = new DbContentRepository();
-      break;
-    case 'hybrid':
-      _instance = new HybridContentRepository();
-      break;
-    case 'file':
-    default:
-      _instance = new FileContentRepository();
-      break;
-  }
-
+  _instance = new DbContentRepository();
   return _instance;
 }

@@ -1,7 +1,0 @@
-{
-  "slug": "frontend-xss-seo-superficies-perigosas",
-  "title": "XSS, formulários ricos e SEO técnico honesto",
-  "summary": "De onde nasce script injection na prática, como pensar sanitização por contexto e o que engenharia pode prometer em indexação sem mentir ao marketing.",
-  "estimatedMinutes": 24,
-  "pillar": "frontend"
-}
