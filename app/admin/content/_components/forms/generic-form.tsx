@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { FormProps } from "../types";
 import { FormField, TextInput } from "../form-elements";
 import { MarkdownEditor } from "../markdown-editor";
@@ -16,6 +17,22 @@ export function GenericForm({
   mode,
   contentType,
 }: FormProps & { contentType: string }) {
+  const [jsonText, setJsonText] = useState(JSON.stringify(meta, null, 2));
+
+  // Sincronizar o slug com o título no modo de criação
+  useEffect(() => {
+    if (mode === "create" && title) {
+      const generatedSlug = title
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Remove acentos
+        .replace(/[^a-z0-9-]/g, "-") // Troca tudo o que não é letra/número por hífen
+        .replace(/-+/g, "-") // Remove hífens duplicados
+        .replace(/^-|-$/g, ""); // Remove hífens no início/fim
+      setSlug(generatedSlug);
+    }
+  }, [title, mode, setSlug]);
+
   const TYPE_LABELS: Record<string, string> = {
     course: "Curso",
     "technical-test": "Simulado Técnico",
@@ -66,15 +83,18 @@ export function GenericForm({
       {/* Raw metadata for types without dedicated forms */}
       <FormField
         label="Metadados (JSON)"
-        hint="Campos específicos deste tipo de conteúdo"
+        hint="Campos específicos deste tipo de conteúdo. As alterações são validadas em tempo real."
       >
         <textarea
-          value={JSON.stringify(meta, null, 2)}
+          value={jsonText}
           onChange={(e) => {
+            const val = e.target.value;
+            setJsonText(val);
             try {
-              setMeta(JSON.parse(e.target.value));
+              const parsed = JSON.parse(val);
+              setMeta(parsed);
             } catch {
-              /* invalid json, user still typing */
+              // JSON inválido enquanto o utilizador digita, não atualiza o estado global ainda
             }
           }}
           rows={8}
