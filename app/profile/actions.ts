@@ -32,26 +32,33 @@ export async function updateProfile(formData: FormData) {
   const bio = formData.get('bio') as string;
   const githubUrl = formData.get('githubUrl') as string;
   const linkedinUrl = formData.get('linkedinUrl') as string;
-  
+
   const techString = formData.get('technologies') as string;
   const technologies = techString ? techString.split(',').map(s => s.trim()).filter(Boolean) : [];
-  
+
   const experiences = formData.get('experiences') as string;
   const projects = formData.get('projects') as string;
+  const image = formData.get('image') as string;
 
   const existingProfile = await db.select().from(userProfile).where(eq(userProfile.userId, userId)).limit(1);
 
+  if (image) {
+    await db.update(user)
+      .set({ image, updatedAt: new Date() })
+      .where(eq(user.id, userId));
+  }
+
   if (existingProfile.length > 0) {
     await db.update(userProfile)
-      .set({ 
-        headline, 
-        bio, 
-        githubUrl, 
-        linkedinUrl, 
-        technologies, 
+      .set({
+        headline,
+        bio,
+        githubUrl,
+        linkedinUrl,
+        technologies,
         experiences,
         projects,
-        updatedAt: new Date() 
+        updatedAt: new Date()
       })
       .where(eq(userProfile.userId, userId));
   } else {

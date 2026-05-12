@@ -6,6 +6,7 @@ import { updateProfile } from '@/app/profile/actions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ProfileSections } from './profile-sections';
+import { ImageUpload } from './image-upload';
 import { TechSelect } from './tech-select';
 
 interface UserProfile {
@@ -20,7 +21,13 @@ interface UserProfile {
   projects?: string | null;
 }
 
-export function EditProfileForm({ profile }: { profile: UserProfile | null | undefined }) {
+export function EditProfileForm({ 
+  profile, 
+  userImage 
+}: { 
+  profile: UserProfile | null | undefined,
+  userImage?: string | null
+}) {
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -38,7 +45,11 @@ export function EditProfileForm({ profile }: { profile: UserProfile | null | und
   }
 
   return (
-    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-4">
+    <form onSubmit={(e) => void handleSubmit(e)} className="space-y-6">
+      <div className="flex justify-center pb-8 border-b border-border/50">
+        <ImageUpload initialImage={userImage} />
+      </div>
+
       <div className="space-y-2">
         <label htmlFor="headline" className="text-xs font-bold uppercase text-muted-foreground tracking-wide">Headline Profissional</label>
         <Input 

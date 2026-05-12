@@ -367,7 +367,10 @@ export default async function ProfilePage() {
               </div>
             </CardHeader>
             <CardContent className="p-8">
-              <EditProfileForm profile={profileRows ? profileRows[0] : null} />
+              <EditProfileForm 
+                profile={profileRows ? profileRows[0] : null} 
+                userImage={sessionUser.image}
+              />
             </CardContent>
           </Card>
 
