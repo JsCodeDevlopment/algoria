@@ -1,6 +1,6 @@
 # Algoria
 
-![](https://img.shields.io/badge/Versão-1.1.3-black?style=for-the-badge)
+![](https://img.shields.io/badge/Versão-1.1.6-black?style=for-the-badge)
 
 Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps).
 
