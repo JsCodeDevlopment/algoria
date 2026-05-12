@@ -1,6 +1,6 @@
 # Algoria
 
-![](https://img.shields.io/badge/Versão-1.1.0-black?style=for-the-badge)
+![](https://img.shields.io/badge/Versão-1.1.3-black?style=for-the-badge)
 
 Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps).
 
@@ -139,7 +139,7 @@ flowchart LR
   <img src="https://img.shields.io/badge/ESLint-4B32C3?style=for-the-badge&logo=eslint&logoColor=white" alt="ESLint" />
 </div>
 
-> Stack principal: Next.js (App Router), React 19, TypeScript, Tailwind CSS v4, Zod, Radix, Shiki, marked, Zustand; analytics opcional via PostHog.
+> Stack principal: Next.js (App Router), React 19, TypeScript, Tailwind CSS v4, Zod, Radix, Shiki, marked, Zustand; analytics via PostHog.
 
 ## Atalhos do code player
 
@@ -149,13 +149,10 @@ flowchart LR
 | `Espaço`        | Play / pausa (autoplay)                             |
 | `1` / `2` / `3` | Nível de explicação: Resumo / Detalhado / Deep dive |
 
-## Adicionar um novo problema (resumo)
+## Adicionar um novo Artigo
 
-1. Cria `content/problems/<slug>/meta.json` conforme `ProblemMeta` em `lib/content/schemas.ts`.
-2. Adiciona `description.md`.
-3. Para cada solução: `content/problems/<slug>/solutions/<solution-slug>/` com `meta.json`, código (`solution.ts`, …), `intro.md`, `annotations.json`.
-4. Opcional: `prerequisites` com slugs de `content/concepts/`.
-5. Corre `pnpm validate:content` antes de commit.
+Após criar a conta no sistema, basta navegar até seu perfil e clicar em "Torne-se um contribuidor".
+Assim que o admin aprovar, você poderá adicionar artigos na área de administração.
 
 ## Desenvolvedor
 
@@ -166,5 +163,5 @@ flowchart LR
 ---
 
 <div align="center">
-  <sub>Built with care by <a href="https://github.com/JsCodeDevlopment">Jonatas Silva</a></sub>
+  <sub>Built with ❤️ by <a href="https://github.com/JsCodeDevlopment">Jonatas Silva</a></sub>
 </div>
