@@ -49,6 +49,19 @@ export function ResultsStep({
             </div>
           </div>
         </div>
+
+        {test.solutions && test.solutions.length > 0 && (
+          <div className="mt-10">
+            <Button 
+              variant="outline" 
+              onClick={() => document.getElementById('resolutions-section')?.scrollIntoView({ behavior: 'smooth' })}
+              className="rounded-none border-primary text-primary font-black uppercase tracking-widest hover:bg-primary hover:text-white transition-all"
+            >
+              Explorar Resoluções Oficiais
+            </Button>
+          </div>
+        )}
+
         {session?.user && (
           <p className="mt-6 text-[10px] font-black uppercase tracking-widest text-emerald-500/70">
             ✓ Resultados sincronizados com o teu perfil profissional
@@ -101,6 +114,45 @@ export function ResultsStep({
           );
         })}
       </div>
+
+      {/* RESOLUTIONS SECTION */}
+      {test.solutions && test.solutions.length > 0 && (
+        <div id="resolutions-section" className="space-y-8 pt-10 border-t-2 border-border">
+          <h3 className="text-xl font-black uppercase tracking-widest text-primary">
+            Resoluções Sugeridas (Prática)
+          </h3>
+          <div className="grid gap-10">
+            {test.solutions.map((sol) => (
+              <div key={sol.id} className="border-2 border-primary/20 bg-background overflow-hidden">
+                <div className="bg-primary/5 p-6 border-b-2 border-primary/10">
+                  <h4 className="text-lg font-black uppercase tracking-tight mb-2">
+                    {sol.title}
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {sol.explanation}
+                  </p>
+                </div>
+                
+                <div className="p-6 space-y-4">
+                  {Object.entries(sol.code).map(([lang, code]) => (
+                    <div key={lang} className="space-y-2">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-2 rounded-full bg-primary" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                          {lang}
+                        </span>
+                      </div>
+                      <pre className="p-4 bg-muted/50 border border-border text-xs font-mono overflow-x-auto leading-relaxed">
+                        <code>{code}</code>
+                      </pre>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="flex justify-center pt-8">
         <Button

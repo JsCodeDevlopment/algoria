@@ -1,8 +1,16 @@
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { TechnicalTest } from "@/lib/content/schemas";
 import { cn } from "@/lib/utils";
 import Editor from "@monaco-editor/react";
-import { CheckCircle2, Play, XCircle } from "lucide-react";
+import { BookOpen, CheckCircle2, Lightbulb, Play, XCircle } from "lucide-react";
 
 interface Props {
   test: TechnicalTest;
@@ -69,42 +77,98 @@ export function ChallengeView({
 
       <div className="flex flex-col border-4 border-border bg-[#1e1e1e] shadow-xl">
         <div className="flex items-center justify-between border-b-2 border-border/20 bg-[#2d2d2d] px-6 py-3">
-          <div className="flex items-center gap-4">
-            <div className="flex gap-1.5">
+          <div className="flex items-center gap-6">
+            <div className="hidden md:flex gap-1.5">
               <div className="h-3 w-3 rounded-full bg-red-500/20 border border-red-500/40" />
               <div className="h-3 w-3 rounded-full bg-amber-500/20 border border-amber-500/40" />
               <div className="h-3 w-3 rounded-full bg-emerald-500/20 border border-emerald-500/40" />
             </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
-                Linguagem:
-              </span>
-              <select
-                value={language}
-                onChange={(e) => {
-                  const lang = e.target.value;
-                  setLanguage(lang);
-                  if (!codes[lang]) {
-                    setCodes({
-                      ...codes,
-                      [lang]: test.challenge.templates[lang].initialCode,
-                    });
-                  }
-                }}
-                className="bg-transparent border-none text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest outline-none transition-all cursor-pointer hover:text-foreground"
-              >
-                {Object.keys(test.challenge.templates).map((lang) => (
-                  <option
-                    key={lang}
-                    value={lang}
-                    className="bg-[#2d2d2d] text-white"
-                  >
-                    {lang.toUpperCase()}
-                  </option>
-                ))}
-              </select>
+            
+            <div className="flex items-center gap-6">
+              <div className="flex items-center gap-2">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground/60">
+                  Linguagem:
+                </span>
+                <select
+                  value={language}
+                  onChange={(e) => {
+                    const lang = e.target.value;
+                    setLanguage(lang);
+                    if (!codes[lang]) {
+                      setCodes({
+                        ...codes,
+                        [lang]: test.challenge.templates[lang].initialCode,
+                      });
+                    }
+                  }}
+                  className="bg-transparent border-none text-[10px] font-mono font-bold text-muted-foreground uppercase tracking-widest outline-none transition-all cursor-pointer hover:text-foreground"
+                >
+                  {Object.keys(test.challenge.templates).map((lang) => (
+                    <option
+                      key={lang}
+                      value={lang}
+                      className="bg-[#2d2d2d] text-white"
+                    >
+                      {lang.toUpperCase()}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {test.solutions && test.solutions.length > 0 && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <button className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-amber-400 hover:text-amber-300 transition-colors">
+                      <Lightbulb className="h-3.5 w-3.5" />
+                      Consultar Solução
+                    </button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[85vh] overflow-y-auto bg-background rounded-none border-4 border-primary p-0">
+                    <DialogHeader className="p-8 bg-primary/5 border-b-2 border-primary/10">
+                      <DialogTitle className="text-2xl font-black uppercase tracking-tighter">
+                        Resoluções Sugeridas
+                      </DialogTitle>
+                      <DialogDescription className="font-bold text-primary/70">
+                        Estuda a abordagem técnica recomendada para este desafio.
+                      </DialogDescription>
+                    </DialogHeader>
+                    
+                    <div className="p-8 space-y-10">
+                      {test.solutions.map((sol) => (
+                        <div key={sol.id} className="space-y-6">
+                          <div className="border-l-4 border-primary pl-6 py-1">
+                            <h4 className="text-lg font-black uppercase tracking-tight mb-3">
+                              {sol.title}
+                            </h4>
+                            <p className="text-sm leading-relaxed text-muted-foreground">
+                              {sol.explanation}
+                            </p>
+                          </div>
+
+                          <div className="space-y-6">
+                            {Object.entries(sol.code).map(([lang, code]) => (
+                              <div key={lang} className="space-y-3">
+                                <div className="flex items-center gap-2">
+                                  <div className="h-1.5 w-4 bg-primary" />
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                                    {lang}
+                                  </span>
+                                </div>
+                                <pre className="p-5 bg-muted/30 border-2 border-border text-xs font-mono overflow-x-auto leading-relaxed shadow-inner">
+                                  <code>{code}</code>
+                                </pre>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
             </div>
           </div>
+          
           <Button
             onClick={onRunTests}
             disabled={isEvaluating}

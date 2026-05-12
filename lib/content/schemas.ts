@@ -366,6 +366,13 @@ export interface CodeChallenge {
   testCases: TestCase[];
 }
 
+export interface TestSolution {
+  id: string;
+  title: string;
+  explanation: string;
+  code: Record<string, string>;
+}
+
 export interface TechnicalTest {
   id: string;
   slug: string;
@@ -378,4 +385,5 @@ export interface TechnicalTest {
   timeLimitMinutes: number;
   questions: QuizQuestion[];
   challenge: CodeChallenge;
+  solutions?: TestSolution[];
 }
