@@ -16,7 +16,7 @@ const secret = process.env.BETTER_AUTH_SECRET;
 export const auth = betterAuth({
   baseURL,
   basePath: '/api/auth',
-  secret: secret ?? 'dev-only-better-auth-secret-min-32-chars-long-rotate-in-prod',
+  secret: secret || 'super-secret-development-key-that-is-at-least-32-characters',
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema: authSchema,
