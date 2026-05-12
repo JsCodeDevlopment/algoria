@@ -64,8 +64,8 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('emailVerified').notNull().default(false),
   image: text('image'),
-  role: text('role').notNull().default('USER'),
-  creatorRequestStatus: text('creator_request_status').notNull().default('NONE'),
+  role: userRoleEnum('role').notNull().default('USER'),
+  creatorRequestStatus: creatorRequestStatusEnum('creator_request_status').notNull().default('NONE'),
   createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });
