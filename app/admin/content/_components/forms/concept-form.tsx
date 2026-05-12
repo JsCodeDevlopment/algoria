@@ -53,21 +53,21 @@ export function ConceptForm({
       <div className="grid gap-4 lg:grid-cols-3">
         <FormField label="Categoria *">
           <SelectInput
-            value={meta.category || "fundamentals"}
+            value={(meta.category as string) || "fundamentals"}
             onChange={(v) => setMeta({ ...meta, category: v })}
             options={conceptCategories}
           />
         </FormField>
         <FormField label="Dificuldade">
           <SelectInput
-            value={meta.difficulty || "medium"}
+            value={(meta.difficulty as string) || "medium"}
             onChange={(v) => setMeta({ ...meta, difficulty: v })}
             options={DIFFICULTIES}
           />
         </FormField>
         <FormField label="Acesso">
           <SelectInput
-            value={meta.access || "pro"}
+            value={(meta.access as string) || "pro"}
             onChange={(v) => setMeta({ ...meta, access: v })}
             options={ACCESS_OPTIONS}
           />
@@ -77,14 +77,14 @@ export function ConceptForm({
       <div className="grid gap-4 lg:grid-cols-2">
         <FormField label="Tempo estimado (min)">
           <NumberInput
-            value={meta.estimatedMinutes || 10}
+            value={(meta.estimatedMinutes as number) || 10}
             onChange={(v) => setMeta({ ...meta, estimatedMinutes: v })}
             min={1}
           />
         </FormField>
         <FormField label="Pré-requisitos" hint="Slugs separados por vírgula">
           <TextInput
-            value={(meta.prerequisites || []).join(", ")}
+            value={((meta.prerequisites as string[]) || []).join(", ")}
             onChange={(v) =>
               setMeta({
                 ...meta,
@@ -101,7 +101,7 @@ export function ConceptForm({
 
       <FormField label="Resumo *" hint="Descrição curta do conceito">
         <TextInput
-          value={meta.summary || ""}
+          value={(meta.summary as string) || ""}
           onChange={(v) => setMeta({ ...meta, summary: v })}
           placeholder="Explicação sobre..."
         />
