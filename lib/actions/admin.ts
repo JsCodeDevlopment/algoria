@@ -8,6 +8,7 @@ import {
   user,
   type contentStatusEnum,
   type userRoleEnum,
+  type contentTypeEnum,
 } from '@/lib/db/schema';
 import { and, count, desc, eq, ilike, sql } from 'drizzle-orm';
 import { createHash } from 'node:crypto';
@@ -17,6 +18,7 @@ import { SYSTEM_TYPES } from '@/lib/content/schemas';
 
 type UserRole = (typeof userRoleEnum.enumValues)[number];
 type ContentStatus = (typeof contentStatusEnum.enumValues)[number];
+type ContentType = (typeof contentTypeEnum.enumValues)[number];
 
 /* ── Helpers ──────────────────────────────────────────────────── */
 
@@ -185,9 +187,9 @@ export async function listContents(params: {
     } else if (params.tab) {
       const { inArray, notInArray } = await import('drizzle-orm');
       if (params.tab === 'sistema') {
-        conditions.push(inArray(contents.type, SYSTEM_TYPES as any));
+        conditions.push(inArray(contents.type, SYSTEM_TYPES as unknown as ContentType[]));
       } else {
-        conditions.push(notInArray(contents.type, SYSTEM_TYPES as any));
+        conditions.push(notInArray(contents.type, SYSTEM_TYPES as unknown as ContentType[]));
       }
     }
     

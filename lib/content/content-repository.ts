@@ -8,7 +8,24 @@
  * quando o slug ainda não foi migrado.
  */
 
-import type { Concept, EngineeringWorkGuide, InterviewEnglishTopic, Problem } from './schemas';
+import type {
+  Concept,
+  EngineeringWorkGuide,
+  InterviewEnglishTopic,
+  Problem,
+  Difficulty,
+  Category,
+  Language,
+  SolutionKind,
+  ContentAccess,
+  Complexity,
+  Example,
+  LineAnnotation,
+  ExecutionTraceStep,
+  TestTrack,
+  TestLevel,
+  TestDifficulty,
+} from './schemas';
 import type { StudyTrackFile } from './track-schema';
 
 /* ── Interface pública ──────────────────────────────────────────── */
@@ -31,20 +48,21 @@ export interface ContentRepository {
 
   getChangelogHtml(): Promise<string | null>;
 
-  getAllTechnicalTests(): Promise<any[]>;
-  getTechnicalTestsByTrack(track: string): Promise<any[]>;
-  getTechnicalTest(slug: string): Promise<any | null>;
+  getAllTechnicalTests(): Promise<TechnicalTest[]>;
+  getTechnicalTestsByTrack(track: string): Promise<TechnicalTest[]>;
+  getTechnicalTest(slug: string): Promise<TechnicalTest | null>;
 
-  getAllCourses(): Promise<any[]>;
-  getCourse(slug: string): Promise<any | null>;
+  getAllCourses(): Promise<CoursePackParsed[]>;
+  getCourse(slug: string): Promise<CoursePackParsed | null>;
 }
-
-/* ── DB-based provider (Phase 1 reads from contents table) ─ */
 
 import { renderMarkdown } from './markdown';
 import { db } from '@/lib/db';
 import { contents } from '@/lib/db/schema';
 import { and, eq } from 'drizzle-orm';
+import type { CoursePackParsed, TechnicalTest } from './schemas';
+
+type ContentRow = typeof contents.$inferSelect;
 
 class DbContentRepository implements ContentRepository {
   async getAllProblems(): Promise<Problem[]> {
@@ -144,19 +162,29 @@ class DbContentRepository implements ContentRepository {
     return row ? renderMarkdown(row.body) : null;
   }
 
-  async getAllTechnicalTests(): Promise<any[]> {
+  async getAllTechnicalTests(): Promise<TechnicalTest[]> {
     const rows = await db
       .select()
       .from(contents)
       .where(and(eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')));
     return rows.map(r => this.hydrateTechnicalTest(r));
   }
-  async getTechnicalTestsByTrack(track: string): Promise<any[]> {
+
+  async getTechnicalTestsByTrack(track: string): Promise<TechnicalTest[]> {
     const rows = await db
       .select()
       .from(contents)
       .where(and(eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')));
     return rows.map(r => this.hydrateTechnicalTest(r)).filter(t => t.track === track);
+  }
+
+  async getTechnicalTest(slug: string): Promise<TechnicalTest | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? this.hydrateTechnicalTest(row) : null;
   }
 
   async getAllCourses(): Promise<CoursePackParsed[]> {
@@ -176,110 +204,87 @@ class DbContentRepository implements ContentRepository {
     return row ? JSON.parse(row.body) : null;
   }
 
-  async getTechnicalTest(slug: string): Promise<any | null> {
-    const [row] = await db
-      .select()
-      .from(contents)
-      .where(and(eq(contents.slug, slug), eq(contents.type, 'technical-test'), eq(contents.status, 'PUBLISHED')))
-      .limit(1);
-    return row ? this.hydrateTechnicalTest(row) : null;
-  }
-
-  private hydrateTechnicalTest(row: any) {
-    const metadata = row.metadata as any;
-    const body = JSON.parse(row.body); // Technical tests body stores the full JSON
+  private hydrateTechnicalTest(row: ContentRow): TechnicalTest {
+    const metadata = row.metadata as Record<string, unknown>;
+    const body = JSON.parse(row.body);
     return {
       ...body,
       id: row.id,
       slug: row.slug,
       title: row.title,
-      track: metadata.track,
-      level: metadata.level,
-      difficulty: metadata.difficulty,
-      topic: metadata.topic,
-    };
+      track: metadata.track as TestTrack,
+      level: metadata.level as TestLevel,
+      difficulty: metadata.difficulty as TestDifficulty,
+      topic: metadata.topic as string,
+    } as unknown as TechnicalTest;
   }
 
-  async getAllCourses(): Promise<any[]> {
-    const rows = await db
-      .select()
-      .from(contents)
-      .where(and(eq(contents.type, 'course'), eq(contents.status, 'PUBLISHED')));
-    return rows.map(r => JSON.parse(r.body));
-  }
-
-  async getCourse(slug: string): Promise<any | null> {
-    const [row] = await db
-      .select()
-      .from(contents)
-      .where(and(eq(contents.slug, slug), eq(contents.type, 'course'), eq(contents.status, 'PUBLISHED')))
-      .limit(1);
-    return row ? JSON.parse(row.body) : null;
-  }
-
-  private hydrateProblem(row: any): Problem {
-    const meta = row.metadata;
+  private hydrateProblem(row: ContentRow): Problem {
+    const meta = row.metadata as Record<string, unknown>;
     return {
       meta: {
         slug: row.slug,
         title: row.title,
-        difficulty: meta.difficulty,
-        categories: meta.categories,
-        prerequisites: meta.prerequisites ?? [],
-        examples: meta.examples ?? [],
-        constraints: meta.constraints ?? [],
-        tags: meta.tags ?? [],
-        estimatedMinutes: meta.estimatedMinutes ?? 15,
-        recommendedOrder: meta.recommendedOrder,
-        access: meta.access ?? 'pro',
+        difficulty: (meta.difficulty as Difficulty) || 'medium',
+        categories: (meta.categories as Category[]) || [],
+        prerequisites: (meta.prerequisites as string[]) ?? [],
+        examples: (meta.examples as Example[]) ?? [],
+        constraints: (meta.constraints as string[]) ?? [],
+        tags: (meta.tags as string[]) ?? [],
+        estimatedMinutes: (meta.estimatedMinutes as number) ?? 15,
+        recommendedOrder: meta.recommendedOrder as number | undefined,
+        access: (meta.access as ContentAccess) ?? 'pro',
       },
       descriptionHtml: renderMarkdown(row.body),
-      solutions: (meta.solutions ?? []).map((s: any) => ({
-        meta: {
-          slug: s.meta?.slug || s.slug,
-          name: s.meta?.name || s.name,
-          kind: s.meta?.kind || s.kind,
-          language: s.meta?.language || s.language,
-          complexity: s.meta?.complexity || s.complexity,
-          entryFunction: s.meta?.entryFunction || s.entryFunction,
-        },
-        codeByLanguage: s.codeByLanguage ?? {},
-        introHtml: s.introHtml || renderMarkdown(s.introMd ?? ''),
-        annotations: s.annotations ?? [],
-        executionTrace: s.executionTrace,
-      })),
+      solutions: ((meta.solutions as Record<string, unknown>[]) ?? []).map((s) => {
+        const sMeta = (s.meta || {}) as Record<string, unknown>;
+        return {
+          meta: {
+            slug: (sMeta.slug as string) || (s.slug as string),
+            name: (sMeta.name as string) || (s.name as string),
+            kind: (sMeta.kind as SolutionKind) || (s.kind as SolutionKind),
+            language: (sMeta.language as Language) || (s.language as Language),
+            complexity: (sMeta.complexity as Complexity) || (s.complexity as Complexity), 
+            entryFunction: (sMeta.entryFunction as string) || (s.entryFunction as string),
+          },
+          codeByLanguage: (s.codeByLanguage as Record<string, string>) ?? {},
+          introHtml: (s.introHtml as string) || renderMarkdown((s.introMd as string) ?? ''),
+          annotations: (s.annotations as LineAnnotation[]) ?? [],
+          executionTrace: s.executionTrace as ExecutionTraceStep[],
+        };
+      }),
     };
   }
 
-  private hydrateConcept(row: any): Concept {
+  private hydrateConcept(row: ContentRow): Concept {
     return {
       meta: {
-        ...row.metadata,
+        ...(row.metadata as Record<string, unknown>),
         slug: row.slug,
         title: row.title,
-      },
+      } as Concept['meta'],
       bodyHtml: renderMarkdown(row.body),
     };
   }
 
-  private hydrateInterviewEn(row: any): InterviewEnglishTopic {
+  private hydrateInterviewEn(row: ContentRow): InterviewEnglishTopic {
     return {
       meta: {
-        ...row.metadata,
+        ...(row.metadata as Record<string, unknown>),
         slug: row.slug,
         title: row.title,
-      },
+      } as InterviewEnglishTopic['meta'],
       bodyHtml: renderMarkdown(row.body),
     };
   }
 
-  private hydrateEngineeringWork(row: any): EngineeringWorkGuide {
+  private hydrateEngineeringWork(row: ContentRow): EngineeringWorkGuide {
     return {
       meta: {
-        ...row.metadata,
+        ...(row.metadata as Record<string, unknown>),
         slug: row.slug,
         title: row.title,
-      },
+      } as EngineeringWorkGuide['meta'],
       bodyHtml: renderMarkdown(row.body, { didacticBlocks: true }),
     };
   }

@@ -10,7 +10,7 @@ import {
 
 const METADATA_EXAMPLES: Record<
   string,
-  { label: string; example: Record<string, any> }
+  { label: string; example: Record<string, unknown> }
 > = {
   "interview-en": { label: "Interview EN", example: INTERVIEW_EN_META_EXAMPLE },
   "engineering-work": {
@@ -37,7 +37,7 @@ export function MetadataPreview({
   meta,
   contentType,
 }: {
-  meta: Record<string, any>;
+  meta: Record<string, unknown>;
   contentType?: string;
 }) {
   const [open, setOpen] = useState(false);

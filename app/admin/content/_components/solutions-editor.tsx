@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { LANGUAGES } from "@/lib/content/schemas";
 import { useState } from "react";
 import { FormField, SelectInput, TextInput } from "./form-elements";
+import { EditorSolution } from "./types";
 
 export function SolutionLanguagesEditor({
   codeByLanguage,
@@ -81,8 +82,8 @@ export function SolutionsList({
   solutions,
   onChange,
 }: {
-  solutions: any[];
-  onChange: (sols: any[]) => void;
+  solutions: EditorSolution[];
+  onChange: (sols: EditorSolution[]) => void;
 }) {
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
 
@@ -103,7 +104,7 @@ export function SolutionsList({
     setExpandedIndex(solutions.length);
   }
 
-  function updateSolution(index: number, data: any) {
+  function updateSolution(index: number, data: EditorSolution) {
     const next = [...solutions];
     next[index] = data;
     onChange(next);

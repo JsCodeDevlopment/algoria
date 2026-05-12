@@ -1,6 +1,3 @@
-"use client";
-
-import { LANGUAGES } from "@/lib/content/schemas";
 
 export interface FormProps {
   slug: string;
@@ -9,8 +6,8 @@ export interface FormProps {
   setTitle: (v: string) => void;
   body: string;
   setBody: (v: string) => void;
-  meta: Record<string, any>;
-  setMeta: (v: Record<string, any>) => void;
+  meta: Record<string, unknown>;
+  setMeta: (v: Record<string, unknown>) => void;
   mode: "create" | "edit";
 }
 
@@ -24,6 +21,46 @@ export interface ContentEditorProps {
     body?: string;
     metadata?: Record<string, unknown>;
   };
+}
+
+export interface EditorSolution {
+  meta: {
+    slug: string;
+    name: string;
+    kind: string;
+    language: string;
+    complexity: {
+      time: string;
+      space: string;
+      rationale: string;
+    };
+    entryFunction?: string;
+  };
+  codeByLanguage: Record<string, string>;
+  introMd: string;
+}
+
+export type ContentStatus =
+  | "DRAFT"
+  | "PENDING_REVIEW"
+  | "CHANGES_REQUESTED"
+  | "APPROVED"
+  | "PUBLISHED"
+  | "REJECTED";
+
+export interface ContentRow {
+  id: string;
+  slug: string;
+  type: string;
+  title: string;
+  status: ContentStatus;
+  version: number;
+  authorId: string | null;
+  authorName: string | null;
+  authorImage: string | null;
+  publishedAt: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export const DIFFICULTIES = [
@@ -71,7 +108,7 @@ export const CATEGORIES = [
   { value: "sorting", label: "Sorting" },
 ];
 
-export const DEFAULT_META: Record<string, Record<string, any>> = {
+export const DEFAULT_META: Record<string, Record<string, unknown>> = {
   "interview-en": {
     track: "vocabulary",
     difficulty: "easy",

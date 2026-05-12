@@ -24,9 +24,9 @@ export function ContentEditor({ mode, initialData }: ContentEditorProps) {
   const [slug, setSlug] = useState(initialData?.slug ?? "");
   const [title, setTitle] = useState(initialData?.title ?? "");
   const [body, setBody] = useState(initialData?.body ?? "");
-  const [meta, setMeta] = useState<Record<string, any>>(
+  const [meta, setMeta] = useState<Record<string, unknown>>(
     initialData?.metadata && Object.keys(initialData.metadata).length > 0
-      ? (initialData.metadata as Record<string, any>)
+      ? (initialData.metadata as Record<string, unknown>)
       : (DEFAULT_META[contentType] ?? {}),
   );
 

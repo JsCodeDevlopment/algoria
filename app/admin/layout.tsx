@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 
-import { requireContributor, isAdminRole, type AdminSession } from '@/lib/admin/auth-guard';
+import { requireContributor, isAdminRole } from '@/lib/admin/auth-guard';
 
 export const metadata: Metadata = {
   title: 'Admin Panel',
@@ -76,9 +77,11 @@ export default async function AdminLayout({
         <div className="border-t border-border px-4 py-4">
           <div className="flex items-center gap-3">
             {session.image ? (
-              <img
+              <Image
                 src={session.image}
                 alt={session.name}
+                width={32}
+                height={32}
                 className="h-8 w-8 rounded-full object-cover"
               />
             ) : (
