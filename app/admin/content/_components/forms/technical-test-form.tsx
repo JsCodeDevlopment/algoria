@@ -8,7 +8,7 @@ import { ChallengeSection } from "./technical-test/challenge-section";
 import { GeneralInfoSection } from "./technical-test/general-info-section";
 import { QuizSection } from "./technical-test/quiz-section";
 import { SolutionsSection } from "./technical-test/solutions-section";
-import { FileJson } from "lucide-react";
+import { FileJson, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -139,6 +139,18 @@ export function TechnicalTestForm({
       console.error(err);
     }
   };
+
+  const handleExportJson = () => {
+    const dataStr = JSON.stringify(testData, null, 2);
+    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+    
+    const exportFileDefaultName = `${slug || 'technical-test'}.json`;
+    
+    const linkElement = document.createElement('a');
+    linkElement.setAttribute('href', dataUri);
+    linkElement.setAttribute('download', exportFileDefaultName);
+    linkElement.click();
+  };
   
   const handleAddQuestion = () => {
     const newQuestion: QuizQuestion = {
@@ -235,8 +247,16 @@ export function TechnicalTestForm({
                 Confirmar Importação e Sincronizar
               </Button>
             </DialogFooter>
-          </DialogContent>
-        </Dialog>
+            </DialogContent>
+          </Dialog>
+
+          <Button 
+            variant="outline" 
+            onClick={handleExportJson}
+            className="rounded-none gap-2 text-xs font-black uppercase border-2 h-12"
+          >
+            <Download className="h-4 w-4" /> Exportar JSON
+          </Button>
       </div>
 
       <GeneralInfoSection
