@@ -295,6 +295,8 @@ export async function updateContentStatus(contentId: string, newStatus: ContentS
       .where(eq(contents.id, contentId));
 
     revalidateContentPaths(current.type, current.slug, current.metadata as Record<string, unknown>);
+    revalidatePath(`/admin/content/${contentId}/edit`);
+    revalidatePath(`/admin/content/${contentId}/review`);
     return { success: true };
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
@@ -460,6 +462,7 @@ export async function updateContent(
       .where(eq(contents.id, contentId));
 
     revalidateContentPaths(existing.type, existing.slug, params.metadata);
+    revalidatePath(`/admin/content/${contentId}/edit`);
     revalidatePath(`/admin/content/${contentId}/review`);
     return { success: true };
   } catch (error) {

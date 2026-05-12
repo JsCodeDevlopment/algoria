@@ -43,10 +43,11 @@ export function revalidateContentPaths(type: ContentType, slug: string, metadata
       break;
     case 'technical-test':
       revalidatePath('/tests');
-      if (metadata?.track) {
-        revalidatePath(`/tests/${metadata.track as string}`);
-        revalidatePath(`/tests/${metadata.track as string}/${slug}`);
-      }
+      // Como o track pode estar apenas no body (JSON), revalidamos as trilhas principais por segurança
+      ['frontend', 'backend', 'devops'].forEach((t) => {
+        revalidatePath(`/tests/${t}`);
+        revalidatePath(`/tests/${t}/${slug}`);
+      });
       break;
     case 'landing-section':
     case 'pricing-copy':
@@ -55,6 +56,7 @@ export function revalidateContentPaths(type: ContentType, slug: string, metadata
     case 'legal-page':
       // Alterações globais ou de estrutura
       revalidatePath('/', 'layout');
+      revalidatePath('/admin/content', 'layout');
       break;
   }
 }
