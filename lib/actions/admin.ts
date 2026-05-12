@@ -1,24 +1,25 @@
 'use server';
 
 import { auth } from '@/lib/auth';
+import { revalidateContentPaths } from '@/lib/content/revalidate';
+import { SYSTEM_TYPES } from '@/lib/content/schemas';
 import { db } from '@/lib/db';
 import {
   contentReviewComments,
   contents,
   user,
   type contentStatusEnum,
-  type userRoleEnum,
-  type contentTypeEnum,
+  type ContentType,
+  type userRoleEnum
 } from '@/lib/db/schema';
 import { and, count, desc, eq, ilike, sql } from 'drizzle-orm';
-import { createHash } from 'node:crypto';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { SYSTEM_TYPES } from '@/lib/content/schemas';
+import { createHash } from 'node:crypto';
 
 type UserRole = (typeof userRoleEnum.enumValues)[number];
 type ContentStatus = (typeof contentStatusEnum.enumValues)[number];
-type ContentType = (typeof contentTypeEnum.enumValues)[number];
+const SYSTEM_TYPES_LIST = SYSTEM_TYPES as unknown as ContentType[];
 
 /* ── Helpers ──────────────────────────────────────────────────── */
 
@@ -127,10 +128,10 @@ export async function approveCreatorRequest(targetUserId: string) {
   try {
     await db
       .update(user)
-      .set({ 
-        role: 'EDITOR', 
+      .set({
+        role: 'EDITOR',
         creatorRequestStatus: 'APPROVED',
-        updatedAt: new Date() 
+        updatedAt: new Date()
       })
       .where(eq(user.id, targetUserId));
 
@@ -149,9 +150,9 @@ export async function rejectCreatorRequest(targetUserId: string) {
   try {
     await db
       .update(user)
-      .set({ 
+      .set({
         creatorRequestStatus: 'REJECTED',
-        updatedAt: new Date() 
+        updatedAt: new Date()
       })
       .where(eq(user.id, targetUserId));
 
@@ -187,12 +188,12 @@ export async function listContents(params: {
     } else if (params.tab) {
       const { inArray, notInArray } = await import('drizzle-orm');
       if (params.tab === 'sistema') {
-        conditions.push(inArray(contents.type, SYSTEM_TYPES as unknown as ContentType[]));
+        conditions.push(inArray(contents.type, SYSTEM_TYPES_LIST));
       } else {
-        conditions.push(notInArray(contents.type, SYSTEM_TYPES as unknown as ContentType[]));
+        conditions.push(notInArray(contents.type, SYSTEM_TYPES_LIST));
       }
     }
-    
+
     if (params.status) conditions.push(eq(contents.status, params.status as never));
     if (params.search) {
       conditions.push(
@@ -252,7 +253,13 @@ export async function updateContentStatus(contentId: string, newStatus: ContentS
 
   try {
     const [current] = await db
-      .select({ authorId: contents.authorId, status: contents.status })
+      .select({
+        authorId: contents.authorId,
+        status: contents.status,
+        type: contents.type,
+        slug: contents.slug,
+        metadata: contents.metadata
+      })
       .from(contents)
       .where(eq(contents.id, contentId))
       .limit(1);
@@ -287,7 +294,7 @@ export async function updateContentStatus(contentId: string, newStatus: ContentS
       .set(updateData)
       .where(eq(contents.id, contentId));
 
-    revalidatePath('/admin/content');
+    revalidateContentPaths(current.type, current.slug, current.metadata as Record<string, unknown>);
     return { success: true };
   } catch (error) {
     console.error('Erro ao atualizar status:', error);
@@ -388,7 +395,7 @@ export async function createContent(params: {
       publishedAt: params.publish ? new Date() : null,
     });
 
-    revalidatePath('/admin/content');
+    revalidateContentPaths(params.type as ContentType, params.slug, params.metadata);
     return { success: true, id };
   } catch (error) {
     console.error('Erro ao criar conteúdo:', error);
@@ -410,10 +417,13 @@ export async function updateContent(
 
   try {
     const [existing] = await db
-      .select({ 
-        version: contents.version, 
+      .select({
+        version: contents.version,
         status: contents.status,
-        authorId: contents.authorId 
+        authorId: contents.authorId,
+        type: contents.type,
+        slug: contents.slug,
+        metadata: contents.metadata
       })
       .from(contents)
       .where(eq(contents.id, contentId))
@@ -449,7 +459,7 @@ export async function updateContent(
       })
       .where(eq(contents.id, contentId));
 
-    revalidatePath('/admin/content');
+    revalidateContentPaths(existing.type, existing.slug, params.metadata);
     revalidatePath(`/admin/content/${contentId}/review`);
     return { success: true };
   } catch (error) {
@@ -463,8 +473,16 @@ export async function deleteContent(contentId: string) {
   if (!admin || admin.role !== 'ADMIN') return { error: 'Não autorizado' };
 
   try {
-    await db.delete(contents).where(eq(contents.id, contentId));
-    revalidatePath('/admin/content');
+    const [existing] = await db
+      .select({ type: contents.type, slug: contents.slug, metadata: contents.metadata })
+      .from(contents)
+      .where(eq(contents.id, contentId))
+      .limit(1);
+
+    if (existing) {
+      await db.delete(contents).where(eq(contents.id, contentId));
+      revalidateContentPaths(existing.type, existing.slug, existing.metadata as Record<string, unknown>);
+    }
     return { success: true };
   } catch (error) {
     console.error('Erro ao excluir conteúdo:', error);

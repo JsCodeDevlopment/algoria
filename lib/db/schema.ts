@@ -36,6 +36,8 @@ export const contentTypeEnum = pgEnum('content_type', [
   'taxonomy',
 ]);
 
+export type ContentType = (typeof contentTypeEnum.enumValues)[number];
+
 export const technicalAssessmentResults = pgTable('technical_assessment_results', {
   id: text('id').primaryKey(),
   userId: text('userId')
