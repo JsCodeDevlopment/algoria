@@ -39,6 +39,11 @@ jobs:
         env:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
 
+      - name: Seed Database
+        run: pnpm db:seed
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
+
       - run: pnpm validate:content
 
       - run: pnpm lint
@@ -48,11 +53,11 @@ jobs:
       - run: pnpm build
         env:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
-          BETTER_AUTH_SECRET: some-secret-for-ci-build-only
+          BETTER_AUTH_SECRET: some-secret-for-ci-build-only-that-is-at-least-32-chars
 
       - run: pnpm exec playwright install chromium --with-deps
 
       - run: pnpm test:e2e
         env:
           DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
-          BETTER_AUTH_SECRET: some-secret-for-ci-build-only
+          BETTER_AUTH_SECRET: some-secret-for-ci-build-only-that-is-at-least-32-chars
