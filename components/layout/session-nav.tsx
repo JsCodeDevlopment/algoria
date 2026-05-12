@@ -50,7 +50,7 @@ export function SessionNav() {
     );
   }
 
-  const user = data.user;
+  const user = data.user as typeof data.user & { role?: string };
   const initials =
     user.name?.substring(0, 2).toUpperCase() ||
     user.email?.substring(0, 2).toUpperCase() ||
