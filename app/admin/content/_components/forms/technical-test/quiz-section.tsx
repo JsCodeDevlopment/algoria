@@ -81,6 +81,18 @@ export function QuizSection({
                   </div>
                 ))}
               </div>
+              <div className="pt-2">
+                <label className="text-[9px] font-black uppercase tracking-widest text-muted-foreground mb-1 block">
+                  Explicação da Resposta Correta
+                </label>
+                <textarea
+                  value={q.explanation || ""}
+                  onChange={(e) => onUpdateQuestion(qIndex, { explanation: e.target.value })}
+                  placeholder="Explica o porquê desta resposta ser a correta..."
+                  rows={2}
+                  className="w-full rounded-xl border border-border bg-background/50 p-3 text-sm focus:border-primary outline-none transition-all placeholder:text-muted-foreground/50 shadow-inner"
+                />
+              </div>
             </div>
           </div>
         ))}
