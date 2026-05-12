@@ -42,7 +42,7 @@ export function BecomeCreatorButton({ status }: { status: 'NONE' | 'PENDING' | '
     <div className="space-y-2">
       <Button
         onClick={handleRequest}
-        disabled={isPending || status === 'PENDING'}
+        disabled={isPending}
         className="w-full h-12 rounded-none font-black uppercase tracking-widest text-[10px] border-2 border-primary gap-2 bg-primary hover:bg-primary/90"
       >
         <Sparkles className="h-3.5 w-3.5" />
