@@ -8,6 +8,17 @@ import { ChallengeSection } from "./technical-test/challenge-section";
 import { GeneralInfoSection } from "./technical-test/general-info-section";
 import { QuizSection } from "./technical-test/quiz-section";
 import { SolutionsSection } from "./technical-test/solutions-section";
+import { FileJson } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 const DEFAULT_JS_RUNNER = `
 function runTests() {
@@ -67,6 +78,8 @@ export function TechnicalTestForm({
   });
 
   const [existingTopics, setExistingTopics] = useState<string[]>([]);
+  const [importJson, setImportJson] = useState("");
+  const [isImportOpen, setIsImportOpen] = useState(false);
 
   useEffect(() => {
     async function loadTopics() {
@@ -94,6 +107,38 @@ export function TechnicalTestForm({
   }, [testData, title, slug, meta, setBody]);
 
   // --- HANDLERS ---
+
+  const handleImportJson = () => {
+    try {
+      const parsed = JSON.parse(importJson);
+      if (typeof parsed !== 'object' || parsed === null) throw new Error();
+
+      // Atualizar metadados globais (o useEffect cuidará do setBody)
+      if (parsed.title) setTitle(parsed.title);
+      if (parsed.slug) setSlug(parsed.slug);
+      
+      setMeta({
+        ...meta,
+        track: parsed.track || meta.track,
+        level: parsed.level || meta.level,
+        difficulty: parsed.difficulty || meta.difficulty,
+        topic: parsed.topic || meta.topic,
+      });
+
+      // Atualizar dados estruturados
+      setTestData({
+        ...testData,
+        ...parsed,
+        // Garantir que não sobrescrevemos campos que o editor controla separadamente se quisermos
+      });
+
+      setIsImportOpen(false);
+      setImportJson("");
+    } catch (err) {
+      alert("Erro ao importar JSON. Verifica se o formato é válido.");
+      console.error(err);
+    }
+  };
   
   const handleAddQuestion = () => {
     const newQuestion: QuizQuestion = {
@@ -154,9 +199,44 @@ export function TechnicalTestForm({
 
   return (
     <div className="space-y-12 pb-24">
-      <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-xs font-bold text-primary flex items-center gap-3">
-        <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-        Modo de Edição Estruturada: Os campos abaixo são sincronizados automaticamente com o JSON do simulado.
+      <div className="flex items-center justify-between">
+        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 text-xs font-bold text-primary flex items-center gap-3 flex-1">
+          <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
+          Modo de Edição Estruturada: Os campos abaixo são sincronizados automaticamente com o JSON do simulado.
+        </div>
+        
+        <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+          <DialogTrigger asChild>
+            <Button variant="outline" className="ml-4 rounded-none gap-2 text-xs font-black uppercase border-2 h-12">
+              <FileJson className="h-4 w-4" /> Importar JSON
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-2xl bg-background border-2 border-border rounded-none">
+            <DialogHeader>
+              <DialogTitle className="text-xl font-black uppercase tracking-tighter">Importar Definição JSON</DialogTitle>
+              <DialogDescription className="text-xs uppercase font-bold tracking-widest text-muted-foreground">
+                Cola o JSON completo do teste abaixo para preencher os campos automaticamente.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="py-4">
+              <textarea
+                value={importJson}
+                onChange={(e) => setImportJson(e.target.value)}
+                placeholder='{"title": "Novo Teste", ...}'
+                rows={12}
+                className="w-full bg-[#080808] text-emerald-400 p-4 font-mono text-xs rounded-none border-2 border-border focus:border-primary outline-none"
+              />
+            </div>
+            <DialogFooter>
+              <Button 
+                onClick={handleImportJson}
+                className="rounded-none font-black uppercase tracking-widest w-full h-12"
+              >
+                Confirmar Importação e Sincronizar
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
       </div>
 
       <GeneralInfoSection
