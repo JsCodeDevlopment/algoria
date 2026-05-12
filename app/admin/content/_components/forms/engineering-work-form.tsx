@@ -48,21 +48,21 @@ export function EngineeringWorkForm({
       <div className="grid gap-4 lg:grid-cols-3">
         <FormField label="Pilar *">
           <SelectInput
-            value={meta.pillar || "frontend"}
+            value={(meta.pillar as string) || "frontend"}
             onChange={(v) => setMeta({ ...meta, pillar: v })}
             options={ENGINEERING_PILLARS}
           />
         </FormField>
         <FormField label="Tempo estimado (min)">
           <NumberInput
-            value={meta.estimatedMinutes || 15}
+            value={(meta.estimatedMinutes as number) || 15}
             onChange={(v) => setMeta({ ...meta, estimatedMinutes: v })}
             min={1}
           />
         </FormField>
         <FormField label="Imagem de capa (URL)" hint="Opcional">
           <TextInput
-            value={meta.image || ""}
+            value={(meta.image as string) || ""}
             onChange={(v) => setMeta({ ...meta, image: v })}
             placeholder="https://..."
           />
@@ -71,7 +71,7 @@ export function EngineeringWorkForm({
 
       <FormField label="Resumo *" hint="Descrição curta para listagens e SEO">
         <TextInput
-          value={meta.summary || ""}
+          value={(meta.summary as string) || ""}
           onChange={(v) => setMeta({ ...meta, summary: v })}
           placeholder="Guia prático sobre..."
         />

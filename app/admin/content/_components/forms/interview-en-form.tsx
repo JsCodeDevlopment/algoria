@@ -51,21 +51,21 @@ export function InterviewEnForm({
       <div className="grid gap-4 lg:grid-cols-3">
         <FormField label="Track *">
           <SelectInput
-            value={meta.track || "vocabulary"}
+            value={(meta.track as string) || "vocabulary"}
             onChange={(v) => setMeta({ ...meta, track: v })}
             options={INTERVIEW_TRACKS}
           />
         </FormField>
         <FormField label="Dificuldade">
           <SelectInput
-            value={meta.difficulty || "easy"}
+            value={(meta.difficulty as string) || "easy"}
             onChange={(v) => setMeta({ ...meta, difficulty: v })}
             options={DIFFICULTIES}
           />
         </FormField>
         <FormField label="Tempo estimado (min)">
           <NumberInput
-            value={meta.estimatedMinutes || 12}
+            value={(meta.estimatedMinutes as number) || 12}
             onChange={(v) => setMeta({ ...meta, estimatedMinutes: v })}
             min={1}
           />
@@ -77,7 +77,7 @@ export function InterviewEnForm({
         hint="Breve descrição do tópico (1-2 linhas, usado em listagens)"
       >
         <TextInput
-          value={meta.summary || ""}
+          value={(meta.summary as string) || ""}
           onChange={(v) => setMeta({ ...meta, summary: v })}
           placeholder="High-frequency vocabulary for explaining data structures..."
         />

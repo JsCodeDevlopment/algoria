@@ -1,6 +1,12 @@
 "use client";
 
-import { FormProps, DIFFICULTIES, ACCESS_OPTIONS, CATEGORIES } from "../types";
+import {
+  FormProps,
+  DIFFICULTIES,
+  ACCESS_OPTIONS,
+  CATEGORIES,
+  EditorSolution,
+} from "../types";
 import { FormField, TextInput, SelectInput, NumberInput } from "../form-elements";
 import { MarkdownEditor } from "../markdown-editor";
 import { MetadataPreview } from "../metadata-preview";
@@ -17,7 +23,7 @@ export function ProblemForm({
   setMeta,
   mode,
 }: FormProps) {
-  const selectedCategories: string[] = meta.categories || [];
+  const selectedCategories: string[] = (meta.categories as string[]) || [];
 
   function toggleCategory(cat: string) {
     const cats = selectedCategories.includes(cat)
@@ -59,21 +65,21 @@ export function ProblemForm({
       <div className="grid gap-4 lg:grid-cols-3">
         <FormField label="Dificuldade *">
           <SelectInput
-            value={meta.difficulty || "easy"}
+            value={(meta.difficulty as string) || "easy"}
             onChange={(v) => setMeta({ ...meta, difficulty: v })}
             options={DIFFICULTIES}
           />
         </FormField>
         <FormField label="Acesso">
           <SelectInput
-            value={meta.access || "pro"}
+            value={(meta.access as string) || "pro"}
             onChange={(v) => setMeta({ ...meta, access: v })}
             options={ACCESS_OPTIONS}
           />
         </FormField>
         <FormField label="Tempo estimado (min)">
           <NumberInput
-            value={meta.estimatedMinutes || 15}
+            value={(meta.estimatedMinutes as number) || 15}
             onChange={(v) => setMeta({ ...meta, estimatedMinutes: v })}
             min={1}
           />
@@ -85,7 +91,7 @@ export function ProblemForm({
         hint="Número para ordenação (menor = aparece primeiro)"
       >
         <NumberInput
-          value={meta.recommendedOrder || 1}
+          value={(meta.recommendedOrder as number) || 1}
           onChange={(v) => setMeta({ ...meta, recommendedOrder: v })}
           min={1}
         />
@@ -114,7 +120,7 @@ export function ProblemForm({
       {/* Constraints */}
       <FormField label="Constraints" hint="Uma por linha">
         <textarea
-          value={(meta.constraints || []).join("\n")}
+          value={((meta.constraints as string[]) || []).join("\n")}
           onChange={(e) =>
             setMeta({
               ...meta,
@@ -132,7 +138,7 @@ export function ProblemForm({
 
       {/* Solutions list */}
       <SolutionsList
-        solutions={meta.solutions || []}
+        solutions={(meta.solutions as EditorSolution[]) || []}
         onChange={(sols) => setMeta({ ...meta, solutions: sols })}
       />
 
