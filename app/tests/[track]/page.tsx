@@ -1,10 +1,4 @@
-import {
-  ArrowRight,
-  ChevronLeft,
-  Clock,
-  Filter,
-  GraduationCap,
-} from "lucide-react";
+import { ArrowRight, ChevronLeft, Clock, GraduationCap } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,6 +9,8 @@ import { getContentRepository } from "@/lib/content/content-repository";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import { cn } from "@/lib/utils";
 
+import { TestsFilters } from "./_components/tests-filters";
+
 interface Params {
   track: string;
 }
@@ -23,6 +19,7 @@ interface SearchParams {
   level?: string;
   topic?: string;
   difficulty?: string;
+  q?: string;
 }
 
 export async function generateMetadata({
@@ -48,7 +45,7 @@ export default async function TrackTestsPage({
   searchParams: Promise<SearchParams>;
 }) {
   const { track } = await params;
-  const { level, topic, difficulty } = await searchParams;
+  const { level, topic, difficulty, q } = await searchParams;
   const repo = getContentRepository();
   const validTracks = ["frontend", "backend", "devops"];
 
@@ -56,12 +53,20 @@ export default async function TrackTestsPage({
     notFound();
   }
 
-  let tests = await repo.getTechnicalTestsByTrack(track);
+  const allTrackTests = await repo.getTechnicalTestsByTrack(track);
 
-  // Extract unique levels, topics and difficulties for the track
-  const availableLevels = Array.from(new Set(tests.map((t) => t.level)));
-  const availableTopics = Array.from(new Set(tests.map((t) => t.topic)));
-  const availableDifficulties = Array.from(new Set(tests.map((t) => t.difficulty)));
+  // Extract unique values BEFORE filtering to populate dropdowns correctly
+  const availableLevels = Array.from(
+    new Set(allTrackTests.map((t) => t.level)),
+  );
+  const availableTopics = Array.from(
+    new Set(allTrackTests.map((t) => t.topic)),
+  );
+  const availableDifficulties = Array.from(
+    new Set(allTrackTests.map((t) => t.difficulty)),
+  );
+
+  let tests = [...allTrackTests];
 
   // Filter tests based on searchParams
   if (level) {
@@ -72,6 +77,15 @@ export default async function TrackTestsPage({
   }
   if (difficulty) {
     tests = tests.filter((t) => t.difficulty === difficulty);
+  }
+  if (q) {
+    const searchLower = q.toLowerCase();
+    tests = tests.filter(
+      (t) =>
+        t.title.toLowerCase().includes(searchLower) ||
+        t.description.toLowerCase().includes(searchLower) ||
+        t.topic.toLowerCase().includes(searchLower),
+    );
   }
 
   const trackTitle = track.charAt(0).toUpperCase() + track.slice(1);
@@ -98,96 +112,12 @@ export default async function TrackTestsPage({
           </p>
         </header>
 
-        {/* FILTERS UI */}
-        <div className="mb-12 flex flex-wrap items-center gap-6 border-b-2 border-border pb-8">
-          <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary">
-            <Filter className="h-4 w-4" /> Filtros:
-          </div>
-
-          <div className="flex flex-wrap gap-8 flex-1">
-            {/* Level Filter */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Sénioridade:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href={`/tests/${track}${topic || difficulty ? `?${topic ? `topic=${topic}` : ""}${topic && difficulty ? "&" : ""}${difficulty ? `difficulty=${difficulty}` : ""}` : ""}`}
-                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!level ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
-                >
-                  Todos
-                </Link>
-                {availableLevels.map((l) => (
-                  <Link
-                    key={l}
-                    href={`/tests/${track}?level=${l}${topic ? `&topic=${topic}` : ""}${difficulty ? `&difficulty=${difficulty}` : ""}`}
-                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${level === l ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
-                  >
-                    {l}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Topic Filter */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Tópico:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href={`/tests/${track}${level || difficulty ? `?${level ? `level=${level}` : ""}${level && difficulty ? "&" : ""}${difficulty ? `difficulty=${difficulty}` : ""}` : ""}`}
-                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!topic ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
-                >
-                  Todos
-                </Link>
-                {availableTopics.map((t) => (
-                  <Link
-                    key={t}
-                    href={`/tests/${track}?topic=${t}${level ? `&level=${level}` : ""}${difficulty ? `&difficulty=${difficulty}` : ""}`}
-                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${topic === t ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
-                  >
-                    {t}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Difficulty Filter */}
-            <div className="flex flex-col gap-2">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                Dificuldade:
-              </span>
-              <div className="flex flex-wrap gap-2">
-                <Link
-                  href={`/tests/${track}${level || topic ? `?${level ? `level=${level}` : ""}${level && topic ? "&" : ""}${topic ? `topic=${topic}` : ""}` : ""}`}
-                  className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${!difficulty ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
-                >
-                  Todos
-                </Link>
-                {availableDifficulties.map((d) => (
-                  <Link
-                    key={d}
-                    href={`/tests/${track}?difficulty=${d}${level ? `&level=${level}` : ""}${topic ? `&topic=${topic}` : ""}`}
-                    className={`px-3 py-1 text-[10px] font-black uppercase tracking-widest border transition-all cursor-pointer ${difficulty === d ? "bg-primary border-primary text-primary-foreground shadow-[3px_3px_0_0_rgba(0,0,0,0.1)]" : "border-border hover:border-primary/50"}`}
-                  >
-                    {d}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {(level || topic || difficulty) && (
-            <Link
-              href={`/tests/${track}`}
-              className="text-[10px] font-black uppercase tracking-widest text-destructive hover:underline cursor-pointer"
-            >
-              Limpar Filtros
-            </Link>
-          )}
-        </div>
-
+        <TestsFilters
+          track={track}
+          availableLevels={availableLevels}
+          availableTopics={availableTopics}
+          availableDifficulties={availableDifficulties}
+        />
 
         {tests.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -209,9 +139,12 @@ export default async function TrackTestsPage({
                         variant="secondary"
                         className={cn(
                           "rounded-none text-[10px] uppercase font-black tracking-widest border-none",
-                          test.difficulty === "fácil" && "bg-emerald-500/10 text-emerald-600",
-                          test.difficulty === "médio" && "bg-amber-500/10 text-amber-600",
-                          test.difficulty === "difícil" && "bg-destructive/10 text-destructive",
+                          test.difficulty === "fácil" &&
+                            "bg-emerald-500/10 text-emerald-600",
+                          test.difficulty === "médio" &&
+                            "bg-amber-500/10 text-amber-600",
+                          test.difficulty === "difícil" &&
+                            "bg-destructive/10 text-destructive",
                         )}
                       >
                         {test.difficulty}
