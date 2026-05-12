@@ -1,7 +1,0 @@
-{
-  "slug": "backend-dependencia-circular-pacotes",
-  "title": "Dependência circular entre módulos: ver, entender e cortar o nó",
-  "summary": "O que acontece quando A importa B e B importa A, como detetar antes do crash em runtime e padrões seguros para extrair contratos sem refactor infinito.",
-  "estimatedMinutes": 22,
-  "pillar": "backend"
-}

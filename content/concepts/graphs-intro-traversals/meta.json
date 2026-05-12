@@ -1,9 +1,0 @@
-{
-  "slug": "graphs-intro-traversals",
-  "title": "Grafos — nós, arestas e percursos básicos",
-  "category": "graphs",
-  "difficulty": "medium",
-  "estimatedMinutes": 22,
-  "prerequisites": ["trees-intro", "queues-intro", "stacks-intro"],
-  "summary": "Introdução sólida a grafos: representações, diferença entre árvore e grafo geral, além de BFS e DFS como percursos fundamentais."
-}

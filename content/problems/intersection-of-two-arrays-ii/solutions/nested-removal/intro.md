@@ -1,1 +1,0 @@
-# Abordagem O(nm) intuitiva

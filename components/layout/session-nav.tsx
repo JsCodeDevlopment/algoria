@@ -50,7 +50,7 @@ export function SessionNav() {
     );
   }
 
-  const user = data.user;
+  const user = data.user as typeof data.user & { role?: string };
   const initials =
     user.name?.substring(0, 2).toUpperCase() ||
     user.email?.substring(0, 2).toUpperCase() ||
@@ -105,6 +105,26 @@ export function SessionNav() {
               <UserIcon className="h-3.5 w-3.5" />
               Meu Perfil
             </Link>
+            {user.role === "ADMIN" && (
+              <Link
+                href="/admin"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-xs font-medium hover:bg-primary/10 hover:text-primary transition-colors"
+              >
+                <UserIcon className="h-3.5 w-3.5" />
+                Painel Admin
+              </Link>
+            )}
+            {(user.role === "EDITOR" || user.role === "CONTRIBUTOR") && (
+              <Link
+                href="/admin/content"
+                onClick={() => setIsOpen(false)}
+                className="flex items-center gap-2 rounded-sm px-2 py-1.5 text-xs font-medium hover:bg-primary/10 hover:text-primary transition-colors"
+              >
+                <UserIcon className="h-3.5 w-3.5" />
+                Meus Conteúdos
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => void handleSignOut()}

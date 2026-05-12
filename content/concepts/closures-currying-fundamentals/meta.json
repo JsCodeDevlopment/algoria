@@ -1,9 +1,0 @@
-{
-  "slug": "closures-currying-fundamentals",
-  "title": "Closures e currying em JavaScript",
-  "category": "fundamentals",
-  "difficulty": "medium",
-  "estimatedMinutes": 20,
-  "prerequisites": ["big-o"],
-  "summary": "Entenda o ambiente léxico através de exemplos práticos: o dilema do var no loop, closures assíncronas, estado privado e currying para APIs elegantes."
-}

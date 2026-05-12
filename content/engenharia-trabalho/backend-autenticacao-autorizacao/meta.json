@@ -1,7 +1,0 @@
-{
-  "slug": "backend-autenticacao-autorizacao",
-  "title": "Autenticação e autorização: duas conversas diferentes",
-  "summary": "Quem és versus o que podes fazer: sessões, tokens, RBAC e os bugs típicos quando misturamos as duas camadas por conveniência.",
-  "estimatedMinutes": 20,
-  "pillar": "backend"
-}

@@ -1,6 +1,6 @@
 # Algoria
 
-![](https://img.shields.io/badge/Versão-1.0.3-black?style=for-the-badge)
+![](https://img.shields.io/badge/Versão-1.1.0-black?style=for-the-badge)
 
 Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps).
 
@@ -23,6 +23,9 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
 - 📊 **Analytics opcional** — PostHog quando `NEXT_PUBLIC_POSTHOG_KEY` está definido
 - 🔍 **SEO** — `sitemap.ts` e `robots.ts` com gate por ambiente (`NEXT_PUBLIC_ENVIRONMENT` + `NODE_ENV`)
 - ✅ **Validação de conteúdo** — script Zod para problemas, conceitos, hubs `interview-en` e `engenharia-trabalho`
+- ✍️ **Painel Editorial (CMS)** — Interface administrativa para editores e contribuidores criarem e gerirem conteúdos (problemas, guias, conceitos) diretamente na plataforma com fluxo de revisão
+- 🔑 **RBAC & Autenticação** — Gestão de acessos baseada em papéis (Admin, Editor, Contribuidor) via Better Auth para garantir a integridade do conteúdo editorial
+- 🗄️ **Arquitetura Híbrida** — Transição para banco de dados relacional (PostgreSQL) para gestão dinâmica de conteúdos, mantendo a performance através de cache e pré-renderização
 
 ## Estrutura do Projeto
 
@@ -41,7 +44,8 @@ algoria/
 │   ├── engenharia-trabalho/          # Hub + guias por slug
 │   ├── tests/                        # Hub de testes + execução por slug
 │   ├── explorer/                     # Explorador de talentos / engenheiros
-│   └── profile/                      # Perfil profissional (pessoal e público)
+│   ├── profile/                      # Perfil profissional (pessoal e público)
+│   └── admin/                        # Dashboard administrativo e CMS (RBAC)
 ├── components/
 │   ├── ui/                           # Button, Card, Tabs, Badge, …
 │   ├── layout/                       # Site header / footer
@@ -64,11 +68,12 @@ algoria/
 │   ├── interview-en/<slug>/
 │   └── engenharia-trabalho/<slug>/
 ├── lib/
+│   ├── actions/                     # Server Actions para lógica de negócio e CMS
+│   ├── db/                          # Integração Drizzle ORM + PostgreSQL
 │   ├── content/                     # loader.ts, schemas.ts (Zod), markdown, shiki
 │   ├── catalog/                     # Filtros e modelos de cards
-│   ├── courses/                     # Seed do curso, hidratação
-│   ├── progress/                    # Progresso local (schema + helpers)
-│   ├── stores/                      # Zustand (ex.: progresso do curso)
+│   ├── courses/                     # Certificados e lógica de módulos
+│   ├── auth.ts                      # Configuração do Better Auth
 │   └── utils.ts
 ├── scripts/                         # validate-content, sync annotations, bootstrap
 ├── public/
@@ -81,7 +86,7 @@ algoria/
 
 ### Visão Geral
 
-O Algoria trata **conteúdo como dados versionáveis**: pastas em `content/` definem problemas, conceitos e guias; o servidor lê o disco em build/request conforme a rota, valida com **Zod** e gera HTML (Markdown via `marked`). O **code player** é uma ilha interativa no cliente com estado local (**Zustand**) sincronizado com as anotações por linha.
+O Algoria evoluiu para uma arquitetura centrada em **dados dinâmicos via PostgreSQL**. Embora o conteúdo possa ser importado de pastas em `content/` para bootstrapping, a fonte canônica agora reside no banco de dados, permitindo edição em tempo real através do **CMS integrado**. O servidor valida as submissões com **Zod**, gera HTML (Markdown via `marked`) e o **code player** mantém-se como uma ilha interativa no cliente com estado sincronizado via **Zustand**.
 
 ### Fluxo de conteúdo → página
 

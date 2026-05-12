@@ -8,6 +8,20 @@ on:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: algoria_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -20,6 +34,16 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      - name: Push DB Schema
+        run: pnpm db:push --force
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
+
+      - name: Seed Database
+        run: pnpm db:seed
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
+
       - run: pnpm validate:content
 
       - run: pnpm lint
@@ -27,7 +51,13 @@ jobs:
       - run: pnpm test
 
       - run: pnpm build
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
+          BETTER_AUTH_SECRET: some-secret-for-ci-build-only-that-is-at-least-32-chars
 
       - run: pnpm exec playwright install chromium --with-deps
 
       - run: pnpm test:e2e
+        env:
+          DATABASE_URL: postgresql://postgres:password@localhost:5432/algoria_db
+          BETTER_AUTH_SECRET: some-secret-for-ci-build-only-that-is-at-least-32-chars

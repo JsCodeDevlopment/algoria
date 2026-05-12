@@ -1,7 +1,0 @@
-{
-  "slug": "frontend-escopos-variaveis-mental-model",
-  "title": "Escopos e variáveis: o modelo mental que desbloqueia JS",
-  "summary": "Sem matemática pesada: ambientes como gavetas empilhadas, blocos que criam gavetas novas e porque isto explica closures e bugs de estado à primeira vista.",
-  "estimatedMinutes": 18,
-  "pillar": "frontend"
-}

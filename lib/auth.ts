@@ -1,6 +1,7 @@
 import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { nextCookies } from 'better-auth/next-js';
+import { admin } from 'better-auth/plugins';
 
 import { db } from '@/lib/db';
 import { authSchema } from '@/lib/db/schema';
@@ -15,7 +16,7 @@ const secret = process.env.BETTER_AUTH_SECRET;
 export const auth = betterAuth({
   baseURL,
   basePath: '/api/auth',
-  secret: secret ?? 'dev-only-better-auth-secret-min-32-chars-long-rotate-in-prod',
+  secret: secret || 'super-secret-development-key-that-is-at-least-32-characters',
   database: drizzleAdapter(db, {
     provider: 'pg',
     schema: authSchema,
@@ -38,4 +39,10 @@ export const auth = betterAuth({
     process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') || '',
   ].filter(Boolean),
   plugins: [nextCookies()],
+  user: {
+    additionalFields: {
+      role: { type: 'string' },
+      creatorRequestStatus: { type: 'string' },
+    },
+  },
 });

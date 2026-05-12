@@ -19,7 +19,6 @@ import {
 } from '../lib/content/schemas';
 import { StudyTrackFileSchema } from '../lib/content/track-schema';
 import { validateDidacticBlocksInMarkdown } from '../lib/content/didactic-schemas';
-import { FUNDAMENTOS_FASE_1_PACK } from '../lib/courses/fundamentos-fase1-seed';
 
 const ROOT = path.join(process.cwd(), 'content');
 const PROBLEMS = path.join(ROOT, 'problems');
@@ -96,6 +95,11 @@ async function fileExists(fp: string): Promise<boolean> {
 async function validate(): Promise<{ errors: string[]; warnings: string[] }> {
   const errors: string[] = [];
   const warnings: string[] = [];
+
+  if (!(await fileExists(ROOT))) {
+    console.log('Pasta "content/" não encontrada. Ignorando validação baseada em ficheiros (migração para DB concluída).');
+    return { errors, warnings };
+  }
 
   const slugs = await listDirs(PROBLEMS);
   if (slugs.length === 0) errors.push('Nenhuma pasta em content/problems');
@@ -288,18 +292,6 @@ async function validate(): Promise<{ errors: string[]; warnings: string[] }> {
   ];
   for (const slug of expectedPhase1) {
     if (!conceptSlugs.includes(slug)) warnings.push(`Mini-curso Fase 1 em falta: concepts/${slug}/`);
-  }
-
-  const seenCourseIds = new Set<string>();
-  for (const mod of FUNDAMENTOS_FASE_1_PACK.modules) {
-    if (seenCourseIds.has(mod.id)) {
-      errors.push(`[course ${FUNDAMENTOS_FASE_1_PACK.slug}] id de módulo repetido ${mod.id}`);
-    }
-    seenCourseIds.add(mod.id);
-    const cMeta = path.join(CONCEPTS, mod.linkedConceptSlug, 'meta.json');
-    if (!(await fileExists(cMeta))) {
-      errors.push(`[course ${FUNDAMENTOS_FASE_1_PACK.slug}/${mod.id}] concepto falta concepts/${mod.linkedConceptSlug}/`);
-    }
   }
 
   const interviewSlugs = await listDirs(INTERVIEW_EN).catch(() => [] as string[]);

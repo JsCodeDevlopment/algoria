@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 
 import { TestClient } from "@/components/tests/test-client";
-import { getTestBySlug } from "@/lib/content/tests-data";
+import { getContentRepository } from "@/lib/content/content-repository";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 
 interface Params {
@@ -16,7 +16,7 @@ export async function generateMetadata({
   params: Promise<Params>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const test = getTestBySlug(slug);
+  const test = await getContentRepository().getTechnicalTest(slug);
   
   if (!test) return {};
 
@@ -34,7 +34,7 @@ export default async function TestExecutionPage({
 }) {
   const { slug } = await params;
   
-  const test = getTestBySlug(slug);
+  const test = await getContentRepository().getTechnicalTest(slug);
 
   if (!test) {
     notFound();

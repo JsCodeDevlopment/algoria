@@ -11,7 +11,6 @@ import Editor from "@monaco-editor/react";
 import { Code } from "lucide-react";
 import { useState } from "react";
 
-import { TECHNICAL_TESTS } from "@/lib/content/tests-data";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -26,6 +25,7 @@ interface Props {
   resolutionCode: string | null;
   explanation: string | null;
   completedAt: string;
+  challengeDescription?: string;
 }
 
 export function AssessmentCard({
@@ -40,9 +40,9 @@ export function AssessmentCard({
   resolutionCode,
   explanation,
   completedAt,
+  challengeDescription,
 }: Props) {
   const [showResolution, setShowResolution] = useState(false);
-  const testData = TECHNICAL_TESTS.find((t) => t.slug === testSlug);
 
   return (
     <>
@@ -114,7 +114,7 @@ export function AssessmentCard({
                 Enunciado do Desafio
               </h3>
               <p className="text-sm leading-relaxed font-medium text-foreground/80 whitespace-pre-wrap">
-                {testData?.challenge.description || "Descrição não disponível."}
+                {challengeDescription || "Descrição não disponível."}
               </p>
             </div>
 

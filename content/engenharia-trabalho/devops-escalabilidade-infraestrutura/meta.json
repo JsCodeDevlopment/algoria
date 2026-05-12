@@ -1,7 +1,0 @@
-{
-  "slug": "devops-escalabilidade-infraestrutura",
-  "title": "Escalabilidade de Infraestrutura: Vertical vs Horizontal",
-  "summary": "Aprende a preparar a tua infraestrutura para crescer: desde o upgrade de máquinas até a orquestração de clusters com Load Balancers e Caching.",
-  "estimatedMinutes": 50,
-  "pillar": "devops"
-}

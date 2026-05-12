@@ -1,4 +1,40 @@
-import { boolean, integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core';
+import { boolean, integer, json, pgEnum, pgTable, text, timestamp, uniqueIndex } from 'drizzle-orm/pg-core';
+
+/* ── Enums ────────────────────────────────────────────────────────── */
+
+export const userRoleEnum = pgEnum('user_role', ['USER', 'CONTRIBUTOR', 'EDITOR', 'ADMIN']);
+
+export const contentStatusEnum = pgEnum('content_status', [
+  'DRAFT',
+  'PENDING_REVIEW',
+  'CHANGES_REQUESTED',
+  'APPROVED',
+  'PUBLISHED',
+  'REJECTED',
+]);
+
+export const creatorRequestStatusEnum = pgEnum('creator_request_status', [
+  'NONE',
+  'PENDING',
+  'APPROVED',
+  'REJECTED',
+]);
+
+export const contentTypeEnum = pgEnum('content_type', [
+  'problem',
+  'concept',
+  'interview-en',
+  'engineering-work',
+  'track',
+  'course',
+  'technical-test',
+  'changelog',
+  'legal-page',
+  'landing-section',
+  'pricing-copy',
+  'navigation',
+  'taxonomy',
+]);
 
 export const technicalAssessmentResults = pgTable('technical_assessment_results', {
   id: text('id').primaryKey(),
@@ -28,6 +64,8 @@ export const user = pgTable('user', {
   email: text('email').notNull().unique(),
   emailVerified: boolean('emailVerified').notNull().default(false),
   image: text('image'),
+  role: userRoleEnum('role').notNull().default('USER'),
+  creatorRequestStatus: creatorRequestStatusEnum('creator_request_status').notNull().default('NONE'),
   createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });
@@ -112,4 +150,43 @@ export const userProfile = pgTable('user_profile', {
   experiences: text('experiences'), // JSON string of professional experiences
   projects: text('projects'), // JSON string of projects
   updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+});
+
+/* ── Content tables (migration + CMS) ─────────────────────────────── */
+
+export const contents = pgTable(
+  'contents',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    slug: text('slug').notNull(),
+    type: contentTypeEnum('type').notNull(),
+    title: text('title').notNull(),
+    /** Markdown bruto — fonte canônica de conteúdo. */
+    body: text('body').notNull().default(''),
+    /** Metadados estruturados por tipo (ex: difficulty, categories, examples). */
+    metadata: json('metadata').$type<Record<string, unknown>>().default({}),
+    status: contentStatusEnum('status').notNull().default('DRAFT'),
+    version: integer('version').notNull().default(1),
+    authorId: text('authorId').references(() => user.id, { onDelete: 'set null' }),
+    updatedBy: text('updatedBy').references(() => user.id, { onDelete: 'set null' }),
+    /** Hash SHA-256 do body para auditoria e idempotência de import. */
+    contentHash: text('contentHash'),
+    publishedAt: timestamp('publishedAt', { mode: 'date', withTimezone: true }),
+    createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+    updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+  },
+  (table) => [uniqueIndex('contents_slug_type_idx').on(table.slug, table.type)],
+);
+
+export const contentReviewComments = pgTable('content_review_comments', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  contentId: text('contentId')
+    .notNull()
+    .references(() => contents.id, { onDelete: 'cascade' }),
+  authorId: text('authorId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  comment: text('comment').notNull(),
+  resolved: boolean('resolved').notNull().default(false),
+  createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });

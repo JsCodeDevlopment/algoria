@@ -32,6 +32,15 @@ export const LANGUAGES = [
   'csharp',
 ] as const;
 
+export const SYSTEM_TYPES = [
+  'changelog',
+  'legal-page',
+  'landing-section',
+  'pricing-copy',
+  'navigation',
+  'taxonomy',
+] as const;
+
 export const SOLUTION_KINDS = ['brute-force', 'optimal', 'alternative'] as const;
 
 export const Difficulty = z.enum(DIFFICULTIES);
@@ -319,4 +328,54 @@ export interface CoursePackHydrated {
   title: string;
   subtitle: string;
   modules: CourseModuleHydrated[];
+}
+
+/* ── Technical Tests ─────────────────────────────────────────────── */
+
+export type TestTrack = 'frontend' | 'backend' | 'devops';
+export type TestLevel = 'junior' | 'pleno' | 'senior';
+export type TestDifficulty = 'fácil' | 'médio' | 'difícil';
+
+export interface QuizQuestion {
+  id: string;
+  question: string;
+  options: {
+    id: 'a' | 'b' | 'c' | 'd';
+    text: string;
+  }[];
+  correctOptionId: 'a' | 'b' | 'c' | 'd';
+  explanation: string;
+}
+
+export interface TestCase {
+  id: string;
+  description: string;
+  assertion: string;
+}
+
+export interface LanguageTemplate {
+  initialCode: string;
+  testRunner: string;
+}
+
+export interface CodeChallenge {
+  title: string;
+  description: string;
+  functionName: string;
+  templates: Record<string, LanguageTemplate>;
+  testCases: TestCase[];
+}
+
+export interface TechnicalTest {
+  id: string;
+  slug: string;
+  track: TestTrack;
+  level: TestLevel;
+  difficulty: TestDifficulty;
+  topic: string;
+  title: string;
+  description: string;
+  timeLimitMinutes: number;
+  questions: QuizQuestion[];
+  challenge: CodeChallenge;
 }

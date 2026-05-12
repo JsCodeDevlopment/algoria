@@ -1,7 +1,0 @@
-{
-  "slug": "frontend-inp-react-interacividade",
-  "title": "INP em apps React: da métrica ao clique que não trava",
-  "summary": "Desmonta Interaction to Next Paint em três fases, aprende a usar DevTools e Profiler sem terror e vê padrões úteis: analytics fora do mesmo turno que o UI e estado menos cascata.",
-  "estimatedMinutes": 28,
-  "pillar": "frontend"
-}
