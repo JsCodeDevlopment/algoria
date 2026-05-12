@@ -8,6 +8,7 @@ import {
   contentReviewComments,
   contents,
   user,
+  contentCategories,
   type contentStatusEnum,
   type ContentType,
   type userRoleEnum
@@ -592,5 +593,96 @@ export async function getDashboardStats() {
   } catch (error) {
     console.error('Erro ao buscar stats do dashboard:', error);
     return null;
+  }
+}
+
+/* ── Category Management ─────────────────────────────────────── */
+
+export async function listCategories() {
+  const staff = await getAuthenticatedStaff();
+  if (!staff) return [];
+
+  try {
+    const rows = await db
+      .select()
+      .from(contentCategories)
+      .orderBy(contentCategories.name);
+    return rows;
+  } catch (error) {
+    console.error('Erro ao listar categorias:', error);
+    return [];
+  }
+}
+
+export async function createCategory(params: { name: string; slug: string; description?: string }) {
+  const admin = await getAuthenticatedStaff();
+  if (!admin || admin.role !== 'ADMIN') return { error: 'Não autorizado' };
+
+  try {
+    await db.insert(contentCategories).values({
+      name: params.name,
+      slug: params.slug,
+      description: params.description,
+    });
+    revalidatePath('/admin/categories');
+    return { success: true };
+  } catch (error) {
+    console.error('Erro ao criar categoria:', error);
+    return { error: 'Erro ao criar categoria. Talvez o nome/slug já exista.' };
+  }
+}
+
+export async function updateCategory(id: string, params: { name: string; slug: string; description?: string }) {
+  const admin = await getAuthenticatedStaff();
+  if (!admin || admin.role !== 'ADMIN') return { error: 'Não autorizado' };
+
+  try {
+    await db
+      .update(contentCategories)
+      .set({
+        name: params.name,
+        slug: params.slug,
+        description: params.description,
+        updatedAt: new Date(),
+      })
+      .where(eq(contentCategories.id, id));
+    
+    revalidatePath('/admin/categories');
+    return { success: true };
+  } catch (error) {
+    console.error('Erro ao atualizar categoria:', error);
+    return { error: 'Erro ao atualizar categoria' };
+  }
+}
+
+export async function deleteCategory(id: string) {
+  const admin = await getAuthenticatedStaff();
+  if (!admin || admin.role !== 'ADMIN') return { error: 'Não autorizado' };
+
+  try {
+    await db.delete(contentCategories).where(eq(contentCategories.id, id));
+    revalidatePath('/admin/categories');
+    return { success: true };
+  } catch (error) {
+    console.error('Erro ao excluir categoria:', error);
+    return { error: 'Erro ao excluir categoria' };
+  }
+}
+
+// Atualizado para usar a nova tabela oficial
+export async function getTechnicalTestTopics() {
+  const staff = await getAuthenticatedStaff();
+  if (!staff) return [];
+
+  try {
+    const rows = await db
+      .select({ name: contentCategories.name })
+      .from(contentCategories)
+      .orderBy(contentCategories.name);
+    
+    return rows.map(r => r.name);
+  } catch (error) {
+    console.error('Erro ao buscar tópicos oficiais:', error);
+    return [];
   }
 }

@@ -5,12 +5,17 @@ import { useState, useTransition } from "react";
 
 import { createContent, updateContent } from "@/lib/actions/admin";
 import { SaveActions } from "./_components/form-elements";
-import { InterviewEnForm } from "./_components/forms/interview-en-form";
-import { EngineeringWorkForm } from "./_components/forms/engineering-work-form";
-import { ProblemForm } from "./_components/forms/problem-form";
 import { ConceptForm } from "./_components/forms/concept-form";
+import { EngineeringWorkForm } from "./_components/forms/engineering-work-form";
 import { GenericForm } from "./_components/forms/generic-form";
-import { ContentEditorProps, FormProps, DEFAULT_META } from "./_components/types";
+import { InterviewEnForm } from "./_components/forms/interview-en-form";
+import { ProblemForm } from "./_components/forms/problem-form";
+import { TechnicalTestForm } from "./_components/forms/technical-test-form";
+import {
+  ContentEditorProps,
+  DEFAULT_META,
+  FormProps,
+} from "./_components/types";
 
 export function ContentEditor({ mode, initialData }: ContentEditorProps) {
   const router = useRouter();
@@ -99,6 +104,8 @@ export function ContentEditor({ mode, initialData }: ContentEditorProps) {
         return <ProblemForm {...formProps} />;
       case "concept":
         return <ConceptForm {...formProps} />;
+      case "technical-test":
+        return <TechnicalTestForm {...formProps} />;
       default:
         return <GenericForm {...formProps} contentType={contentType} />;
     }
@@ -106,7 +113,6 @@ export function ContentEditor({ mode, initialData }: ContentEditorProps) {
 
   return (
     <div className="space-y-6">
-      {/* Feedback */}
       {feedback && (
         <div
           className={`rounded-lg px-4 py-3 text-sm font-medium ${
@@ -119,10 +125,8 @@ export function ContentEditor({ mode, initialData }: ContentEditorProps) {
         </div>
       )}
 
-      {/* Type-specific form */}
       {renderForm()}
 
-      {/* Actions */}
       <SaveActions
         isPending={isPending}
         onSave={handleSave}
