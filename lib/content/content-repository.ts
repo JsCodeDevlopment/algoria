@@ -212,10 +212,10 @@ class DbContentRepository implements ContentRepository {
       id: row.id,
       slug: row.slug,
       title: row.title,
-      track: metadata.track as TestTrack,
-      level: metadata.level as TestLevel,
-      difficulty: metadata.difficulty as TestDifficulty,
-      topic: metadata.topic as string,
+      track: (metadata.track || body.track) as TestTrack,
+      level: (metadata.level || body.level) as TestLevel,
+      difficulty: (metadata.difficulty || body.difficulty) as TestDifficulty,
+      topic: (metadata.topic || body.topic) as string,
     } as unknown as TechnicalTest;
   }
 
