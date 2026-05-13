@@ -5,14 +5,15 @@ import Link from 'next/link';
 interface DashboardHeaderProps {
   total: number;
   tab: 'editorial' | 'sistema';
+  title?: string;
 }
 
-export function DashboardHeader({ total, tab }: DashboardHeaderProps) {
+export function DashboardHeader({ total, tab, title }: DashboardHeaderProps) {
   return (
     <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <h1 className="text-2xl font-bold tracking-tight text-foreground">
-          Gestão de Conteúdos
+          {title || 'Gestão de Conteúdos'}
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
           {total} conteúdo{total !== 1 ? 's' : ''} encontrado{total !== 1 ? 's' : ''}

@@ -28,6 +28,25 @@ export function TestsFilters({
   const currentDifficulty = searchParams.get("difficulty");
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
 
+  const updateFilters = useCallback(
+    (updates: Record<string, string | undefined>) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === undefined || value === "all") {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+
+      startTransition(() => {
+        router.push(`/tests/${track}?${params.toString()}`);
+      });
+    },
+    [track, searchParams, router],
+  );
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       updateFilters({ q: searchTerm || undefined });
@@ -35,22 +54,6 @@ export function TestsFilters({
 
     return () => clearTimeout(delayDebounceFn);
   }, [searchTerm, updateFilters]);
-
-  const updateFilters = useCallback((updates: Record<string, string | undefined>) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === "all") {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    startTransition(() => {
-      router.push(`/tests/${track}?${params.toString()}`);
-    });
-  }, [track, searchParams, router]);
 
   const clearFilters = () => {
     setSearchTerm("");

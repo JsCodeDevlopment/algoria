@@ -54,19 +54,21 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
     const SYSTEM_TYPES_LIST = ['changelog', 'legal-page', 'landing-section', 'pricing-copy', 'navigation', 'taxonomy'];
     const isSystemType = SYSTEM_TYPES_LIST.includes(urlType);
 
-    if (isSystemType && isAdmin) {
-      setTab('sistema');
-    } else if (urlTab === 'sistema' && isAdmin) {
-      setTab('sistema');
-    } else if (urlTab === 'editorial') {
-      setTab('editorial');
-    }
+    setTimeout(() => {
+      if (isSystemType && isAdmin) {
+        setTab('sistema');
+      } else if (urlTab === 'sistema' && isAdmin) {
+        setTab('sistema');
+      } else if (urlTab === 'editorial') {
+        setTab('editorial');
+      }
 
-    setTypeFilter(urlType);
-    setStatusFilter(urlStatus);
-    setSearch(urlSearch);
-    setAccessFilter(urlAccess);
-    setPage(urlPage);
+      setTypeFilter(urlType);
+      setStatusFilter(urlStatus);
+      setSearch(urlSearch);
+      setAccessFilter(urlAccess);
+      setPage(urlPage);
+    }, 0);
   }, [searchParams, isAdmin]);
 
   const load = useCallback(async (p: number, s: string) => {
@@ -210,7 +212,6 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
           isPending={isPending} 
           onStatusUpdate={handleStatusUpdate} 
           onAccessUpdate={handleAccessUpdate}
-          accessFilter={accessFilter}
           isAdmin={isAdmin}
         />
 

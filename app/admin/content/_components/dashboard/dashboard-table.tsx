@@ -10,7 +10,6 @@ interface DashboardTableProps {
   isPending: boolean;
   onStatusUpdate: (id: string, status: ContentStatus) => void;
   onAccessUpdate: (id: string, access: "free" | "pro") => void;
-  accessFilter?: string;
   isAdmin: boolean;
 }
 
@@ -19,7 +18,6 @@ export function DashboardTable({
   isPending,
   onStatusUpdate,
   onAccessUpdate,
-  accessFilter,
   isAdmin,
 }: DashboardTableProps) {
   return (

@@ -166,8 +166,8 @@ export function useTestExecution(test: TechnicalTest) {
           })),
         );
       }
-    } catch (_err) {
-      const results = test.challenge.testCases.map((tc, _i) => {
+    } catch {
+      const results = test.challenge.testCases.map((tc) => {
         let passed = false;
         if (currentCode.length > 50) {
           // Heurística básica de fallback
