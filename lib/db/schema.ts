@@ -13,6 +13,8 @@ export const contentStatusEnum = pgEnum('content_status', [
   'REJECTED',
 ]);
 
+export const contentAccessEnum = pgEnum('content_access', ['free', 'pro']);
+
 export const creatorRequestStatusEnum = pgEnum('creator_request_status', [
   'NONE',
   'PENDING',
@@ -167,6 +169,7 @@ export const contents = pgTable(
     body: text('body').notNull().default(''),
     /** Metadados estruturados por tipo (ex: difficulty, categories, examples). */
     metadata: json('metadata').$type<Record<string, unknown>>().default({}),
+    access: contentAccessEnum('access').notNull().default('free'),
     status: contentStatusEnum('status').notNull().default('DRAFT'),
     version: integer('version').notNull().default(1),
     authorId: text('authorId').references(() => user.id, { onDelete: 'set null' }),

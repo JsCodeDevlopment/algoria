@@ -160,6 +160,21 @@ export function ConceptsCatalogClient({ concepts }: Props) {
                 <CardHeader className="px-6 pt-6">
                   <div className="mb-6 flex flex-wrap items-center gap-2">
                     <DifficultyBadge difficulty={c.difficulty} />
+                    {c.access === "pro" ? (
+                      <Badge
+                        variant="outline"
+                        className="rounded-none border-primary font-mono text-[9px] uppercase text-primary"
+                      >
+                        Pro
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-none font-mono text-[9px] uppercase"
+                      >
+                        Free
+                      </Badge>
+                    )}
                     <Badge
                       variant="secondary"
                       className="rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[9px] uppercase text-primary"
@@ -167,13 +182,8 @@ export function ConceptsCatalogClient({ concepts }: Props) {
                       {c.category.replace("-", "_")}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary flex items-center justify-between gap-4">
+                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary">
                     {c.title}
-                    {c.access === "pro" && (
-                      <Badge className="rounded-none bg-primary px-1.5 py-0 font-mono text-[9px] uppercase text-primary-foreground">
-                        Pro
-                      </Badge>
-                    )}
                   </CardTitle>
                   <CardDescription className="mt-2 flex items-center gap-2 font-mono text-[10px] uppercase">
                     <Clock className="h-3 w-3" aria-hidden />{" "}

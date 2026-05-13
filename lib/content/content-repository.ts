@@ -25,6 +25,7 @@ import type {
   TestTrack,
   TestLevel,
   TestDifficulty,
+  PricingCopy,
 } from './schemas';
 import type { StudyTrackFile } from './track-schema';
 
@@ -54,6 +55,8 @@ export interface ContentRepository {
 
   getAllCourses(): Promise<CoursePackParsed[]>;
   getCourse(slug: string): Promise<CoursePackParsed | null>;
+
+  getPricingCopy(slug: string): Promise<PricingCopy | null>;
 }
 
 import { renderMarkdown } from './markdown';
@@ -204,6 +207,15 @@ class DbContentRepository implements ContentRepository {
     return row ? JSON.parse(row.body) : null;
   }
 
+  async getPricingCopy(slug: string): Promise<PricingCopy | null> {
+    const [row] = await db
+      .select()
+      .from(contents)
+      .where(and(eq(contents.slug, slug), eq(contents.type, 'pricing-copy'), eq(contents.status, 'PUBLISHED')))
+      .limit(1);
+    return row ? this.hydratePricingCopy(row) : null;
+  }
+
   private hydrateTechnicalTest(row: ContentRow): TechnicalTest {
     const metadata = row.metadata as Record<string, unknown>;
     const body = JSON.parse(row.body);
@@ -216,6 +228,7 @@ class DbContentRepository implements ContentRepository {
       level: (metadata.level || body.level) as TestLevel,
       difficulty: (metadata.difficulty || body.difficulty) as TestDifficulty,
       topic: (metadata.topic || body.topic) as string,
+      access: row.access as ContentAccess,
     } as unknown as TechnicalTest;
   }
 
@@ -233,7 +246,7 @@ class DbContentRepository implements ContentRepository {
         tags: (meta.tags as string[]) ?? [],
         estimatedMinutes: (meta.estimatedMinutes as number) ?? 15,
         recommendedOrder: meta.recommendedOrder as number | undefined,
-        access: (meta.access as ContentAccess) ?? 'pro',
+        access: row.access as ContentAccess,
       },
       descriptionHtml: renderMarkdown(row.body),
       solutions: ((meta.solutions as Record<string, unknown>[]) ?? []).map((s) => {
@@ -262,6 +275,7 @@ class DbContentRepository implements ContentRepository {
         ...(row.metadata as Record<string, unknown>),
         slug: row.slug,
         title: row.title,
+        access: row.access as ContentAccess,
       } as Concept['meta'],
       bodyHtml: renderMarkdown(row.body),
     };
@@ -273,6 +287,7 @@ class DbContentRepository implements ContentRepository {
         ...(row.metadata as Record<string, unknown>),
         slug: row.slug,
         title: row.title,
+        access: row.access as ContentAccess,
       } as InterviewEnglishTopic['meta'],
       bodyHtml: renderMarkdown(row.body),
     };
@@ -284,8 +299,19 @@ class DbContentRepository implements ContentRepository {
         ...(row.metadata as Record<string, unknown>),
         slug: row.slug,
         title: row.title,
+        access: row.access as ContentAccess,
       } as EngineeringWorkGuide['meta'],
       bodyHtml: renderMarkdown(row.body, { didacticBlocks: true }),
+    };
+  }
+
+  private hydratePricingCopy(row: ContentRow): PricingCopy {
+    return {
+      id: row.id,
+      slug: row.slug,
+      title: row.title,
+      body: row.body,
+      meta: row.metadata as PricingCopy['meta'],
     };
   }
 }
