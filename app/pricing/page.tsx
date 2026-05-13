@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckoutButton } from "@/components/billing/checkout-button";
 import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
 import { PricingPageAnalytics } from "@/components/billing/pricing-analytics";
+import { getPricingPlans, getPricingFeatures, getPricingInventory } from "@/lib/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
@@ -30,35 +31,29 @@ export default async function PricingPage() {
   const hasPro = await userHasPro(session?.user?.id);
 
   const repo = getContentRepository();
-  const pricingData = await repo.getPricingCopy("main-pricing");
+  const plans = await getPricingPlans();
+  const proPlan = plans.find((p) => p.id === "pro");
 
-  // Fallbacks if DB content doesn't exist yet
-  const title = pricingData?.title || "Planos e Preços";
+  const freeFeatures = await getPricingFeatures("free");
+  const proFeatures = await getPricingFeatures("pro");
+  const inventory = await getPricingInventory();
+
+  // Agrupar inventário por categoria de pricing
+  const inventoryGroups = inventory.reduce((acc, item) => {
+    acc[item.pricingCategory] = (acc[item.pricingCategory] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const title = proPlan?.title || "Planos e Preços";
   const description =
-    pricingData?.body ||
+    proPlan?.description ||
     "Compara o plano gratuito com a subscrição Pro: desbloqueia o catálogo completo, sincronização de progresso e investimento contínuo em conteúdo.";
 
-  const freePerks = pricingData?.meta?.freePerks?.length
-    ? pricingData.meta.freePerks
-    : [
-        "10 Problemas Hero (Free)",
-        "Conceitos de Engenharia Públicos",
-        "Progresso Local (Browser)",
-        "Acesso ao Changelog",
-      ];
+  const finalFreePerks = freeFeatures.map((f) => f.label || "");
+  const finalProPerks = proFeatures.map((f) => f.label || "");
 
-  const proPerks = pricingData?.meta?.proPerks?.length
-    ? pricingData.meta.proPerks
-    : [
-        "Todo o Catálogo (Problemas Pro)",
-        "Player Interativo Linha-a-Linha",
-        "Traces de Execução e Estado",
-        "Sincronização de Conta & Cloud",
-        "Acesso Antecipado a Novos Cursos",
-      ];
-
-  const monthlyDisplay = pricingData?.meta?.monthlyPrice || monthly;
-  const yearlyNoteDisplay = pricingData?.meta?.yearlyNote || yearlyNote;
+  const monthlyDisplay = proPlan?.priceDisplay || monthly;
+  const yearlyNoteDisplay = proPlan?.yearlyNote || yearlyNote;
 
   return (
     <div className="relative bg-grid-pattern">
@@ -110,7 +105,7 @@ export default async function PricingPage() {
                 fundamentos.
               </p>
               <ul className="space-y-4">
-                {freePerks.map((perk) => (
+                {finalFreePerks.map((perk) => (
                   <li
                     key={perk}
                     className="flex items-center gap-3 text-xs uppercase tracking-tight text-foreground"
@@ -158,7 +153,7 @@ export default async function PricingPage() {
                 técnica.
               </p>
               <ul className="space-y-4">
-                {proPerks.map((perk) => (
+                {finalProPerks.map((perk) => (
                   <li
                     key={perk}
                     className="flex items-center gap-3 text-xs font-bold uppercase tracking-tight text-foreground"
