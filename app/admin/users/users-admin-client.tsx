@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState, useTransition } from 'react';
+import { useCallback, useEffect, useState, useTransition } from 'react';
+import Image from 'next/image';
 
 import { listUsers, updateUserRole, approveCreatorRequest, rejectCreatorRequest } from '@/lib/actions/admin';
 
@@ -34,7 +35,7 @@ export default function AdminUsersPage() {
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
   const pageSize = 20;
 
-  function loadUsers(p: number, s: string) {
+  const loadUsers = useCallback((p: number, s: string) => {
     startTransition(async () => {
       const result = await listUsers({ page: p, pageSize, search: s || undefined });
       if (!result.error) {
@@ -42,11 +43,11 @@ export default function AdminUsersPage() {
         setTotal(result.total as number);
       }
     });
-  }
+  }, [pageSize]);
 
   useEffect(() => {
     loadUsers(page, search);
-  }, [page]);
+  }, [page, search, loadUsers]);
 
   function handleSearch() {
     setPage(1);
@@ -191,9 +192,11 @@ export default function AdminUsersPage() {
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-3">
                           {u.image ? (
-                            <img
+                            <Image
                               src={u.image}
                               alt={u.name}
+                              width={32}
+                              height={32}
                               className="h-8 w-8 rounded-full object-cover"
                             />
                           ) : (

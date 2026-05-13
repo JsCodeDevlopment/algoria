@@ -10,7 +10,7 @@ import {
 import { TechnicalTest } from "@/lib/content/schemas";
 import { cn } from "@/lib/utils";
 import Editor from "@monaco-editor/react";
-import { BookOpen, CheckCircle2, Lightbulb, Play, XCircle } from "lucide-react";
+import { CheckCircle2, Lightbulb, Play, XCircle } from "lucide-react";
 
 interface Props {
   test: TechnicalTest;

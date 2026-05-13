@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 
+interface NavItem {
+  href: string;
+  label: string;
+  icon: string;
+}
+
 export function AdminNav({
   navItems,
-  mobile,
 }: {
-  navItems: any[];
-  mobile?: boolean;
+  navItems: NavItem[];
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();

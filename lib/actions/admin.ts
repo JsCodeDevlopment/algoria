@@ -17,7 +17,7 @@ import { and, count, desc, eq, ilike, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { createHash } from 'node:crypto';
-import { requireAdmin, requireContributor } from '@/lib/admin/auth-guard';
+import { requireAdmin } from '@/lib/admin/auth-guard';
 
 type UserRole = (typeof userRoleEnum.enumValues)[number];
 type ContentStatus = (typeof contentStatusEnum.enumValues)[number];
@@ -398,7 +398,7 @@ export async function createContent(params: {
       title: params.title,
       body: params.body,
       metadata: params.metadata,
-      access: (params.metadata.access as any) || 'pro',
+      access: (params.metadata.access as 'free' | 'pro') || 'pro',
       status: params.publish ? 'PUBLISHED' : 'DRAFT',
       contentHash: hash,
       authorId: user.id,
@@ -461,7 +461,7 @@ export async function updateContent(
         title: params.title,
         body: params.body,
         metadata: params.metadata,
-        access: (params.metadata.access as any) || existing.access,
+        access: (params.metadata.access as 'free' | 'pro') || existing.access,
         status: newStatus,
         contentHash: hash,
         version: existing.version + 1,

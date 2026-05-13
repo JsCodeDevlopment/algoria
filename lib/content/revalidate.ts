@@ -6,7 +6,7 @@ import type { ContentType } from '@/lib/db/schema';
  * Centraliza a lógica de invalidação de cache para garantir que alterações
  * no banco de dados sejam refletidas imediatamente no site.
  */
-export function revalidateContentPaths(type: ContentType, slug: string, metadata?: Record<string, unknown>) {
+export function revalidateContentPaths(type: ContentType, slug: string, _metadata?: Record<string, unknown>) {
   // Sempre revalida o painel admin
   revalidatePath('/admin/content');
   

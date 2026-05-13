@@ -54,11 +54,11 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
     const SYSTEM_TYPES_LIST = ['changelog', 'legal-page', 'landing-section', 'pricing-copy', 'navigation', 'taxonomy'];
     const isSystemType = SYSTEM_TYPES_LIST.includes(urlType);
 
-    if (isSystemType && tab !== 'sistema' && isAdmin) {
+    if (isSystemType && isAdmin) {
       setTab('sistema');
-    } else if (urlTab === 'sistema' && tab !== 'sistema' && isAdmin) {
+    } else if (urlTab === 'sistema' && isAdmin) {
       setTab('sistema');
-    } else if (urlTab === 'editorial' && tab !== 'editorial') {
+    } else if (urlTab === 'editorial') {
       setTab('editorial');
     }
 
@@ -67,7 +67,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
     setSearch(urlSearch);
     setAccessFilter(urlAccess);
     setPage(urlPage);
-  }, [searchParams, isAdmin, tab]);
+  }, [searchParams, isAdmin]);
 
   const load = useCallback(async (p: number, s: string) => {
     const result = await listContents({

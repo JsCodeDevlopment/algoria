@@ -13,7 +13,7 @@ async function check() {
   const types = {};
   all.forEach(c => {
     types[c.type] = (types[c.type] || 0) + 1;
-    const meta = c.metadata as any;
+    const meta = c.metadata as { access?: string };
     if (meta?.access) {
       console.log(`[${c.type}] ${c.slug}: access=${meta.access}`);
     } else {

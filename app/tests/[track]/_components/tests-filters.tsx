@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 
 interface TestsFiltersProps {
   track: string;
@@ -34,9 +34,9 @@ export function TestsFilters({
     }, 400);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm]);
+  }, [searchTerm, updateFilters]);
 
-  function updateFilters(updates: Record<string, string | undefined>) {
+  const updateFilters = useCallback((updates: Record<string, string | undefined>) => {
     const params = new URLSearchParams(searchParams.toString());
 
     Object.entries(updates).forEach(([key, value]) => {
@@ -50,7 +50,7 @@ export function TestsFilters({
     startTransition(() => {
       router.push(`/tests/${track}?${params.toString()}`);
     });
-  }
+  }, [track, searchParams, router]);
 
   const clearFilters = () => {
     setSearchTerm("");

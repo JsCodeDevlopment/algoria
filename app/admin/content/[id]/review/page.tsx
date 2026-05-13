@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { redirect } from "next/navigation";
 
 import { ReviewActions } from "@/app/admin/content/[id]/review/review-actions";
@@ -170,9 +171,11 @@ export default async function ContentReviewPage({ params }: PageProps) {
                   >
                     <div className="flex items-center gap-2 mb-2">
                       {c.authorImage ? (
-                        <img
+                        <Image
                           src={c.authorImage}
                           alt={c.authorName}
+                          width={20}
+                          height={20}
                           className="h-5 w-5 rounded-full"
                         />
                       ) : (
@@ -228,7 +231,7 @@ export default async function ContentReviewPage({ params }: PageProps) {
                 <dd className="flex items-center gap-2">
                   <div className="h-8 w-8 overflow-hidden rounded-full bg-muted">
                     {content.authorImage ? (
-                      <img src={content.authorImage} alt={content.authorName || ''} className="h-full w-full object-cover" />
+                      <Image src={content.authorImage} alt={content.authorName || ''} width={32} height={32} className="h-full w-full object-cover" />
                     ) : (
                       <div className="flex h-full w-full items-center justify-center text-xs font-bold text-muted-foreground">
                         {content.authorName?.[0] || '?'}

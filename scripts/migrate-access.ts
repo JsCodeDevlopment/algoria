@@ -26,7 +26,7 @@ async function migrate() {
   let updatedCount = 0;
 
   for (const item of allContents) {
-    const meta = item.metadata as any;
+    const meta = item.metadata as { access?: string };
     let accessValue: 'free' | 'pro' = 'pro';
 
     // Regra 1: Conteúdos de sistema são sempre GRATUITOS
