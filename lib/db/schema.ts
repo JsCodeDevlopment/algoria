@@ -204,3 +204,38 @@ export const contentCategories = pgTable('content_categories', {
   createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });
+
+/* ── Pricing & Plans ─────────────────────────────────────────────── */
+
+export const pricingPlans = pgTable('pricing_plans', {
+  id: text('id').primaryKey(), // 'free', 'pro'
+  title: text('title').notNull(),
+  description: text('description'),
+  priceDisplay: text('priceDisplay'), // e.g. "19€"
+  yearlyNote: text('yearlyNote'), // e.g. "Ou 190€/ano"
+  updatedAt: timestamp('updatedAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+});
+
+export const pricingFeatures = pgTable('pricing_features', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  planId: text('planId').notNull().references(() => pricingPlans.id, { onDelete: 'cascade' }),
+  type: text('type').notNull().default('manual'), // 'manual' | 'automatic'
+  label: text('label'), // For manual perks
+  categoryName: text('categoryName'), // For automatic counts grouping
+  order: integer('order').notNull().default(0),
+});
+
+/**
+ * Tabela que espelha os conteúdos PRO para fins de marketing e precificação.
+ * Sincronizada automaticamente com a tabela contents.
+ */
+export const pricingInventory = pgTable('pricing_inventory', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  contentId: text('contentId')
+    .notNull()
+    .unique()
+    .references(() => contents.id, { onDelete: 'cascade' }),
+  /** Categoria de exibição amigável no pricing (ex: "Estruturas de Dados") */
+  pricingCategory: text('pricingCategory').notNull(),
+  createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+});

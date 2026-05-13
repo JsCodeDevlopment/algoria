@@ -30,12 +30,16 @@ export function TextInput({
   placeholder,
   disabled,
   mono,
+  className,
+  autoFocus,
 }: {
   value: string;
   onChange: (v: string) => void;
   placeholder?: string;
   disabled?: boolean;
   mono?: boolean;
+  className?: string;
+  autoFocus?: boolean;
 }) {
   return (
     <input
@@ -43,7 +47,8 @@ export function TextInput({
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
       disabled={disabled}
-      className={`h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 disabled:opacity-50 ${mono ? "font-mono" : ""}`}
+      autoFocus={autoFocus}
+      className={`h-10 w-full rounded-lg border border-border bg-background px-3 text-sm text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30 disabled:opacity-50 ${mono ? "font-mono" : ""} ${className || ""}`}
     />
   );
 }

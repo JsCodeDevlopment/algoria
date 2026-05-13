@@ -29,6 +29,11 @@ import type {
 } from './schemas';
 import type { StudyTrackFile } from './track-schema';
 
+export interface ContentAccessCounts {
+  free: Record<string, number>;
+  pro: Record<string, number>;
+}
+
 /* ── Interface pública ──────────────────────────────────────────── */
 
 export interface ContentRepository {
@@ -57,12 +62,13 @@ export interface ContentRepository {
   getCourse(slug: string): Promise<CoursePackParsed | null>;
 
   getPricingCopy(slug: string): Promise<PricingCopy | null>;
+  getContentCountsByAccess(): Promise<ContentAccessCounts>;
 }
 
 import { renderMarkdown } from './markdown';
 import { db } from '@/lib/db';
 import { contents } from '@/lib/db/schema';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, count } from 'drizzle-orm';
 import type { CoursePackParsed, TechnicalTest } from './schemas';
 
 type ContentRow = typeof contents.$inferSelect;
@@ -214,6 +220,31 @@ class DbContentRepository implements ContentRepository {
       .where(and(eq(contents.slug, slug), eq(contents.type, 'pricing-copy'), eq(contents.status, 'PUBLISHED')))
       .limit(1);
     return row ? this.hydratePricingCopy(row) : null;
+  }
+
+  async getContentCountsByAccess(): Promise<ContentAccessCounts> {
+    const rows = await db
+      .select({
+        type: contents.type,
+        access: contents.access,
+        total: count(),
+      })
+      .from(contents)
+      .where(eq(contents.status, 'PUBLISHED'))
+      .groupBy(contents.type, contents.access);
+
+    const result: ContentAccessCounts = {
+      free: {},
+      pro: {},
+    };
+
+    rows.forEach((r) => {
+      const access = r.access as 'free' | 'pro';
+      const type = r.type as string;
+      result[access][type] = Number(r.total);
+    });
+
+    return result;
   }
 
   private hydrateTechnicalTest(row: ContentRow): TechnicalTest {
