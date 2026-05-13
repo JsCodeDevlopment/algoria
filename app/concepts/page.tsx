@@ -35,8 +35,8 @@ export default async function ConceptsPage() {
   }));
 
   return (
-    <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-7xl px-6 py-24">
+    <div className="relative bg-grid-pattern min-h-screen flex flex-col">
+      <div className="mx-auto max-w-7xl px-6 py-24 flex-1">
         <header className="mb-16 border-l-4 border-primary pl-8">
           <Badge
             variant="secondary"
