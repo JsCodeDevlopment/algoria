@@ -77,7 +77,7 @@ export default async function EngineeringWorkGuidePage({
 
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
-  const isLocked = !isContentUnlockedForUser(guide.meta.access, hasPro);
+  const isLocked = !isContentUnlockedForUser(guide.meta.access || 'pro', hasPro);
 
   const adjacent = await getAdjacentEngineeringWork(slug);
 

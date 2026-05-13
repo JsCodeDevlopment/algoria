@@ -47,7 +47,7 @@ export default async function TestExecutionPage({
 
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
-  const isLocked = !isContentUnlockedForUser(test.access, hasPro);
+  const isLocked = !isContentUnlockedForUser(test.access || 'pro', hasPro);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6">

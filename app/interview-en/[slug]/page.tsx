@@ -62,7 +62,7 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
   
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
-  const isLocked = !isContentUnlockedForUser(topic.meta.access, hasPro);
+  const isLocked = !isContentUnlockedForUser(topic.meta.access || 'pro', hasPro);
 
   const adjacent = await getAdjacentInterviewEnglish(slug);
 
