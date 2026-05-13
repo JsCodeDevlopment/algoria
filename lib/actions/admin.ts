@@ -17,6 +17,7 @@ import { and, count, desc, eq, ilike, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
 import { createHash } from 'node:crypto';
+import { requireAdmin } from '@/lib/admin/auth-guard';
 
 type UserRole = (typeof userRoleEnum.enumValues)[number];
 type ContentStatus = (typeof contentStatusEnum.enumValues)[number];
@@ -174,6 +175,7 @@ export async function listContents(params: {
   status?: string;
   search?: string;
   tab?: 'editorial' | 'sistema';
+  access?: string;
 }) {
   const admin = await getAuthenticatedStaff();
   if (!admin) return { error: 'Não autorizado', contents: [], total: 0 };
@@ -193,6 +195,10 @@ export async function listContents(params: {
       } else {
         conditions.push(notInArray(contents.type, SYSTEM_TYPES_LIST));
       }
+    }
+
+    if (params.access) {
+      conditions.push(eq(contents.access, params.access as never));
     }
 
     if (params.status) conditions.push(eq(contents.status, params.status as never));
@@ -219,6 +225,7 @@ export async function listContents(params: {
         id: contents.id,
         slug: contents.slug,
         type: contents.type,
+        access: contents.access,
         title: contents.title,
         status: contents.status,
         version: contents.version,
@@ -315,6 +322,7 @@ export async function getContentById(contentId: string) {
         id: contents.id,
         slug: contents.slug,
         type: contents.type,
+        access: contents.access,
         title: contents.title,
         body: contents.body,
         metadata: contents.metadata,
@@ -391,6 +399,7 @@ export async function createContent(params: {
       title: params.title,
       body: params.body,
       metadata: params.metadata,
+      access: (params.metadata.access as 'free' | 'pro') || 'pro',
       status: params.publish ? 'PUBLISHED' : 'DRAFT',
       contentHash: hash,
       authorId: user.id,
@@ -426,6 +435,7 @@ export async function updateContent(
         authorId: contents.authorId,
         type: contents.type,
         slug: contents.slug,
+        access: contents.access,
         metadata: contents.metadata
       })
       .from(contents)
@@ -453,6 +463,7 @@ export async function updateContent(
         title: params.title,
         body: params.body,
         metadata: params.metadata,
+        access: (params.metadata.access as 'free' | 'pro') || existing.access,
         status: newStatus,
         contentHash: hash,
         version: existing.version + 1,
@@ -684,5 +695,37 @@ export async function getTechnicalTestTopics() {
   } catch (error) {
     console.error('Erro ao buscar tópicos oficiais:', error);
     return [];
+  }
+}
+
+export async function updateContentAccess(id: string, access: 'free' | 'pro') {
+  const admin = await requireAdmin();
+  if (!admin) return { error: 'Não autorizado' };
+
+  try {
+    const [existing] = await db.select().from(contents).where(eq(contents.id, id)).limit(1);
+    if (!existing) return { error: 'Conteúdo não encontrado' };
+
+    // Update both column and metadata JSON for consistency
+    const newMetadata = {
+      ...(existing.metadata as Record<string, unknown>),
+      access,
+    };
+
+    await db
+      .update(contents)
+      .set({
+        access,
+        metadata: newMetadata,
+        updatedBy: admin.userId,
+        updatedAt: new Date(),
+      })
+      .where(eq(contents.id, id));
+
+    revalidatePath('/admin/content');
+    return { success: true };
+  } catch (error) {
+    console.error('Error updating content access:', error);
+    return { error: 'Erro ao atualizar acesso' };
   }
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormProps, INTERVIEW_TRACKS, DIFFICULTIES } from "../types";
+import { FormProps, INTERVIEW_TRACKS, DIFFICULTIES, ACCESS_OPTIONS } from "../types";
 import { FormField, TextInput, SelectInput, NumberInput } from "../form-elements";
 import { MarkdownEditor } from "../markdown-editor";
 import { MetadataPreview } from "../metadata-preview";
@@ -68,6 +68,13 @@ export function InterviewEnForm({
             value={(meta.estimatedMinutes as number) || 12}
             onChange={(v) => setMeta({ ...meta, estimatedMinutes: v })}
             min={1}
+          />
+        </FormField>
+        <FormField label="Acesso">
+          <SelectInput
+            value={(meta.access as string) || "pro"}
+            onChange={(v) => setMeta({ ...meta, access: v })}
+            options={ACCESS_OPTIONS}
           />
         </FormField>
       </div>

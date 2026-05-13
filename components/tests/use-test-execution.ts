@@ -166,9 +166,8 @@ export function useTestExecution(test: TechnicalTest) {
           })),
         );
       }
-    } catch (err) {
-      const codeLower = currentCode.toLowerCase();
-      const results = test.challenge.testCases.map((tc, i) => {
+    } catch {
+      const results = test.challenge.testCases.map((tc) => {
         let passed = false;
         if (currentCode.length > 50) {
           // Heurística básica de fallback

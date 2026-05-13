@@ -52,6 +52,7 @@ export interface ContentRow {
   id: string;
   slug: string;
   type: string;
+  access: "free" | "pro";
   title: string;
   status: ContentStatus;
   version: number;
@@ -114,8 +115,9 @@ export const DEFAULT_META: Record<string, Record<string, unknown>> = {
     difficulty: "easy",
     estimatedMinutes: 12,
     summary: "",
+    access: "pro",
   },
-  "engineering-work": { pillar: "frontend", estimatedMinutes: 15, summary: "" },
+  "engineering-work": { pillar: "frontend", estimatedMinutes: 15, summary: "", access: "pro" },
   problem: {
     difficulty: "easy",
     categories: [],
@@ -134,5 +136,11 @@ export const DEFAULT_META: Record<string, Record<string, unknown>> = {
   },
   course: { subtitle: "", moduleCount: 0, moduleIds: [] },
   changelog: {},
-  "technical-test": {},
+  "technical-test": { access: "pro" },
+  "pricing-copy": {
+    freePerks: [],
+    proPerks: [],
+    monthlyPrice: "",
+    yearlyNote: "",
+  },
 };

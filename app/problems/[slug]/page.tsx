@@ -214,20 +214,20 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
 
       <Separator className="mb-10" />
 
-      <ProblemStudyTabs
-        statement={statement}
-        strategies={
-          strategiesLocked ? (
-            <UpgradePrompt
-              context="Soluções comentadas e player"
-              problemSlug={slug}
-              hideLogin={!!session}
-            />
-          ) : (
-            strategies
-          )
-        }
-      />
+      {strategiesLocked ? (
+        <div className="py-12 border-y border-dashed border-zinc-200 dark:border-zinc-800 my-10 bg-zinc-50/50 dark:bg-zinc-900/20">
+          <UpgradePrompt
+            context="Conteúdo e Soluções Pro"
+            problemSlug={slug}
+            hideLogin={!!session}
+          />
+        </div>
+      ) : (
+        <ProblemStudyTabs
+          statement={statement}
+          strategies={strategies}
+        />
+      )}
 
       <ProblemStudyCompletionBar problemSlug={slug} solutionCount={problem.solutions.length} />
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormProps, ENGINEERING_PILLARS } from "../types";
+import { FormProps, ENGINEERING_PILLARS, ACCESS_OPTIONS } from "../types";
 import { FormField, TextInput, SelectInput, NumberInput } from "../form-elements";
 import { MarkdownEditor } from "../markdown-editor";
 import { MetadataPreview } from "../metadata-preview";
@@ -45,7 +45,7 @@ export function EngineeringWorkForm({
         </FormField>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid gap-4 lg:grid-cols-4">
         <FormField label="Pilar *">
           <SelectInput
             value={(meta.pillar as string) || "frontend"}
@@ -58,6 +58,13 @@ export function EngineeringWorkForm({
             value={(meta.estimatedMinutes as number) || 15}
             onChange={(v) => setMeta({ ...meta, estimatedMinutes: v })}
             min={1}
+          />
+        </FormField>
+        <FormField label="Acesso">
+          <SelectInput
+            value={(meta.access as string) || "pro"}
+            onChange={(v) => setMeta({ ...meta, access: v })}
+            options={ACCESS_OPTIONS}
           />
         </FormField>
         <FormField label="Imagem de capa (URL)" hint="Opcional">

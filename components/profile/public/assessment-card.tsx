@@ -11,7 +11,6 @@ import Editor from "@monaco-editor/react";
 import { Code } from "lucide-react";
 import { useState } from "react";
 
-import { cn } from "@/lib/utils";
 
 interface Props {
   testSlug: string;
@@ -29,7 +28,6 @@ interface Props {
 }
 
 export function AssessmentCard({
-  testSlug,
   testTitle,
   track,
   level,

@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { CodeChallenge } from "@/lib/content/schemas";
-import { Code2, Trash2, ChevronDown, ChevronUp, X, Plus } from "lucide-react";
+import { Code2, Trash2, X, Plus } from "lucide-react";
 import { FormField, TextInput } from "../../form-elements";
 
 interface ChallengeSectionProps {

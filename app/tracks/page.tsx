@@ -28,8 +28,8 @@ export default async function TracksIndexPage() {
   const tracks = await getAllStudyTracks();
 
   return (
-    <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-7xl px-6 py-24">
+    <div className="relative bg-grid-pattern min-h-screen flex flex-col">
+      <div className="mx-auto max-w-7xl px-6 py-24 flex-1">
         <header className="mb-16 border-l-4 border-primary pl-8">
           <Badge
             variant="secondary"
@@ -42,42 +42,51 @@ export default async function TracksIndexPage() {
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
             Listas editoriais organizadas por tópicos específicos ou fundamentos
-            gerais.
+            gerais para otimizar a tua aprendizagem.
           </p>
         </header>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="grid gap-0 border border-border md:grid-cols-2">
           {tracks.map((t) => (
             <Link
               key={t.slug}
               href={`/tracks/${t.slug}`}
-              className="group block"
+              className="group relative border border-border p-px hover:z-10"
             >
-              <Card className="h-full rounded-xl border-border bg-card/80 backdrop-blur-sm transition-colors hover:border-primary/40">
-                <CardHeader>
-                  <CardTitle className="text-xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">
+              <Card className="h-full rounded-none border-none bg-background transition-all duration-300 group-hover:bg-primary/[0.02]">
+                <CardHeader className="p-8 md:p-10">
+                  <div className="mb-6 flex items-center justify-between">
+                    <div className="h-1 w-12 bg-primary/30 group-hover:w-20 group-hover:bg-primary transition-all duration-500" />
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-widest text-primary">
+                      {t.problemSlugs.length} problemas
+                    </span>
+                  </div>
+                  <CardTitle className="text-2xl font-black uppercase tracking-tight group-hover:text-primary transition-colors md:text-3xl">
                     {t.title}
                   </CardTitle>
-                  <CardDescription className="text-sm leading-relaxed">
+                  <CardDescription className="mt-4 text-base leading-relaxed text-muted-foreground line-clamp-3">
                     {t.summary}
                   </CardDescription>
-                  <p className="text-[11px] font-mono text-muted-foreground pt-2">
-                    {t.problemSlugs.length} problemas
-                  </p>
+                  <div className="mt-10 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-[-10px] group-hover:translate-x-0">
+                    Começar trilha <span className="text-lg">→</span>
+                  </div>
                 </CardHeader>
               </Card>
             </Link>
           ))}
         </div>
 
-        <p className="mt-12 text-center">
+        <div className="mt-20 flex flex-col items-center border-t border-border pt-12">
+          <p className="mb-6 text-xs font-mono uppercase tracking-widest text-muted-foreground">
+            Queres ver todos os problemas disponíveis?
+          </p>
           <Link
             href="/problems"
-            className="text-sm font-semibold text-primary underline-offset-4 hover:underline"
+            className="inline-flex items-center justify-center border-2 border-primary px-8 py-4 text-center text-xs font-black uppercase tracking-[0.2em] transition-all hover:bg-primary hover:text-primary-foreground active:scale-95"
           >
-            Voltar ao catálogo completo
+            Explorar Catálogo Completo
           </Link>
-        </p>
+        </div>
       </div>
     </div>
   );

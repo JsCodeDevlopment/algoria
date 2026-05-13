@@ -208,6 +208,8 @@ export const InterviewEnglishMeta = z.object({
   estimatedMinutes: z.number().int().positive().default(12),
   track: InterviewEnglishTrack,
   difficulty: Difficulty.default('easy'),
+  /** `pro` = requer assinatura. Omisso = `pro`. */
+  access: ContentAccess.default('pro'),
 });
 export type InterviewEnglishMeta = z.infer<typeof InterviewEnglishMeta>;
 
@@ -228,6 +230,8 @@ export const EngineeringWorkMeta = z.object({
   estimatedMinutes: z.number().int().positive().default(15),
   pillar: EngineeringWorkPillar,
   image: z.string().optional(),
+  /** `pro` = requer assinatura. Omisso = `pro`. */
+  access: ContentAccess.default('pro'),
 });
 export type EngineeringWorkMeta = z.infer<typeof EngineeringWorkMeta>;
 
@@ -386,4 +390,23 @@ export interface TechnicalTest {
   questions: QuizQuestion[];
   challenge: CodeChallenge;
   solutions?: TestSolution[];
+  access?: ContentAccess;
+}
+
+/* ── Pricing Copy ────────────────────────────────────────────────── */
+
+export const PricingCopyMeta = z.object({
+  freePerks: z.array(z.string()).default([]),
+  proPerks: z.array(z.string()).default([]),
+  monthlyPrice: z.string().optional(),
+  yearlyNote: z.string().optional(),
+});
+export type PricingCopyMeta = z.infer<typeof PricingCopyMeta>;
+
+export interface PricingCopy {
+  id: string;
+  slug: string;
+  title: string;
+  body: string;
+  meta: PricingCopyMeta;
 }

@@ -104,7 +104,7 @@ export function TechnicalTestForm({
     if (updatedBody !== body) {
       setBody(updatedBody);
     }
-  }, [testData, title, slug, meta, setBody]);
+  }, [testData, title, slug, meta, setBody, body]);
 
   // --- HANDLERS ---
 
