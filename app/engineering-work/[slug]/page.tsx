@@ -14,6 +14,11 @@ import {
   getAllEngineeringWorkSlugs,
   getEngineeringWorkGuide,
 } from "@/lib/content/loader";
+import { auth } from "@/lib/auth";
+import { userHasPro } from "@/lib/billing/entitlements";
+import { isContentUnlockedForUser } from "@/lib/billing/tiering";
+import { UpgradePrompt } from "@/components/billing/upgrade-prompt";
+import { headers } from "next/headers";
 import type { EngineeringWorkPillar } from "@/lib/content/schemas";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
@@ -69,6 +74,11 @@ export default async function EngineeringWorkGuidePage({
   const { slug } = await params;
   const guide = await getEngineeringWorkGuide(slug);
   if (!guide) notFound();
+
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const isLocked = !isContentUnlockedForUser(guide.meta.access || 'pro', hasPro);
+
   const adjacent = await getAdjacentEngineeringWork(slug);
 
   // Busca o ID do Jonatas para o link do perfil
@@ -125,7 +135,13 @@ export default async function EngineeringWorkGuidePage({
         href={authorData ? `/user/${authorData.id}` : "#"}
       />
 
-      <EngineeringGuideArticle html={guide.bodyHtml} />
+      {isLocked ? (
+        <div className="py-12 border-y border-dashed border-zinc-200 dark:border-zinc-800 my-10 bg-zinc-50/50 dark:bg-zinc-900/20">
+          <UpgradePrompt hideLogin={!!session} />
+        </div>
+      ) : (
+        <EngineeringGuideArticle html={guide.bodyHtml} />
+      )}
 
       <ContentNavigation
         sectionLabel="Mais guias de engenharia"

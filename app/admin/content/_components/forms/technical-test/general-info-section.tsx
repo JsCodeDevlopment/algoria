@@ -1,6 +1,7 @@
 "use client";
 
 import { FormField, NumberInput, SelectInput, TextInput } from "../../form-elements";
+import { ACCESS_OPTIONS } from "../../types";
 import { TopicSelector } from "./topic-selector";
 
 const TRACKS = [
@@ -72,7 +73,7 @@ export function GeneralInfoSection({
         </FormField>
       </div>
 
-      <div className="grid gap-4 lg:grid-cols-4">
+      <div className="grid gap-4 lg:grid-cols-5">
         <FormField label="Trilha *">
           <SelectInput
             value={(meta.track as string) || "frontend"}
@@ -99,6 +100,13 @@ export function GeneralInfoSection({
             value={timeLimitMinutes || 30}
             onChange={setTimeLimitMinutes}
             min={1}
+          />
+        </FormField>
+        <FormField label="Acesso">
+          <SelectInput
+            value={(meta.access as string) || "pro"}
+            onChange={(v) => setMeta({ ...meta, access: v })}
+            options={ACCESS_OPTIONS}
           />
         </FormField>
       </div>

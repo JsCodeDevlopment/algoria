@@ -9,11 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
 import { userHasPro } from "@/lib/billing/entitlements";
-import {
-  checkoutAvailable,
-  formatFreeTierPrice,
-  formatPricingDisplay,
-} from "@/lib/billing/pricing-env";
+import { checkoutAvailable, formatFreeTierPrice, formatPricingDisplay } from "@/lib/billing/pricing-env";
+import { getContentRepository } from "@/lib/content/content-repository";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import { headers } from "next/headers";
 import { CheckoutSuccessAnalytics } from "./checkout-success-analytics";
@@ -31,6 +28,37 @@ export default async function PricingPage() {
   const canPay = checkoutAvailable();
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
+
+  const repo = getContentRepository();
+  const pricingData = await repo.getPricingCopy("main-pricing");
+
+  // Fallbacks if DB content doesn't exist yet
+  const title = pricingData?.title || "Planos e Preços";
+  const description =
+    pricingData?.body ||
+    "Compara o plano gratuito com a subscrição Pro: desbloqueia o catálogo completo, sincronização de progresso e investimento contínuo em conteúdo.";
+
+  const freePerks = pricingData?.meta?.freePerks?.length
+    ? pricingData.meta.freePerks
+    : [
+        "10 Problemas Hero (Free)",
+        "Conceitos de Engenharia Públicos",
+        "Progresso Local (Browser)",
+        "Acesso ao Changelog",
+      ];
+
+  const proPerks = pricingData?.meta?.proPerks?.length
+    ? pricingData.meta.proPerks
+    : [
+        "Todo o Catálogo (Problemas Pro)",
+        "Player Interativo Linha-a-Linha",
+        "Traces de Execução e Estado",
+        "Sincronização de Conta & Cloud",
+        "Acesso Antecipado a Novos Cursos",
+      ];
+
+  const monthlyDisplay = pricingData?.meta?.monthlyPrice || monthly;
+  const yearlyNoteDisplay = pricingData?.meta?.yearlyNote || yearlyNote;
 
   return (
     <div className="relative bg-grid-pattern">
@@ -55,11 +83,10 @@ export default async function PricingPage() {
             Monetização Transparente
           </Badge>
           <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
-            Planos e Preços
+            {title}
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
-            Compara o plano gratuito com a subscrição Pro: desbloqueia o catálogo completo,
-            sincronização de progresso e investimento contínuo em conteúdo.
+            {description}
           </p>
         </header>
 
@@ -83,12 +110,7 @@ export default async function PricingPage() {
                 fundamentos.
               </p>
               <ul className="space-y-4">
-                {[
-                  "10 Problemas Hero (Free)",
-                  "Conceitos de Engenharia Públicos",
-                  "Progresso Local (Browser)",
-                  "Acesso ao Changelog",
-                ].map((perk) => (
+                {freePerks.map((perk) => (
                   <li
                     key={perk}
                     className="flex items-center gap-3 text-xs uppercase tracking-tight text-foreground"
@@ -119,14 +141,14 @@ export default async function PricingPage() {
               </h2>
               <div className="mt-6 flex items-baseline gap-2">
                 <p className="font-mono text-5xl font-black tracking-tighter text-foreground">
-                  {monthly.replace("/mês", "")}
+                  {monthlyDisplay.replace("/mês", "")}
                 </p>
                 <span className="font-mono text-sm font-bold uppercase tracking-widest text-muted-foreground">
                   / mês
                 </span>
               </div>
               <p className="mt-2 text-xs font-bold uppercase tracking-widest text-primary">
-                {yearlyNote}
+                {yearlyNoteDisplay}
               </p>
             </div>
 
@@ -136,13 +158,7 @@ export default async function PricingPage() {
                 técnica.
               </p>
               <ul className="space-y-4">
-                {[
-                  "Todo o Catálogo (Problemas Pro)",
-                  "Player Interativo Linha-a-Linha",
-                  "Traces de Execução e Estado",
-                  "Sincronização de Conta & Cloud",
-                  "Acesso Antecipado a Novos Cursos",
-                ].map((perk) => (
+                {proPerks.map((perk) => (
                   <li
                     key={perk}
                     className="flex items-center gap-3 text-xs font-bold uppercase tracking-tight text-foreground"

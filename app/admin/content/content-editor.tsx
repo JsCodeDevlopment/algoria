@@ -11,6 +11,7 @@ import { GenericForm } from "./_components/forms/generic-form";
 import { InterviewEnForm } from "./_components/forms/interview-en-form";
 import { ProblemForm } from "./_components/forms/problem-form";
 import { TechnicalTestForm } from "./_components/forms/technical-test-form";
+import { PricingCopyForm } from "./_components/forms/pricing-copy-form";
 import {
   ContentEditorProps,
   DEFAULT_META,
@@ -106,6 +107,8 @@ export function ContentEditor({ mode, initialData }: ContentEditorProps) {
         return <ConceptForm {...formProps} />;
       case "technical-test":
         return <TechnicalTestForm {...formProps} />;
+      case "pricing-copy":
+        return <PricingCopyForm {...formProps} />;
       default:
         return <GenericForm {...formProps} contentType={contentType} />;
     }

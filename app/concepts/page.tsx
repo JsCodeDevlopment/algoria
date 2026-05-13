@@ -35,8 +35,8 @@ export default async function ConceptsPage() {
   }));
 
   return (
-    <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-7xl px-6 py-24">
+    <div className="relative bg-grid-pattern min-h-screen flex flex-col">
+      <div className="mx-auto max-w-7xl px-6 py-24 flex-1">
         <header className="mb-16 border-l-4 border-primary pl-8">
           <Badge
             variant="secondary"
@@ -53,7 +53,7 @@ export default async function ConceptsPage() {
           </p>
         </header>
 
-        <div className="mb-14 flex flex-col gap-6 rounded-xl border border-primary/35 bg-background/95 p-6 md:flex-row md:items-center md:justify-between">
+        <div className="mb-14 flex flex-col gap-6 rounded-none border border-primary/35 bg-background/95 p-6 md:flex-row md:items-center md:justify-between">
           <div className="max-w-xl space-y-2">
             <p className="text-[10px] font-black uppercase tracking-[0.35em] text-primary">
               Nova trilha

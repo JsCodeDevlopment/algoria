@@ -7,7 +7,7 @@ import {
   updateCategory, 
   deleteCategory 
 } from '@/lib/actions/admin';
-import { Plus, Trash2, Edit2, X, Check } from 'lucide-react';
+import { Plus, Trash2, Edit2, Check } from 'lucide-react';
 
 interface Category {
   id: string;

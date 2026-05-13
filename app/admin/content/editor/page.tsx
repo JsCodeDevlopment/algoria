@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { redirect } from 'next/navigation';
 
 import { requireContributor, isAdminRole } from '@/lib/admin/auth-guard';
@@ -70,7 +71,7 @@ export default async function AdminContentEditorPage({ searchParams }: PageProps
         <div className="flex items-center gap-2 rounded-lg border border-border bg-secondary/30 px-3 py-1.5 text-xs">
           <div className="h-5 w-5 overflow-hidden rounded-full bg-muted">
             {session.image ? (
-              <img src={session.image} alt={session.name} className="h-full w-full object-cover" />
+              <Image src={session.image} alt={session.name} width={20} height={20} className="h-full w-full object-cover" />
             ) : (
               <div className="flex h-full w-full items-center justify-center text-[10px] font-bold text-muted-foreground">
                 {session.name.charAt(0).toUpperCase()}

@@ -7,7 +7,6 @@ import {
   Languages,
   Map,
   Sparkles,
-  Target,
   Users,
 } from "lucide-react";
 

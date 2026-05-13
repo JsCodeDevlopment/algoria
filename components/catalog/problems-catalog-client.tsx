@@ -56,8 +56,8 @@ export function ProblemsCatalogClient({ problems }: Props) {
   }, [problems, q, difficultyFilter, categoryFilter, sortMode]);
 
   return (
-    <div className="relative bg-grid-pattern">
-      <div className="mx-auto max-w-7xl px-6 py-24">
+    <div className="relative bg-grid-pattern min-h-screen flex flex-col">
+      <div className="mx-auto max-w-7xl px-6 py-24 flex-1">
         <header className="mb-16 border-l-4 border-primary pl-8">
           <Badge
             variant="secondary"
@@ -91,7 +91,7 @@ export function ProblemsCatalogClient({ problems }: Props) {
 
         <CatalogReviewSection problems={problems} />
 
-        <div className="mb-10 flex flex-col gap-4 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
+        <div className="mb-10 flex flex-col gap-4 rounded-none border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
           <div className="flex-1 min-w-[12rem]">
             <label
               htmlFor="catalog-search"
@@ -120,7 +120,7 @@ export function ProblemsCatalogClient({ problems }: Props) {
               onChange={(e) =>
                 setDifficultyFilter(e.target.value as Difficulty | "all")
               }
-              className="flex h-9 w-full min-w-[10rem] rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
+              className="flex h-9 w-full min-w-[10rem] rounded-none border border-zinc-200 bg-white px-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
             >
               {(["all", "easy", "medium", "hard"] as const).map((d) => (
                 <option key={d} value={d}>
@@ -142,7 +142,7 @@ export function ProblemsCatalogClient({ problems }: Props) {
               onChange={(e) =>
                 setCategoryFilter(e.target.value as CategoryFilter)
               }
-              className="flex h-9 w-full min-w-[12rem] rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
+              className="flex h-9 w-full min-w-[12rem] rounded-none border border-zinc-200 bg-white px-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
             >
               <option value="all">Todas</option>
               {categories.map((c) => (
@@ -163,7 +163,7 @@ export function ProblemsCatalogClient({ problems }: Props) {
               id="catalog-sort"
               value={sortMode}
               onChange={(e) => setSortMode(e.target.value as SortMode)}
-              className="flex h-9 w-full min-w-[12rem] rounded-md border border-zinc-200 bg-white px-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
+              className="flex h-9 w-full min-w-[12rem] rounded-none border border-zinc-200 bg-white px-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
             >
               {(Object.keys(SORT_LABEL) as SortMode[]).map((m) => (
                 <option key={m} value={m}>

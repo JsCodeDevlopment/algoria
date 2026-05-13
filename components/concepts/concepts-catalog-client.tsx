@@ -83,7 +83,7 @@ export function ConceptsCatalogClient({ concepts }: Props) {
 
   return (
     <>
-      <div className="mb-10 flex flex-col gap-4 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
+      <div className="mb-10 flex flex-col gap-4 rounded-none border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
         <div className="min-w-[12rem] flex-1">
           <label
             htmlFor="concepts-search"
@@ -112,7 +112,7 @@ export function ConceptsCatalogClient({ concepts }: Props) {
             onChange={(e) =>
               setDifficultyFilter(e.target.value as Difficulty | "all")
             }
-            className="flex h-9 w-full min-w-[10rem] rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-9 w-full min-w-[10rem] rounded-none border border-input bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
           >
             {(["all", "easy", "medium", "hard"] as const).map((d) => (
               <option key={d} value={d}>
@@ -132,7 +132,7 @@ export function ConceptsCatalogClient({ concepts }: Props) {
             id="concepts-sort"
             value={sortMode}
             onChange={(e) => setSortMode(e.target.value as SortMode)}
-            className="flex h-9 w-full min-w-[12rem] rounded-md border border-input bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex h-9 w-full min-w-[12rem] rounded-none border border-input bg-background px-3 text-sm outline-none ring-offset-background focus-visible:ring-2 focus-visible:ring-ring"
           >
             {(Object.keys(SORT_LABEL) as SortMode[]).map((m) => (
               <option key={m} value={m}>
@@ -160,6 +160,21 @@ export function ConceptsCatalogClient({ concepts }: Props) {
                 <CardHeader className="px-6 pt-6">
                   <div className="mb-6 flex flex-wrap items-center gap-2">
                     <DifficultyBadge difficulty={c.difficulty} />
+                    {c.access === "pro" ? (
+                      <Badge
+                        variant="outline"
+                        className="rounded-none border-primary font-mono text-[9px] uppercase text-primary"
+                      >
+                        Pro
+                      </Badge>
+                    ) : (
+                      <Badge
+                        variant="secondary"
+                        className="rounded-none font-mono text-[9px] uppercase"
+                      >
+                        Free
+                      </Badge>
+                    )}
                     <Badge
                       variant="secondary"
                       className="rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[9px] uppercase text-primary"
@@ -167,13 +182,8 @@ export function ConceptsCatalogClient({ concepts }: Props) {
                       {c.category.replace("-", "_")}
                     </Badge>
                   </div>
-                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary flex items-center justify-between gap-4">
+                  <CardTitle className="text-xl font-black uppercase tracking-tight transition-colors group-hover:text-primary">
                     {c.title}
-                    {c.access === "pro" && (
-                      <Badge className="rounded-none bg-primary px-1.5 py-0 font-mono text-[9px] uppercase text-primary-foreground">
-                        Pro
-                      </Badge>
-                    )}
                   </CardTitle>
                   <CardDescription className="mt-2 flex items-center gap-2 font-mono text-[10px] uppercase">
                     <Clock className="h-3 w-3" aria-hidden />{" "}

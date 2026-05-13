@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 
 interface TestsFiltersProps {
   track: string;
@@ -28,29 +28,32 @@ export function TestsFilters({
   const currentDifficulty = searchParams.get("difficulty");
   const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
 
+  const updateFilters = useCallback(
+    (updates: Record<string, string | undefined>) => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      Object.entries(updates).forEach(([key, value]) => {
+        if (value === undefined || value === "all") {
+          params.delete(key);
+        } else {
+          params.set(key, value);
+        }
+      });
+
+      startTransition(() => {
+        router.push(`/tests/${track}?${params.toString()}`);
+      });
+    },
+    [track, searchParams, router],
+  );
+
   useEffect(() => {
     const delayDebounceFn = setTimeout(() => {
       updateFilters({ q: searchTerm || undefined });
     }, 400);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm]);
-
-  function updateFilters(updates: Record<string, string | undefined>) {
-    const params = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === undefined || value === "all") {
-        params.delete(key);
-      } else {
-        params.set(key, value);
-      }
-    });
-
-    startTransition(() => {
-      router.push(`/tests/${track}?${params.toString()}`);
-    });
-  }
+  }, [searchTerm, updateFilters]);
 
   const clearFilters = () => {
     setSearchTerm("");
@@ -168,7 +171,7 @@ export function TestsFilters({
 
       {isPending && (
         <div className="flex items-center gap-2 text-[9px] font-bold text-primary animate-pulse uppercase tracking-[0.3em]">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary" /> Atualizando
+          <div className="h-1.5 w-1.5 rounded-none bg-primary" /> Atualizando
           resultados...
         </div>
       )}
