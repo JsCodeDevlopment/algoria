@@ -322,6 +322,7 @@ export async function getContentById(contentId: string) {
         id: contents.id,
         slug: contents.slug,
         type: contents.type,
+        access: contents.access,
         title: contents.title,
         body: contents.body,
         metadata: contents.metadata,
@@ -434,6 +435,7 @@ export async function updateContent(
         authorId: contents.authorId,
         type: contents.type,
         slug: contents.slug,
+        access: contents.access,
         metadata: contents.metadata
       })
       .from(contents)
@@ -715,7 +717,7 @@ export async function updateContentAccess(id: string, access: 'free' | 'pro') {
       .set({
         access,
         metadata: newMetadata,
-        updatedBy: admin.id,
+        updatedBy: admin.userId,
         updatedAt: new Date(),
       })
       .where(eq(contents.id, id));
