@@ -11,6 +11,11 @@ import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic, getAdjacentInter
 import type { InterviewEnglishTrack } from '@/lib/content/schemas';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
+import { auth } from '@/lib/auth';
+import { userHasPro } from '@/lib/billing/entitlements';
+import { isContentUnlockedForUser } from '@/lib/billing/tiering';
+import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
+import { headers } from 'next/headers';
 
 interface Params {
   slug: string;
@@ -54,6 +59,11 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
   const { slug } = await params;
   const topic = await getInterviewEnglishTopic(slug);
   if (!topic) notFound();
+  
+  const session = await auth.api.getSession({ headers: await headers() });
+  const hasPro = await userHasPro(session?.user?.id);
+  const isLocked = !isContentUnlockedForUser(topic.meta.access, hasPro);
+
   const adjacent = await getAdjacentInterviewEnglish(slug);
 
   return (
@@ -83,16 +93,22 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
       <h1 className="mb-3 text-3xl font-semibold tracking-tight md:text-4xl">{topic.meta.title}</h1>
       <p className="mb-10 text-lg leading-relaxed text-muted-foreground">{topic.meta.summary}</p>
 
-      <article
-        className="prose prose-zinc max-w-none dark:prose-invert
-                   prose-h2:mt-10 prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight
-                   prose-h3:text-lg prose-h3:font-semibold
-                   prose-code:text-blue-600 dark:prose-code:text-blue-400
-                   prose-code:before:content-none prose-code:after:content-none
-                   prose-pre:bg-zinc-900 prose-pre:text-zinc-100
-                   prose-table:text-sm"
-        dangerouslySetInnerHTML={{ __html: topic.bodyHtml }}
-      />
+      {isLocked ? (
+        <div className="py-12 border-y border-dashed border-zinc-200 dark:border-zinc-800 my-10 bg-zinc-50/50 dark:bg-zinc-900/20">
+          <UpgradePrompt hideLogin={!!session} />
+        </div>
+      ) : (
+        <article
+          className="prose prose-zinc max-w-none dark:prose-invert
+                     prose-h2:mt-10 prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight
+                     prose-h3:text-lg prose-h3:font-semibold
+                     prose-code:text-blue-600 dark:prose-code:text-blue-400
+                     prose-code:before:content-none prose-code:after:content-none
+                     prose-pre:bg-zinc-900 prose-pre:text-zinc-100
+                     prose-table:text-sm"
+          dangerouslySetInnerHTML={{ __html: topic.bodyHtml }}
+        />
+      )}
 
       <ContentNavigation
         sectionLabel="Mais conteúdo de inglês"
