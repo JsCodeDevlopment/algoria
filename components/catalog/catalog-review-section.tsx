@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useMemo, useState } from "react";
 
-import type { ProblemsCatalogProblem } from '@/lib/catalog/problem-card-model';
-import { loadProgressBlob } from '@/lib/progress/local-progress';
-import { getProblemSlugsDueForReview } from '@/lib/progress/review';
+import type { ProblemsCatalogProblem } from "@/lib/catalog/problem-card-model";
+import { loadProgressBlob } from "@/lib/progress/local-progress";
+import { getProblemSlugsDueForReview } from "@/lib/progress/review";
 
 const DAY_OPTIONS = [7, 14, 30] as const;
 
@@ -20,8 +20,8 @@ export function CatalogReviewSection({ problems }: Props) {
 
   useEffect(() => {
     const onProg = () => setRevision((x) => x + 1);
-    window.addEventListener('algoria-progress', onProg);
-    return () => window.removeEventListener('algoria-progress', onProg);
+    window.addEventListener("algoria-progress", onProg);
+    return () => window.removeEventListener("algoria-progress", onProg);
   }, []);
 
   const reviewItems = useMemo(() => {
@@ -33,14 +33,21 @@ export function CatalogReviewSection({ problems }: Props) {
 
   if (reviewItems.length === 0) {
     return (
-      <section className="mb-10 rounded-xl border border-dashed border-border bg-muted/20 px-4 py-6">
+      <section className="mb-10 border border-dashed border-border bg-muted/20 px-4 py-6">
         <div className="flex items-start gap-3">
-          <RotateCcw className="h-5 w-5 shrink-0 text-muted-foreground mt-0.5" aria-hidden />
+          <RotateCcw
+            className="h-5 w-5 shrink-0 text-muted-foreground mt-0.5"
+            aria-hidden
+          />
           <div className="space-y-2 min-w-0">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Modo revisão</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">
+              Modo revisão
+            </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Quando marcares problemas como concluídos no teu perfil local, aparecem aqui sugestões para rever passados{' '}
-              <span className="font-mono text-xs">{minDays}</span> dias ou mais. Escolhe o intervalo:
+              Quando marcares problemas como concluídos no teu perfil local,
+              aparecem aqui sugestões para rever passados{" "}
+              <span className="font-mono text-xs">{minDays}</span> dias ou mais.
+              Escolhe o intervalo:
             </p>
             <div className="flex flex-wrap gap-2 pt-1">
               {DAY_OPTIONS.map((d) => (
@@ -50,8 +57,8 @@ export function CatalogReviewSection({ problems }: Props) {
                   onClick={() => setMinDays(d)}
                   className={
                     minDays === d
-                      ? 'rounded-md border-2 border-primary bg-primary/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wide'
-                      : 'rounded-md border border-border px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:border-primary/40'
+                      ? "rounded-md border-2 border-primary bg-primary/10 px-3 py-1.5 text-xs font-bold uppercase tracking-wide"
+                      : "rounded-md border border-border px-3 py-1.5 text-xs font-bold uppercase tracking-wide text-muted-foreground hover:border-primary/40"
                   }
                 >
                   {d} dias
@@ -65,16 +72,21 @@ export function CatalogReviewSection({ problems }: Props) {
   }
 
   return (
-    <section className="mb-10 rounded-xl border border-primary/35 bg-primary/5 px-4 py-6">
+    <section className="mb-10 border border-primary/35 bg-primary/5 px-4 py-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3 min-w-0">
-          <RotateCcw className="h-5 w-5 shrink-0 text-primary mt-0.5" aria-hidden />
+          <RotateCcw
+            className="h-5 w-5 shrink-0 text-primary mt-0.5"
+            aria-hidden
+          />
           <div>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-1">Revisão sugerida</h2>
+            <h2 className="text-sm font-bold uppercase tracking-widest text-primary mb-1">
+              Revisão sugerida
+            </h2>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Estes problemas foram marcados como concluídos há pelo menos{' '}
-              <span className="font-mono text-primary">{minDays}</span> dias — vale refrescar o enunciado ou uma solução
-              alternativa.
+              Estes problemas foram marcados como concluídos há pelo menos{" "}
+              <span className="font-mono text-primary">{minDays}</span> dias —
+              vale refrescar o enunciado ou uma solução alternativa.
             </p>
           </div>
         </div>
@@ -86,8 +98,8 @@ export function CatalogReviewSection({ problems }: Props) {
               onClick={() => setMinDays(d)}
               className={
                 minDays === d
-                  ? 'rounded-md border-2 border-primary bg-background px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide'
-                  : 'rounded-md border border-border bg-background/60 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:border-primary/40'
+                  ? "rounded-md border-2 border-primary bg-background px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide"
+                  : "rounded-md border border-border bg-background/60 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wide text-muted-foreground hover:border-primary/40"
               }
             >
               {d} d

@@ -76,7 +76,7 @@ export function InterviewCatalogClient({ topics }: Props) {
 
   return (
     <>
-      <div className="mb-10 flex flex-col gap-4 rounded-xl border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
+      <div className="mb-10 flex flex-col gap-4 rounded-none border border-border bg-card/40 p-4 backdrop-blur-sm lg:flex-row lg:flex-wrap lg:items-end">
         <div className="min-w-[12rem] flex-1">
           <label htmlFor="interview-search" className="mb-1.5 block text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             Search

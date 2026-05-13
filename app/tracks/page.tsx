@@ -53,7 +53,7 @@ export default async function TracksIndexPage() {
               href={`/tracks/${t.slug}`}
               className="group block"
             >
-              <Card className="h-full rounded-xl border-border bg-card/80 backdrop-blur-sm transition-colors hover:border-primary/40">
+              <Card className="h-full rounded-none border-border bg-card/80 backdrop-blur-sm transition-colors hover:border-primary/40">
                 <CardHeader>
                   <CardTitle className="text-xl font-black uppercase tracking-tight group-hover:text-primary transition-colors">
                     {t.title}

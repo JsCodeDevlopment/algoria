@@ -168,7 +168,7 @@ export function TestsFilters({
 
       {isPending && (
         <div className="flex items-center gap-2 text-[9px] font-bold text-primary animate-pulse uppercase tracking-[0.3em]">
-          <div className="h-1.5 w-1.5 rounded-full bg-primary" /> Atualizando
+          <div className="h-1.5 w-1.5 rounded-none bg-primary" /> Atualizando
           resultados...
         </div>
       )}
