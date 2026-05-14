@@ -69,7 +69,7 @@ export function GenericVisualizer({ steps, solutionSlug }: Props) {
           </div>
           <div className="flex flex-wrap gap-1">
             {arr.values.map((val, idx) => {
-              const isHighlighted = arr.highlightIndices.includes(idx);
+              const isHighlighted = (arr.highlightIndices || []).includes(idx);
               const isInRange = arr.range
                 ? idx >= arr.range[0] && idx <= arr.range[1]
                 : false;
@@ -78,7 +78,7 @@ export function GenericVisualizer({ steps, solutionSlug }: Props) {
                 <div key={idx} className="relative flex flex-col items-center">
                   <motion.div
                     layout
-                    className={`flex h-12 w-12 items-center justify-center border-2 font-mono text-lg font-black transition-all ${
+                    className={`flex h-12 min-w-[48px] px-3 items-center justify-center border-2 font-mono ${String(val).length > 4 ? 'text-xs' : 'text-lg'} font-black transition-all ${
                       isHighlighted
                         ? "border-blue-600 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 scale-105 z-10"
                         : isInRange

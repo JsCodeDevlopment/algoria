@@ -332,6 +332,24 @@ export function SolutionsList({
                 />
               </FormField>
 
+              <FormField 
+                label="Simulator Code (Javascript)" 
+                hint="Função (input) => steps[] para gerar a simulação visual."
+              >
+                <textarea
+                  value={sol.meta.simulatorCode || ""}
+                  onChange={(e) =>
+                    updateSolution(idx, {
+                      ...sol,
+                      meta: { ...sol.meta, simulatorCode: e.target.value },
+                    })
+                  }
+                  className="w-full rounded-lg border border-border bg-[#080808] text-emerald-400 p-3 font-mono text-xs focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/30"
+                  rows={8}
+                  placeholder="(s) => { const steps = []; ... return steps; }"
+                />
+              </FormField>
+
               <div className="space-y-4 pt-4 border-t border-border">
                 <h4 className="text-xs font-black uppercase tracking-widest text-primary">
                   Implementações (Multi-Language)

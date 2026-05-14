@@ -206,7 +206,7 @@ export default async function SolutionPage({
         annotations={playerAnnotations}
         conceptTitles={conceptTitles}
         readOnlyExplanationMd={readOnlyExplanationMd}
-        executionTrace={lineSynced ? solution.executionTrace : []}
+        executionTrace={lineSynced ? (solution.executionTrace ?? []) : []}
         problemSlug={problem.meta.slug}
         solutionSlug={solutionSlug}
         simulatorCode={solution.meta.simulatorCode}

@@ -11,6 +11,12 @@ import type { ExecutionTraceStep } from '@/lib/content/schemas';
 export const BESPOKE_VISUALIZERS: Record<string, React.ComponentType<{ steps: ExecutionTraceStep[]; solutionSlug?: string }>> = {
   'two-sum': TwoSumVisualizer,
   'minimum-window-substring': GenericVisualizer,
+  'longest-substring-without-repeating': GenericVisualizer,
+  'subarray-sum-equals-k': GenericVisualizer,
+  'trapping-rain-water': GenericVisualizer,
+  'group-anagrams': GenericVisualizer,
+  'daily-temperatures': GenericVisualizer,
+  '3sum': GenericVisualizer,
 };
 
 /**

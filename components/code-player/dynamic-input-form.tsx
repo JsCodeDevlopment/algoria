@@ -41,6 +41,59 @@ export function DynamicInputForm({
       defaults: ["ADOBECODEBANC", "ABC"],
       types: ["text", "text"],
       parser: (vals) => [vals[0].trim(), vals[1].trim()]
+    },
+    "longest-substring-without-repeating": {
+      labels: ["String de Entrada (S)"],
+      placeholders: ["Ex: abcabcbb"],
+      defaults: ["abcabcbb"],
+      types: ["text"],
+      parser: (vals) => [vals[0].trim()]
+    },
+    "subarray-sum-equals-k": {
+      labels: ["Números (nums)", "Alvo (k)"],
+      placeholders: ["Ex: 1, 1, 1", "2"],
+      defaults: ["1, 1, 1", "2"],
+      types: ["text", "number"],
+      parser: (vals) => [
+        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number),
+        Number(vals[1])
+      ]
+    },
+    "trapping-rain-water": {
+      labels: ["Alturas (height)"],
+      placeholders: ["Ex: 0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1"],
+      defaults: ["0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1"],
+      types: ["text"],
+      parser: (vals) => [
+        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number)
+      ]
+    },
+    "group-anagrams": {
+      labels: ["Lista de Palavras (strs)"],
+      placeholders: ["Ex: eat, tea, tan, ate, nat, bat"],
+      defaults: ["eat, tea, tan, ate, nat, bat"],
+      types: ["text"],
+      parser: (vals) => [
+        vals[0].split(",").map(s => s.trim()).filter(Boolean)
+      ]
+    },
+    "daily-temperatures": {
+      labels: ["Temperaturas (Celsius)"],
+      placeholders: ["Ex: 73, 74, 75, 71, 69, 72, 76, 73"],
+      defaults: ["73, 74, 75, 71, 69, 72, 76, 73"],
+      types: ["text"],
+      parser: (vals) => [
+        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number)
+      ]
+    },
+    "3sum": {
+      labels: ["Números (nums)"],
+      placeholders: ["Ex: -1, 0, 1, 2, -1, -4"],
+      defaults: ["-1, 0, 1, 2, -1, -4"],
+      types: ["text"],
+      parser: (vals) => [
+        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number)
+      ]
     }
   };
 
