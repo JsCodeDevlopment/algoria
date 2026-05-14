@@ -37,8 +37,8 @@ export function ExplanationPanel({ annotations, conceptTitles }: Props) {
 
   if (!annotation) {
     return (
-      <aside className="rounded-xl border border-dashed border-zinc-300 dark:border-zinc-700 p-6 text-sm text-zinc-500">
-        Esta linha não tem explicação curada.
+      <aside className="border border-dashed border-zinc-200 dark:border-zinc-800 p-6 text-xs uppercase tracking-widest text-zinc-400">
+        Nenhuma explicação disponível para esta linha.
       </aside>
     );
   }
@@ -49,29 +49,29 @@ export function ExplanationPanel({ annotations, conceptTitles }: Props) {
   return (
     <aside
       aria-live="polite"
-      className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm"
+      className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950"
     >
       <header className="flex items-center justify-between gap-3 border-b border-zinc-100 dark:border-zinc-900 px-5 py-3">
         <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="font-mono">
-            linha {annotation.line}
+          <Badge variant="secondary" className="font-mono rounded-none">
+            line {annotation.line}
           </Badge>
-          <span className="text-xs text-zinc-500">{LEVEL_DESCRIPTION[level]}</span>
+          <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-tighter">{LEVEL_DESCRIPTION[level]}</span>
         </div>
         <LevelTabs level={level} setLevel={setLevel} availability={availability()} />
       </header>
 
       <div
         className="prose prose-zinc dark:prose-invert prose-sm max-w-none px-5 py-4
-                   prose-pre:bg-zinc-900 prose-pre:text-zinc-100 prose-code:text-blue-600 dark:prose-code:text-blue-400
+                   prose-pre:rounded-none prose-pre:bg-zinc-900 prose-pre:text-zinc-100 prose-code:text-blue-600 dark:prose-code:text-blue-400
                    prose-code:before:content-none prose-code:after:content-none"
         dangerouslySetInnerHTML={{ __html: html }}
       />
 
       {annotation.warnings && annotation.warnings.length > 0 ? (
-        <div className="mx-5 mb-4 rounded-lg border border-amber-300/40 bg-amber-50 dark:bg-amber-500/5 p-3">
-          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 text-xs font-semibold mb-2">
-            <AlertTriangle className="h-3.5 w-3.5" /> Pegadinhas comuns
+        <div className="mx-5 mb-4 border border-amber-500/20 bg-amber-500/5 p-3">
+          <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400 text-[10px] font-black uppercase tracking-widest mb-2">
+            <AlertTriangle className="h-3 w-3" /> ATENÇÃO
           </div>
           <ul className="space-y-1 text-sm text-amber-900 dark:text-amber-100">
             {annotation.warnings.map((w, i) => (
@@ -86,12 +86,12 @@ export function ExplanationPanel({ annotations, conceptTitles }: Props) {
       {annotation.concepts && annotation.concepts.length > 0 ? (
         <div className="border-t border-zinc-100 dark:border-zinc-900 px-5 py-3 flex items-center gap-2 flex-wrap">
           <BookOpen className="h-4 w-4 text-zinc-400" />
-          <span className="text-xs text-zinc-500">Conceitos:</span>
+          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">Conceitos:</span>
           {annotation.concepts.map((slug) => (
             <Link
               key={slug}
               href={`/concepts/${slug}`}
-              className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 hover:bg-blue-500/20 transition-colors"
+              className="text-[10px] font-black uppercase px-2 py-0.5 bg-zinc-100 text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400 hover:bg-zinc-900 hover:text-white dark:hover:bg-zinc-100 dark:hover:text-zinc-900 transition-colors"
             >
               {conceptTitles[slug] ?? slug}
             </Link>
@@ -126,7 +126,7 @@ function LevelTabs({
   availability: Record<ExplanationLevel, boolean>;
 }) {
   return (
-    <div role="tablist" aria-label="Nível de explicação" className="inline-flex rounded-lg bg-zinc-100 dark:bg-zinc-900 p-0.5">
+    <div role="tablist" aria-label="Nível de explicação" className="inline-flex bg-zinc-100 dark:bg-zinc-900 p-0.5">
       {([1, 2, 3] as const).map((l) => {
         const active = level === l;
         const enabled = availability[l];
@@ -138,12 +138,12 @@ function LevelTabs({
             disabled={!enabled}
             onClick={() => enabled && setLevel(l)}
             className={cn(
-              'px-2.5 py-1 text-xs rounded-md transition-colors',
+              'px-2.5 py-1 text-[10px] font-black uppercase transition-colors',
               active
-                ? 'bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 shadow-sm font-medium'
+                ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
                 : enabled
-                ? 'text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
-                : 'text-zinc-400 dark:text-zinc-600 cursor-not-allowed',
+                ? 'text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100'
+                : 'text-zinc-300 dark:text-zinc-700 cursor-not-allowed',
             )}
             title={`${LEVEL_LABEL[l]} (atalho ${l})`}
           >

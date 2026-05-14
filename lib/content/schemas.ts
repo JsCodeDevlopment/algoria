@@ -87,6 +87,8 @@ export const ProblemMeta = z.object({
   recommendedOrder: z.number().int().positive().optional(),
   /** `pro` = requer assinatura para player e soluções. Omisso = `pro`. */
   access: ContentAccess.default('pro'),
+  /** Ativa o visualizador industrial/dinâmico exclusivo para Pro. */
+  hasBespokeVisualizer: z.boolean().default(false),
 });
 export type ProblemMeta = z.infer<typeof ProblemMeta>;
 
@@ -99,6 +101,9 @@ export const SolutionMeta = z.object({
   /** Identifier of the function/method that holds the solution.
    * Used by the player to know what to highlight as "the entry point". */
   entryFunction: z.string().optional(),
+  /** Código JavaScript (string) que gera o ExecutionTraceStep[]. 
+   * Recebe (nums, target) e retorna o rastro. */
+  simulatorCode: z.string().optional(),
 });
 export type SolutionMeta = z.infer<typeof SolutionMeta>;
 
@@ -134,6 +139,7 @@ export const ExecutionTraceArraySnapshotSchema = z.object({
   label: z.string().min(1),
   values: z.array(z.union([z.number(), z.string(), z.null()])),
   highlightIndices: z.array(z.number().int().nonnegative()).default([]),
+  range: z.tuple([z.number(), z.number()]).optional(),
 });
 
 export const ExecutionTraceSnapshotSchema = z.object({

@@ -29,15 +29,20 @@ export interface EditorSolution {
     name: string;
     kind: string;
     language: string;
+    entryFunction?: string;
+    simulatorCode?: string;
     complexity: {
       time: string;
       space: string;
       rationale: string;
     };
-    entryFunction?: string;
   };
   codeByLanguage: Record<string, string>;
   introMd: string;
+  annotations: unknown[];
+  executionTrace?: {
+    steps: unknown[];
+  };
 }
 
 export type ContentStatus =
@@ -121,6 +126,7 @@ export const DEFAULT_META: Record<string, Record<string, unknown>> = {
   problem: {
     difficulty: "easy",
     categories: [],
+    hasBespokeVisualizer: false,
     estimatedMinutes: 15,
     access: "pro",
     recommendedOrder: 1,

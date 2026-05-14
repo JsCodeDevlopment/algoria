@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { CodePlayer } from '@/components/code-player/code-player';
+import { DynamicPlayerWrapper } from '@/components/code-player/dynamic-player-wrapper';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { JsonLdScript } from '@/components/seo/json-ld';
@@ -201,14 +201,15 @@ export default async function SolutionPage({
         />
       ) : null}
 
-      <CodePlayer
+      <DynamicPlayerWrapper
         lines={lines}
         annotations={playerAnnotations}
         conceptTitles={conceptTitles}
         readOnlyExplanationMd={readOnlyExplanationMd}
-        executionTrace={lineSynced ? solution.executionTrace : undefined}
+        executionTrace={lineSynced ? (solution.executionTrace ?? []) : []}
         problemSlug={problem.meta.slug}
         solutionSlug={solutionSlug}
+        simulatorCode={solution.meta.simulatorCode}
       />
 
       <Separator className="my-10" />

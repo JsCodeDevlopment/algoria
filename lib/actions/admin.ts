@@ -205,6 +205,7 @@ export async function listContents(params: {
   search?: string;
   tab?: 'editorial' | 'sistema';
   access?: string;
+  category?: string;
 }) {
   const admin = await getAuthenticatedStaff();
   if (!admin) return { error: 'Não autorizado', contents: [], total: 0 };
@@ -228,6 +229,13 @@ export async function listContents(params: {
 
     if (params.access) {
       conditions.push(eq(contents.access, params.access as never));
+    }
+
+    if (params.category) {
+      // Filtra dentro do JSONB metadata -> categories
+      conditions.push(
+        sql`${contents.metadata}->'categories' @> ${JSON.stringify([params.category])}::jsonb`
+      );
     }
 
     if (params.status) conditions.push(eq(contents.status, params.status as never));
@@ -868,7 +876,8 @@ export async function getPricingInventory() {
     createdAt: pricingInventory.createdAt,
     contentTitle: contents.title,
     contentType: contents.type,
-    contentSlug: contents.slug
+    contentSlug: contents.slug,
+    metadata: contents.metadata
   })
   .from(pricingInventory)
   .innerJoin(contents, eq(pricingInventory.contentId, contents.id))

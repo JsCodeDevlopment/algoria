@@ -26,19 +26,38 @@ export function TestsFilters({
   const currentLevel = searchParams.get("level");
   const currentTopic = searchParams.get("topic");
   const currentDifficulty = searchParams.get("difficulty");
-  const [searchTerm, setSearchTerm] = useState(searchParams.get("q") || "");
+  const currentQ = searchParams.get("q") || "";
+  const [searchTerm, setSearchTerm] = useState(currentQ);
+  const [prevQ, setPrevQ] = useState(currentQ);
+
+  // Sync state with URL when it changes externally (e.g. back button)
+  // We do this during render to avoid cascading effects and lint errors
+  if (currentQ !== prevQ) {
+    setPrevQ(currentQ);
+    setSearchTerm(currentQ);
+  }
 
   const updateFilters = useCallback(
     (updates: Record<string, string | undefined>) => {
       const params = new URLSearchParams(searchParams.toString());
+      let hasChanges = false;
 
       Object.entries(updates).forEach(([key, value]) => {
-        if (value === undefined || value === "all") {
-          params.delete(key);
-        } else {
-          params.set(key, value);
+        const currentValue = params.get(key);
+        const newValue = value === "all" ? undefined : value;
+
+        if (newValue === undefined) {
+          if (params.has(key)) {
+            params.delete(key);
+            hasChanges = true;
+          }
+        } else if (currentValue !== newValue) {
+          params.set(key, newValue);
+          hasChanges = true;
         }
       });
+
+      if (!hasChanges) return;
 
       startTransition(() => {
         router.push(`/tests/${track}?${params.toString()}`);
@@ -48,16 +67,22 @@ export function TestsFilters({
   );
 
   useEffect(() => {
+    // Only trigger if searchTerm is different from what's in the URL
+    const urlSearchTerm = searchParams.get("q") || "";
+    if (searchTerm === urlSearchTerm) return;
+
     const delayDebounceFn = setTimeout(() => {
       updateFilters({ q: searchTerm || undefined });
     }, 400);
 
     return () => clearTimeout(delayDebounceFn);
-  }, [searchTerm, updateFilters]);
+  }, [searchTerm, updateFilters, searchParams]);
 
   const clearFilters = () => {
     setSearchTerm("");
-    router.push(`/tests/${track}`);
+    if (searchParams.toString() !== "") {
+      router.push(`/tests/${track}`);
+    }
   };
 
   const hasActiveFilters =
