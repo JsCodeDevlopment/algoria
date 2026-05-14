@@ -16,6 +16,8 @@ export const metadata: Metadata = buildPublicMetadata({
   keywords: ["changelog", "novidades", "Algoria", "actualizações"],
 });
 
+export const dynamic = "force-dynamic";
+
 export default async function ChangelogPage() {
   const html = await getChangelogHtml();
 

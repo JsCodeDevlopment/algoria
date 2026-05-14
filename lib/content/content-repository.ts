@@ -68,7 +68,7 @@ export interface ContentRepository {
 import { renderMarkdown } from './markdown';
 import { db } from '@/lib/db';
 import { contents } from '@/lib/db/schema';
-import { and, eq, count } from 'drizzle-orm';
+import { and, eq, count, desc } from 'drizzle-orm';
 import type { CoursePackParsed, TechnicalTest } from './schemas';
 
 type ContentRow = typeof contents.$inferSelect;
@@ -166,7 +166,8 @@ class DbContentRepository implements ContentRepository {
     const [row] = await db
       .select()
       .from(contents)
-      .where(eq(contents.type, 'changelog'))
+      .where(eq(contents.type, "changelog"))
+      .orderBy(desc(contents.updatedAt))
       .limit(1);
     return row ? renderMarkdown(row.body) : null;
   }
