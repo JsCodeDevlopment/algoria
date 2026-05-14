@@ -60,3 +60,25 @@ export const STATUS_FILTERS = [
   { value: "PUBLISHED", label: "Publicado" },
   { value: "REJECTED", label: "Rejeitado" },
 ];
+
+export const CATEGORY_OPTIONS = [
+  { value: "", label: "Todas as categorias" },
+  { value: "arrays", label: "Arrays" },
+  { value: "hash-tables", label: "Hash Tables" },
+  { value: "two-pointers", label: "Two Pointers" },
+  { value: "sliding-window", label: "Sliding Window" },
+  { value: "binary-search", label: "Binary Search" },
+  { value: "linked-list", label: "Linked List" },
+  { value: "trees", label: "Trees" },
+  { value: "graphs", label: "Graphs" },
+  { value: "dynamic-programming", label: "Dynamic Programming" },
+  { value: "greedy", label: "Greedy" },
+  { value: "backtracking", label: "Backtracking" },
+  { value: "bit-manipulation", label: "Bit Manipulation" },
+  { value: "math", label: "Math" },
+  { value: "strings", label: "Strings" },
+  { value: "stacks", label: "Stacks" },
+  { value: "queues", label: "Queues" },
+  { value: "recursion", label: "Recursion" },
+  { value: "sorting", label: "Sorting" },
+];

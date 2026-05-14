@@ -25,6 +25,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
   const [search, setSearch] = useState(searchParams.get('search') ?? '');
   const [typeFilter, setTypeFilter] = useState(searchParams.get('type') ?? '');
   const [statusFilter, setStatusFilter] = useState(searchParams.get('status') ?? '');
+  const [categoryFilter, setCategoryFilter] = useState(searchParams.get('category') ?? '');
   const [accessFilter, setAccessFilter] = useState(searchParams.get('access') ?? '');
   const [feedback, setFeedback] = useState<{ type: 'success' | 'error'; msg: string } | null>(null);
 
@@ -46,6 +47,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
     const urlType = searchParams.get('type') ?? '';
     const urlTab = searchParams.get('tab') ?? '';
     const urlStatus = searchParams.get('status') ?? '';
+    const urlCategory = searchParams.get('category') ?? '';
     const urlSearch = searchParams.get('search') ?? '';
     const urlAccess = searchParams.get('access') ?? '';
     const urlPage = parseInt(searchParams.get('page') || '1');
@@ -65,6 +67,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
 
       setTypeFilter(urlType);
       setStatusFilter(urlStatus);
+      setCategoryFilter(urlCategory);
       setSearch(urlSearch);
       setAccessFilter(urlAccess);
       setPage(urlPage);
@@ -77,6 +80,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
       search: s,
       type: typeFilter || undefined,
       status: statusFilter || undefined,
+      category: categoryFilter || undefined,
       tab,
       access: accessFilter || undefined,
     });
@@ -85,20 +89,21 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
       setRows(result.contents as unknown as ContentRow[]);
       setTotal(result.total);
     }
-  }, [typeFilter, statusFilter, tab, accessFilter]);
+  }, [typeFilter, statusFilter, categoryFilter, tab, accessFilter]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       load(page, search);
     }, 300);
     return () => clearTimeout(timer);
-  }, [page, typeFilter, statusFilter, search, tab, accessFilter, load]);
+  }, [page, typeFilter, statusFilter, categoryFilter, search, tab, accessFilter, load]);
 
   function handleTabChange(newTab: 'editorial' | 'sistema') {
     setTab(newTab);
     setPage(1);
     setTypeFilter('');
     setStatusFilter('');
+    setCategoryFilter('');
     setSearch('');
     
     // Update URL
@@ -106,6 +111,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
     params.set('tab', newTab);
     params.delete('type');
     params.delete('status');
+    params.delete('category');
     params.delete('search');
     params.set('page', '1');
     window.history.pushState(null, '', `?${params.toString()}`);
@@ -141,6 +147,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
     setSearch('');
     setTypeFilter('');
     setStatusFilter('');
+    setCategoryFilter('');
     setPage(1);
   }
 
@@ -182,7 +189,7 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
         )}
 
         <DashboardFilters 
-          tab={tab}
+          tab={accessFilter === 'pro' ? 'editorial' : tab}
           search={search}
           onSearchChange={(v) => {
             setSearch(v);
@@ -201,9 +208,15 @@ export default function ContentDashboardClient({ isAdmin }: { isAdmin: boolean }
             setPage(1);
             updateUrl({ status: v, page: '1' });
           }}
+          categoryFilter={categoryFilter}
+          onCategoryFilterChange={(v) => {
+            setCategoryFilter(v);
+            setPage(1);
+            updateUrl({ category: v, page: '1' });
+          }}
           onClearFilters={() => {
             clearFilters();
-            updateUrl({ type: null, status: null, search: null, page: '1' });
+            updateUrl({ type: null, status: null, category: null, search: null, page: '1' });
           }}
         />
 

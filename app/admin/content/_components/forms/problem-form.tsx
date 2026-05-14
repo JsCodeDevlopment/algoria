@@ -61,14 +61,15 @@ export function ProblemForm({
         ...meta,
         difficulty: importedMeta.difficulty || meta.difficulty,
         access: importedMeta.access || meta.access,
+        hasBespokeVisualizer: parsed.hasBespokeVisualizer ?? importedMeta.hasBespokeVisualizer ?? meta.hasBespokeVisualizer,
         estimatedMinutes: importedMeta.estimatedMinutes || meta.estimatedMinutes,
         recommendedOrder: importedMeta.recommendedOrder || meta.recommendedOrder,
-        categories: importedMeta.categories || meta.categories,
-        constraints: importedMeta.constraints || meta.constraints,
-        solutions: importedMeta.solutions || meta.solutions,
-        examples: importedMeta.examples || meta.examples,
-        tags: importedMeta.tags || meta.tags,
-        prerequisites: importedMeta.prerequisites || meta.prerequisites,
+        categories: importedMeta.categories || parsed.categories || meta.categories,
+        constraints: importedMeta.constraints || parsed.constraints || meta.constraints,
+        solutions: importedMeta.solutions || parsed.solutions || meta.solutions,
+        examples: importedMeta.examples || parsed.examples || meta.examples,
+        tags: importedMeta.tags || parsed.tags || meta.tags,
+        prerequisites: importedMeta.prerequisites || parsed.prerequisites || meta.prerequisites,
       });
 
       setIsImportOpen(false);

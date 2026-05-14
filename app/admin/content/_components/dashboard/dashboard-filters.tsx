@@ -1,6 +1,6 @@
 'use client';
 
-import { EDITORIAL_TYPES, SYSTEM_TYPE_OPTIONS, STATUS_FILTERS } from "./dashboard-types";
+import { EDITORIAL_TYPES, SYSTEM_TYPE_OPTIONS, STATUS_FILTERS, CATEGORY_OPTIONS } from "./dashboard-types";
 
 interface DashboardFiltersProps {
   tab: 'editorial' | 'sistema';
@@ -10,6 +10,8 @@ interface DashboardFiltersProps {
   onTypeFilterChange: (v: string) => void;
   statusFilter: string;
   onStatusFilterChange: (v: string) => void;
+  categoryFilter: string;
+  onCategoryFilterChange: (v: string) => void;
   onClearFilters: () => void;
 }
 
@@ -21,6 +23,8 @@ export function DashboardFilters({
   onTypeFilterChange,
   statusFilter,
   onStatusFilterChange,
+  categoryFilter,
+  onCategoryFilterChange,
   onClearFilters,
 }: DashboardFiltersProps) {
   const typeOptions = tab === 'editorial' ? EDITORIAL_TYPES : SYSTEM_TYPE_OPTIONS;
@@ -63,6 +67,20 @@ export function DashboardFilters({
           ))}
         </select>
 
+        {typeOptions === EDITORIAL_TYPES && (
+          <select
+            value={categoryFilter}
+            onChange={(e) => onCategoryFilterChange(e.target.value)}
+            className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none focus:ring-2 focus:ring-primary/20"
+          >
+            {CATEGORY_OPTIONS.map((opt) => (
+              <option key={opt.value} value={opt.value}>
+                {opt.label}
+              </option>
+            ))}
+          </select>
+        )}
+
         <select
           value={statusFilter}
           onChange={(e) => onStatusFilterChange(e.target.value)}
@@ -75,7 +93,7 @@ export function DashboardFilters({
           ))}
         </select>
 
-        {(search || typeFilter || statusFilter) && (
+        {(search || typeFilter || statusFilter || categoryFilter) && (
           <button
             onClick={onClearFilters}
             className="h-10 rounded-md px-3 text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground"

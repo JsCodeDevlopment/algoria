@@ -13,11 +13,14 @@ interface Props {
 
 export function ExecutionTracePanel({ steps }: Props) {
   const currentLine = usePlayerStore((s) => s.currentLine);
+  const currentStepIndex = usePlayerStore((s) => s.currentStepIndex);
 
-  const snapshot = useMemo(
-    () => resolveExecutionSnapshot(currentLine, steps),
-    [currentLine, steps],
-  );
+  const snapshot = useMemo(() => {
+    if (currentStepIndex !== -1 && steps[currentStepIndex]) {
+      return steps[currentStepIndex].snapshot;
+    }
+    return resolveExecutionSnapshot(currentLine, steps);
+  }, [currentLine, currentStepIndex, steps]);
 
   if (!snapshot) {
     return (
@@ -25,7 +28,7 @@ export function ExecutionTracePanel({ steps }: Props) {
         className="rounded-xl border border-dashed border-zinc-300 bg-zinc-50/80 p-4 text-sm text-zinc-500 dark:border-zinc-700 dark:bg-zinc-950/40 dark:text-zinc-400"
         aria-label="Estado da execução (demonstração)"
       >
-        Sem modelo visual para esta linha — avança no player para ver arrays e mapas quando definidos no{' '}
+        Sem modelo visual para esta linha — avance no player para ver arrays e mapas quando definidos no{' '}
         <code className="text-xs">trace.json</code>.
       </section>
     );

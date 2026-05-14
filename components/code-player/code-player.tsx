@@ -1,20 +1,24 @@
-'use client';
+"use client";
 
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo } from "react";
 
-import type { ExecutionTraceStep, LineAnnotation } from '@/lib/content/schemas';
-import type { HighlightedLine } from '@/lib/content/shiki';
+import type { ExecutionTraceStep, LineAnnotation } from "@/lib/content/schemas";
+import type { HighlightedLine } from "@/lib/content/shiki";
 
-import { renderMarkdown } from '@/lib/content/markdown';
-import { getSolutionResumeLine, touchSolutionLastLine } from '@/lib/progress/local-progress';
+import { renderMarkdown } from "@/lib/content/markdown";
+import {
+  getSolutionResumeLine,
+  touchSolutionLastLine,
+} from "@/lib/progress/local-progress";
 
-import { CodeView } from './code-view';
-import { ExecutionTracePanel } from './execution-trace-panel';
-import { ExplanationPanel } from './explanation-panel';
-import { KeyboardShortcuts } from './keyboard-shortcuts';
-import { PlayerAnalyticsSync } from './player-analytics-sync';
-import { PlayerControls } from './player-controls';
-import { usePlayerStore } from './use-player-store';
+import { CodeView } from "./code-view";
+import { ExecutionTracePanel } from "./execution-trace-panel";
+import { ExplanationPanel } from "./explanation-panel";
+import { KeyboardShortcuts } from "./keyboard-shortcuts";
+import { PlayerAnalyticsSync } from "./player-analytics-sync";
+import { PlayerControls } from "./player-controls";
+import { usePlayerStore } from "./use-player-store";
+import { BESPOKE_VISUALIZERS, hasBespokeVisualizer } from "./visualizers";
 
 interface Props {
   lines: HighlightedLine[];
@@ -25,6 +29,7 @@ interface Props {
   executionTrace?: ExecutionTraceStep[];
   problemSlug?: string;
   solutionSlug?: string;
+  autoPlay?: boolean;
 }
 
 /**
@@ -45,11 +50,15 @@ export function CodePlayer({
   executionTrace,
   problemSlug,
   solutionSlug,
+  autoPlay,
 }: Props) {
   const initialize = usePlayerStore((s) => s.initialize);
 
   const tutorialMode = annotations.length > 0 && !readOnlyExplanationMd;
-  const annotatedLineSet = useMemo(() => new Set(annotations.map((a) => a.line)), [annotations]);
+  const annotatedLineSet = useMemo(
+    () => new Set(annotations.map((a) => a.line)),
+    [annotations],
+  );
   const annotatedLines = useMemo(
     () => annotations.map((a) => a.line).sort((a, b) => a - b),
     [annotations],
@@ -58,12 +67,22 @@ export function CodePlayer({
   useEffect(() => {
     if (tutorialMode) {
       const resume =
-        problemSlug && solutionSlug ? getSolutionResumeLine(problemSlug, solutionSlug, annotatedLines) : undefined;
-      initialize(annotatedLines, resume);
+        problemSlug && solutionSlug
+          ? getSolutionResumeLine(problemSlug, solutionSlug, annotatedLines)
+          : undefined;
+      initialize(annotatedLines, resume, executionTrace, autoPlay);
     } else {
-      initialize([], 1);
+      initialize([], 1, executionTrace, autoPlay);
     }
-  }, [annotatedLines, initialize, tutorialMode, problemSlug, solutionSlug]);
+  }, [
+    annotatedLines,
+    initialize,
+    tutorialMode,
+    problemSlug,
+    solutionSlug,
+    executionTrace,
+    autoPlay,
+  ]);
 
   useEffect(() => {
     if (!tutorialMode || !problemSlug || !solutionSlug) return;
@@ -74,7 +93,10 @@ export function CodePlayer({
       if (line === lastLine) return;
       lastLine = line;
       if (timer) clearTimeout(timer);
-      timer = setTimeout(() => touchSolutionLastLine(problemSlug, solutionSlug, line), 400);
+      timer = setTimeout(
+        () => touchSolutionLastLine(problemSlug, solutionSlug, line),
+        400,
+      );
     });
     return () => {
       if (timer) clearTimeout(timer);
@@ -97,10 +119,13 @@ export function CodePlayer({
           />
           {tutorialMode ? <PlayerControls /> : null}
           {tutorialMode ? (
-            <p className="text-[11px] text-zinc-500 px-1">
-              Atalhos: <kbd className="kbd">←</kbd>/<kbd className="kbd">→</kbd> mudar de linha,{' '}
-              <kbd className="kbd">espaço</kbd> play/pause, <kbd className="kbd">1</kbd>/<kbd className="kbd">2</kbd>/
-              <kbd className="kbd">3</kbd> mudar nível.
+            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 px-1">
+              Atalhos: <kbd className="kbd rounded-none">←</kbd>/
+              <kbd className="kbd rounded-none">→</kbd> Navegar,{" "}
+              <kbd className="kbd rounded-none">Espaço</kbd> Play/Pause,{" "}
+              <kbd className="kbd rounded-none">1</kbd>/
+              <kbd className="kbd rounded-none">2</kbd>/
+              <kbd className="kbd rounded-none">3</kbd> Nível.
             </p>
           ) : null}
         </div>
@@ -113,14 +138,28 @@ export function CodePlayer({
               className="prose prose-zinc dark:prose-invert prose-sm max-w-none
                          prose-code:text-blue-600 dark:prose-code:text-blue-400
                          prose-code:before:content-none prose-code:after:content-none"
-              dangerouslySetInnerHTML={{ __html: renderMarkdown(readOnlyExplanationMd) }}
+              dangerouslySetInnerHTML={{
+                __html: renderMarkdown(readOnlyExplanationMd),
+              }}
             />
           </aside>
         ) : (
-          <ExplanationPanel annotations={annotations} conceptTitles={conceptTitles} />
+          <ExplanationPanel
+            annotations={annotations}
+            conceptTitles={conceptTitles}
+          />
         )}
       </div>
-      {showTrace ? <ExecutionTracePanel steps={executionTrace} /> : null}
+      {showTrace ? (
+        problemSlug && hasBespokeVisualizer(problemSlug) ? (
+          (() => {
+            const Visualizer = BESPOKE_VISUALIZERS[problemSlug];
+            return <Visualizer steps={executionTrace} solutionSlug={solutionSlug} />;
+          })()
+        ) : (
+          <ExecutionTracePanel steps={executionTrace} />
+        )
+      ) : null}
     </div>
   );
 }

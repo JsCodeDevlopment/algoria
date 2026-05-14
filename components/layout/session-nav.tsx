@@ -12,8 +12,18 @@ import Image from "next/image";
 export function SessionNav() {
   const { data, isPending } = authClient.useSession();
   const [isOpen, setIsOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    // Usamos setTimeout para evitar o aviso de 'cascading renders' síncrono.
+    // Isto move a atualização para a próxima iteração do event loop.
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 0);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -29,7 +39,7 @@ export function SessionNav() {
     return () => document.removeEventListener("mousedown", handleOutsideClick);
   }, [isOpen]);
 
-  if (isPending) {
+  if (!mounted || isPending) {
     return (
       <span className="hidden text-[10px] text-muted-foreground sm:inline">
         …

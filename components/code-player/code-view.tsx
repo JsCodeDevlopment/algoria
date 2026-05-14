@@ -31,19 +31,13 @@ export function CodeView({ lines, annotatedLineSet, interactiveSteps = true }: P
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (!interactiveSteps) return;
-    const container = containerRef.current;
-    if (!container) return;
-    const target = container.querySelector<HTMLElement>(`[data-line="${currentLine}"]`);
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+    // Scroll automático desativado a pedido do utilizador para evitar saltos de tela.
   }, [currentLine, interactiveSteps]);
 
   return (
     <div
       ref={containerRef}
-      className="relative font-mono text-[13px] leading-6 overflow-auto max-h-[70vh] rounded-xl border border-zinc-200 dark:border-zinc-800 bg-[var(--shiki-light-bg,#fff)] dark:bg-[var(--shiki-dark-bg,#0a0a0a)]"
+      className="relative font-mono text-[13px] leading-6 overflow-auto max-h-[70vh] border border-zinc-200 dark:border-zinc-800 bg-[var(--shiki-light-bg,#fff)] dark:bg-[var(--shiki-dark-bg,#0a0a0a)]"
       role="region"
       aria-label="Código com explicação por linha"
     >
