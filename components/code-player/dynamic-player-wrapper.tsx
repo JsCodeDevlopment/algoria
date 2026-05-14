@@ -29,18 +29,18 @@ export function DynamicPlayerWrapper(props: Props) {
   const isBespoke = hasBespokeVisualizer(props.problemSlug);
 
   const handleRun = useCallback(
-    (nums: number[], target: number) => {
+    (...args: unknown[]) => {
       // 1. Prioridade para o código vindo do banco (Admin)
       if (props.simulatorCode) {
         try {
+          // Criamos uma função que aceita argumentos variáveis
           const dynamicSim = new Function(
-            "nums",
-            "target",
-            "const simulate = " + props.simulatorCode + ";\n" +
-            "return typeof simulate === 'function' ? simulate(nums, target) : null;"
+            "...args",
+            `const simulate = ${props.simulatorCode};
+             return typeof simulate === 'function' ? simulate(...args) : null;`
           );
 
-          const trace = dynamicSim(nums, target);
+          const trace = dynamicSim(...args);
           
           if (trace && Array.isArray(trace) && trace.length > 0) {
             setDynamicTrace(trace);
@@ -55,7 +55,7 @@ export function DynamicPlayerWrapper(props: Props) {
       // 2. Fallback para simuladores locais (legado)
       const simulator = getSimulator(props.problemSlug, props.solutionSlug);
       if (simulator) {
-        const trace = simulator(nums, target);
+        const trace = simulator(...args);
         if (trace.length > 0) {
           setDynamicTrace(trace);
           setShouldAutoPlay(true);
@@ -72,13 +72,11 @@ export function DynamicPlayerWrapper(props: Props) {
 
   return (
     <div className="flex flex-col">
-      {isBespoke && props.problemSlug === "two-sum" && (
+      {isBespoke && (
         <DynamicInputForm
           onRun={handleRun}
           onReset={handleReset}
-          // Valores iniciais do Two Sum padrão
-          defaultNums="2, 7, 11, 15"
-          defaultTarget={9}
+          problemSlug={props.problemSlug}
         />
       )}
 

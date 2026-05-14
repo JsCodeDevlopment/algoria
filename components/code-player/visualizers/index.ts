@@ -1,6 +1,7 @@
 'use client';
 
 import { TwoSumVisualizer } from './two-sum-visualizer';
+import { GenericVisualizer } from './generic-visualizer';
 import type { ExecutionTraceStep } from '@/lib/content/schemas';
 
 /**
@@ -9,7 +10,7 @@ import type { ExecutionTraceStep } from '@/lib/content/schemas';
  */
 export const BESPOKE_VISUALIZERS: Record<string, React.ComponentType<{ steps: ExecutionTraceStep[]; solutionSlug?: string }>> = {
   'two-sum': TwoSumVisualizer,
-  // 'three-sum': ThreeSumVisualizer, // Exemplo de expansão futura
+  'minimum-window-substring': GenericVisualizer,
 };
 
 /**

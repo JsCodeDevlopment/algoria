@@ -139,6 +139,7 @@ export const ExecutionTraceArraySnapshotSchema = z.object({
   label: z.string().min(1),
   values: z.array(z.union([z.number(), z.string(), z.null()])),
   highlightIndices: z.array(z.number().int().nonnegative()).default([]),
+  range: z.tuple([z.number(), z.number()]).optional(),
 });
 
 export const ExecutionTraceSnapshotSchema = z.object({
