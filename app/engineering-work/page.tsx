@@ -1,4 +1,4 @@
-import { Clock, CloudCog, MonitorSmartphone, Server } from "lucide-react";
+import { Clock, CloudCog, MonitorSmartphone, Server, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -21,15 +21,15 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 export const metadata: Metadata = buildPublicMetadata({
   title: "Engenharia no trabalho — guias práticos",
   description:
-    "Guias em português sobre frontend e produto, backend e APIs, DevOps e operação — aplicáveis na sprint real, sem lista de buzzwords.",
+    "Guias em português sobre frontend, backend, DevOps e soft skills — aplicáveis na sprint real, sem lista de buzzwords.",
   pathname: "/engineering-work",
   keywords: [
     "engenharia software prática",
     "frontend produção",
     "APIs backend",
     "DevOps dia a dia",
-    "observabilidade",
-    "segurança aplicações",
+    "soft skills engenharia",
+    "carreira tech leader",
     "Algoria guias",
   ],
 });
@@ -42,12 +42,14 @@ const PILLAR_ICON: Record<EngineeringWorkPillar, ReactNode> = {
   frontend: <MonitorSmartphone className="h-6 w-6" aria-hidden />,
   backend: <Server className="h-6 w-6" aria-hidden />,
   devops: <CloudCog className="h-6 w-6" aria-hidden />,
+  softskills: <Users className="h-6 w-6" aria-hidden />,
 };
 
 const PILLAR_TITLE: Record<EngineeringWorkPillar, string> = {
   frontend: "Frontend e produto",
   backend: "Backend e APIs",
   devops: "DevOps e sistema",
+  softskills: "Carreira e Soft Skills",
 };
 
 const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
@@ -57,6 +59,8 @@ const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
     "Identidade, permissões, contratos estáveis e resiliência sob carga.",
   devops:
     "Entrega contínua, observabilidade e segurança operacional sem teatro.",
+  softskills:
+    "Liderança, comunicação, produtividade e evolução profissional na engenharia.",
 };
 
 export default async function EngineeringWorkHubPage() {

@@ -91,6 +91,7 @@ export const ENGINEERING_PILLARS = [
   { value: "frontend", label: "Frontend" },
   { value: "backend", label: "Backend" },
   { value: "devops", label: "DevOps" },
+  { value: "softskills", label: "Soft Skills / Carreira" },
 ];
 
 export const CATEGORIES = [
