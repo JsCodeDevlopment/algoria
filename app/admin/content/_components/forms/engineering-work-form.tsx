@@ -1,9 +1,21 @@
 "use client";
 
+import { useState } from "react";
+import { FileJson, Download } from "lucide-react";
 import { FormProps, ENGINEERING_PILLARS, ACCESS_OPTIONS } from "../types";
 import { FormField, TextInput, SelectInput, NumberInput } from "../form-elements";
 import { MarkdownEditor } from "../markdown-editor";
 import { MetadataPreview } from "../metadata-preview";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export function EngineeringWorkForm({
   slug,
@@ -16,12 +28,109 @@ export function EngineeringWorkForm({
   setMeta,
   mode,
 }: FormProps) {
+  const [importJson, setImportJson] = useState("");
+  const [isImportOpen, setIsImportOpen] = useState(false);
+
+  const handleImportJson = () => {
+    try {
+      const parsed = JSON.parse(importJson);
+      if (typeof parsed !== "object" || parsed === null) throw new Error();
+
+      if (parsed.title) setTitle(parsed.title);
+      if (parsed.slug) setSlug(parsed.slug);
+      if (parsed.body) setBody(parsed.body);
+      
+      if (parsed.meta || parsed.metadata) {
+        setMeta({
+          ...meta,
+          ...(parsed.meta || parsed.metadata),
+        });
+      }
+
+      setIsImportOpen(false);
+      setImportJson("");
+    } catch (err) {
+      alert("Erro ao importar JSON. Verifica se o formato é válido.");
+      console.error(err);
+    }
+  };
+
+  const handleExportJson = () => {
+    const dataToExport = {
+      title,
+      slug,
+      body,
+      meta,
+    };
+    const dataStr = JSON.stringify(dataToExport, null, 2);
+    const dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = `${slug || "engineering-work"}.json`;
+
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
+    linkElement.click();
+  };
+
   return (
     <div className="space-y-6">
-      <div className="rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-amber-600 dark:text-amber-400">
-        <strong>Engenharia</strong> — Conteúdo apresentado na página{" "}
-        <code>Academy → Engineering Work</code>. Guias sobre processos, cultura
-        e carreira em engenharia de software.
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 rounded-lg border border-amber-500/20 bg-amber-500/5 p-4 text-sm text-amber-600 dark:text-amber-400">
+          <strong>Engenharia</strong> — Conteúdo apresentado na página{" "}
+          <code>Academy → Engineering Work</code>. Guias sobre processos, cultura
+          e carreira em engenharia de software.
+        </div>
+
+        <div className="flex shrink-0 gap-2">
+          <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
+            <DialogTrigger asChild>
+              <Button
+                variant="outline"
+                className="gap-2 text-xs font-bold uppercase border-2 h-10"
+              >
+                <FileJson className="h-4 w-4" /> Importar
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl bg-background border-2 border-border">
+              <DialogHeader>
+                <DialogTitle className="text-xl font-black uppercase tracking-tighter">
+                  Importar Definição JSON
+                </DialogTitle>
+                <DialogDescription className="text-xs uppercase font-bold tracking-widest text-muted-foreground">
+                  Cola o JSON completo do guia abaixo para preencher os campos
+                  automaticamente.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="py-4">
+                <textarea
+                  value={importJson}
+                  onChange={(e) => setImportJson(e.target.value)}
+                  placeholder='{"title": "Novo Guia", "body": "...", "meta": { ... }}'
+                  rows={12}
+                  className="w-full bg-[#080808] text-emerald-400 p-4 font-mono text-xs rounded-none border-2 border-border focus:border-primary outline-none"
+                />
+              </div>
+              <DialogFooter>
+                <Button
+                  onClick={handleImportJson}
+                  className="rounded-none font-black uppercase tracking-widest w-full h-12"
+                >
+                  Confirmar Importação
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          <Button
+            variant="outline"
+            onClick={handleExportJson}
+            className="gap-2 text-xs font-bold uppercase border-2 h-10"
+          >
+            <Download className="h-4 w-4" /> Exportar
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 lg:grid-cols-2">
@@ -94,3 +203,4 @@ export function EngineeringWorkForm({
     </div>
   );
 }
+
