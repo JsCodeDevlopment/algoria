@@ -51,8 +51,10 @@ export const metadata: Metadata = buildPublicMetadata({
 export default async function HomePage() {
   return (
     <div className="relative">
-      <Hero />
-      <MetricsMarquee />
+      <div className="flex h-[calc(100dvh-4rem)] flex-col overflow-hidden">
+        <Hero />
+        <MetricsMarquee />
+      </div>
       <PlatformValueProps />
       <HowItWorks />
       <TargetAudience />

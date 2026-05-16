@@ -1,4 +1,3 @@
-import React from "react";
 import { getContentRepository } from "@/lib/content/content-repository";
 import { getAllProblems } from "@/lib/content/loader";
 
@@ -10,19 +9,20 @@ interface MetricProps {
 
 function Metric({ label, value, hint }: MetricProps) {
   return (
-    <div className="w-[220px] shrink-0 border-r border-border bg-background px-6 py-7 text-left">
-      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
+    <div className="group w-[220px] shrink-0 border-r border-border bg-background px-6 py-5 text-left transition-colors duration-300 hover:bg-primary hover:border-primary">
+      <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-muted-foreground transition-colors duration-300 group-hover:text-primary-foreground/70">
         {label}
       </p>
-      <p className="mt-3 text-4xl font-black tracking-tighter text-foreground">
+      <p className="mt-3 text-4xl font-black tracking-tighter text-foreground transition-colors duration-300 group-hover:text-primary-foreground">
         {value}
       </p>
-      <p className="mt-2 line-clamp-1 text-[10px] leading-snug text-muted-foreground">
+      <p className="mt-2 line-clamp-1 text-[10px] leading-snug text-muted-foreground transition-colors duration-300 group-hover:text-primary-foreground/60">
         {hint}
       </p>
     </div>
   );
 }
+
 
 export async function MetricsMarquee() {
   const [problems, counts] = await Promise.all([
@@ -68,7 +68,11 @@ export async function MetricsMarquee() {
       value: String(totalByType("technical-test")),
       hint: "Testes técnicos reais",
     },
-    { label: "Cursos", value: String(totalByType("course")), hint: "Trilhas guiadas" },
+    {
+      label: "Cursos",
+      value: String(totalByType("course")),
+      hint: "Trilhas guiadas",
+    },
     { label: "Certificados", value: "8", hint: "Disponíveis no curso" },
   ];
 
