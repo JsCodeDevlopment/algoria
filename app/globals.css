@@ -166,8 +166,19 @@ body {
   background: color-mix(in oklab, currentColor 4%, transparent);
 }
 
+@theme inline {
+  /* ... existing animations ... */
+  --animate-marquee: marquee 40s linear infinite;
+  
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+}
+
 :root {
   --shiki-light-bg: #ffffff;
   --shiki-dark-bg: #020617;
 }
+
 
