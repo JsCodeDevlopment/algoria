@@ -59,32 +59,49 @@ export function useTestExecution(test: TechnicalTest) {
       try {
         const fullCode = template.testRunner.replace("{{CODE}}", currentCode);
 
+        // Maximum time to wait for async test runners (e.g., debounce tests)
+        const MAX_WAIT_MS = 6000;
+        const POLL_INTERVAL_MS = 100;
+
         const executeString = `
           return (async () => {
             let capturedResults = [];
             const originalLog = console.log;
             
+            // Intercept console.log to capture JSON test results
             console.log = (...args) => {
               const msg = args[0];
-              if (typeof msg === 'string' && msg.startsWith('[') && msg.endsWith(']')) {
+              // Handle both string and object/array outputs
+              let candidate = null;
+              if (typeof msg === 'string') {
                 try {
-                  const parsed = JSON.parse(msg);
-                  if (Array.isArray(parsed) && parsed.length > 0 && parsed[0].id) {
-                    capturedResults = parsed;
-                  }
+                  candidate = JSON.parse(msg);
                 } catch (e) {}
+              } else if (Array.isArray(msg)) {
+                candidate = msg;
               }
-              originalLog(...args);
+              
+              if (Array.isArray(candidate) && candidate.length > 0 && candidate[0] && typeof candidate[0].id === 'string' && typeof candidate[0].passed === 'boolean') {
+                capturedResults = candidate;
+              }
+              originalLog.apply(console, args);
             };
 
             try {
               ${fullCode}
-              await new Promise(r => setTimeout(r, 200));
             } catch (err) {
               console.error("Erro na execução do teste:", err);
-            } finally {
-              console.log = originalLog;
             }
+            
+            // Poll for results — async test runners (debounce, throttle, etc.)
+            // may fire console.log after a delay
+            const startTime = Date.now();
+            while (capturedResults.length === 0 && (Date.now() - startTime) < ${MAX_WAIT_MS}) {
+              await new Promise(r => setTimeout(r, ${POLL_INTERVAL_MS}));
+            }
+            
+            // Restore original console.log after polling completes
+            console.log = originalLog;
             
             return capturedResults;
           })();
