@@ -1,4 +1,4 @@
-import { Clock, CloudCog, MonitorSmartphone, Server, Users } from "lucide-react";
+import { Brain, Clock, CloudCog, MonitorSmartphone, Server, Users } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
@@ -29,6 +29,9 @@ export const metadata: Metadata = buildPublicMetadata({
     "APIs backend",
     "DevOps dia a dia",
     "soft skills engenharia",
+    "inteligência artificial",
+    "LLM treinamento",
+    "IA para engenheiros",
     "carreira tech leader",
     "Algoria guias",
   ],
@@ -43,6 +46,7 @@ const PILLAR_ICON: Record<EngineeringWorkPillar, ReactNode> = {
   backend: <Server className="h-6 w-6" aria-hidden />,
   devops: <CloudCog className="h-6 w-6" aria-hidden />,
   softskills: <Users className="h-6 w-6" aria-hidden />,
+  ia: <Brain className="h-6 w-6" aria-hidden />,
 };
 
 const PILLAR_TITLE: Record<EngineeringWorkPillar, string> = {
@@ -50,6 +54,7 @@ const PILLAR_TITLE: Record<EngineeringWorkPillar, string> = {
   backend: "Backend e APIs",
   devops: "DevOps e sistema",
   softskills: "Carreira e Soft Skills",
+  ia: "Inteligência Artificial",
 };
 
 const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
@@ -61,6 +66,7 @@ const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
     "Entrega contínua, observabilidade e segurança operacional sem teatro.",
   softskills:
     "Liderança, comunicação, produtividade e evolução profissional na engenharia.",
+  ia: "LLMs, treinamento de modelos, arquiteturas distribuídas e infraestrutura para IA.",
 };
 
 export default async function EngineeringWorkHubPage() {
@@ -92,7 +98,7 @@ export default async function EngineeringWorkHubPage() {
             Engenharia no trabalho
           </h1>
           <p className="max-w-2xl text-lg leading-relaxed tracking-tight text-muted-foreground">
-            Frontend, Backend e DevOps aplicados ao mundo real. Material pensado
+            Frontend, Backend, DevOps e IA aplicados ao mundo real. Material pensado
             para ler com calma e usar na segunda-feira.
           </p>
         </header>

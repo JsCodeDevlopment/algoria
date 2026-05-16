@@ -225,7 +225,7 @@ export interface InterviewEnglishTopic {
 }
 
 /** Guias de engenharia aplicada ao dia-a-dia (produto, APIs, operação). */
-export const ENGINEERING_WORK_PILLARS = ['frontend', 'backend', 'devops', 'softskills'] as const;
+export const ENGINEERING_WORK_PILLARS = ['frontend', 'backend', 'devops', 'softskills', 'ia'] as const;
 export const EngineeringWorkPillar = z.enum(ENGINEERING_WORK_PILLARS);
 export type EngineeringWorkPillar = z.infer<typeof EngineeringWorkPillar>;
 

@@ -2,7 +2,7 @@
 
 ![](https://img.shields.io/badge/Versão-1.4.0-black?style=for-the-badge)
 
-Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps).
+Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps, SoftSkills e IA).
 
 <h1 align="center">
   <img alt="Algoria Preview" title="Algoria" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="public/gallery/image1.png" />
@@ -15,7 +15,7 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
 - 🧠 **Conceitos** — páginas longas (fundamentos, estruturas, padrões) carregadas do repositório em Markdown
 - 🎓 **Curso guiado** — trilha modular com exemplos, MCQs e certificado por capítulo (progresso no browser)
 - 🌍 **Interview English** — hub `/interview-en` com vocabulário e scripts 100% em inglês para entrevistas
-- 💼 **Engenharia no trabalho** — guias didáticos `/engineering-work` (frontend, backend, DevOps)
+- 💼 **Engenharia no trabalho** — guias didáticos `/engineering-work` (frontend, backend, DevOps, SoftSkills e IA)
 - 🧪 **Testes Técnicos** — hub `/tests` com simulados reais (escolha múltipla + live coding) por trilha e nível
 - 👤 **Perfis Profissionais** — portfólio público `/profile` com experiência detalhada, projetos e tecnologias
 - 🔍 **Explorador de Talentos** — hub `/explorer` para descobrir e conectar-te com outros engenheiros da comunidade

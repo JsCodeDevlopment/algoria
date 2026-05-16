@@ -48,6 +48,9 @@ export function SiteFooter() {
             <span className="border border-border bg-background px-2 py-1 text-muted-foreground">
               DevOps
             </span>
+            <span className="border border-border bg-background px-2 py-1 text-muted-foreground">
+              IA
+            </span>
           </div>
         </div>
 

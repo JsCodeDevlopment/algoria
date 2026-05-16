@@ -17,7 +17,7 @@ export const metadata: Metadata = buildPublicMetadata({
   titleAbsolute:
     "Algoria — Aprenda Algoritmos com Code Player Linha-a-Linha e Preparação Técnica para Elite",
   description:
-    "Domine algoritmos, estruturas de dados e sistemas complexos. Explore soluções explicadas linha-a-linha com nosso Code Player, prepare-se para entrevistas em Big Techs e acesse guias práticos de Engenharia (Frontend, Backend e DevOps).",
+    "Domine algoritmos, estruturas de dados e sistemas complexos. Explore soluções explicadas linha-a-linha com nosso Code Player, prepare-se para entrevistas em Big Techs e acesse guias práticos de Engenharia (Frontend, Backend, DevOps e IA).",
   pathname: "/",
   image: "/preview.webp",
   keywords: [
@@ -33,7 +33,7 @@ export const metadata: Metadata = buildPublicMetadata({
     "entrevista de código big tech",
     "aprendizado técnico interativo",
     "engenharia de software aplicada",
-    "frontend backend devops roadmap",
+    "frontend backend devops ia roadmap",
     "boas práticas de programação",
     "estudo dirigido de código",
     "programação competitiva iniciante",
@@ -41,6 +41,8 @@ export const metadata: Metadata = buildPublicMetadata({
     "node.js backend escalável",
     "performance web vitals",
     "arquitetura de sistemas distribuídos",
+    "inteligência artificial para engenheiros",
+    "treinamento de LLMs",
     "mentoria técnica software",
     "desafios de código comentados",
     "carreira sênior engenharia",

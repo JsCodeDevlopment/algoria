@@ -8,6 +8,7 @@ import {
   Gauge,
   Shield,
   Search,
+  Brain,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -86,12 +87,12 @@ export function EngineeringShowcase() {
             className="rounded-none border-2 border-primary font-black uppercase tracking-wider"
           >
             <Link href="/engineering-work">
-              Abrir guias · Front, Back, DevOps{" "}
+              Abrir guias · Front, Back, DevOps, IA{" "}
               <ArrowRight className="ml-1 h-4 w-4" />
             </Link>
           </Button>
         </div>
-        <div className="mt-14 grid gap-0 border border-border md:grid-cols-3">
+        <div className="mt-14 grid gap-0 border border-border md:grid-cols-2 lg:grid-cols-4">
           <WorkPracticeColumn
             icon={<MonitorSmartphone className="h-7 w-7" />}
             title="Frontend & produto"
@@ -123,6 +124,17 @@ export function EngineeringShowcase() {
               "Mudança contínua com rollback que não diz “rezemos só desta vez”.",
               "Observabilidade mínima viável antes do primeiro spike de custo inexplicável à terça-feira.",
               "Segredos, RBAC e políticas quando equipas clicam rápido em consolas cloud públicas.",
+            ]}
+          />
+          <WorkPracticeColumn
+            icon={<Brain className="h-7 w-7" />}
+            title="IA & modelos"
+            tag="IA"
+            bullets={[
+              "Treinamento de LLMs do zero — da coleta de petabytes à arquitetura Transformer e alinhamento RLHF/DPO.",
+              "Infraestrutura para IA — dimensionamento de VRAM, treinamento distribuído (FSDP) e otimização de matrizes.",
+              "Inferência e Quantização — servindo modelos massivos em hardware limitado com GGUF, AWQ e vLLM.",
+              "IA aplicada ao produto — RAG (Retrieval Augmented Generation), bases vetoriais e agentes autônomos.",
             ]}
           />
         </div>
