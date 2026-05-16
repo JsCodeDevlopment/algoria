@@ -119,7 +119,7 @@ export function CodePlayer({
           />
           {tutorialMode ? <PlayerControls /> : null}
           {tutorialMode ? (
-            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400 px-1">
+            <p className="font-mono text-[8px] font-bold uppercase tracking-[0.2em] text-muted-foreground/40 px-1">
               Atalhos: <kbd className="kbd rounded-none">←</kbd>/
               <kbd className="kbd rounded-none">→</kbd> Navegar,{" "}
               <kbd className="kbd rounded-none">Espaço</kbd> Play/Pause,{" "}

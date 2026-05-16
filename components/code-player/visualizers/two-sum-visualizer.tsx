@@ -33,7 +33,7 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
 
   if (!snapshot) {
     return (
-      <section className="border border-dashed border-zinc-200 bg-zinc-50 p-6 text-[10px] font-black uppercase tracking-widest text-zinc-400">
+      <section className="border border-dashed border-border bg-muted/30 p-6 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
         Motor Offline / Aguardando dados de execução...
       </section>
     );
@@ -60,49 +60,58 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
     result !== undefined ||
     (currentSum !== undefined && currentSum === target);
 
+  const progress = ((currentStepIndex + 1) / steps.length) * 100;
+
   return (
-    <section className="flex flex-col gap-10 border-x border-b border-zinc-200 bg-white p-10 select-none dark:border-zinc-800 dark:bg-zinc-950 shadow-sm">
-      {/* Header Area */}
-      <div className="flex items-center justify-between border-b-2 border-zinc-900 pb-8 dark:border-zinc-100">
-        <div className="flex flex-col gap-2">
+    <section className="border border-border/50 bg-background/80 backdrop-blur-md overflow-hidden select-none">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-border/30 bg-muted/20">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground/60">
+            Execution Monitor
+          </span>
+        </div>
+        <div className="flex items-center gap-4">
+          {target !== undefined && (
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground/40">
+                Target
+              </span>
+              <div
+                className={`px-3 py-1 font-mono text-sm font-black transition-all duration-500 ${
+                  isFound
+                    ? "bg-green-500 text-white"
+                    : "bg-primary/10 text-primary"
+                }`}
+              >
+                {target}
+              </div>
+            </div>
+          )}
           <div className="flex items-center gap-2">
-            <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-            <h3 className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-400">
-              Execution Monitor
-            </h3>
-          </div>
-          <div className="flex items-center gap-4">
-            <div className="bg-zinc-900 px-4 py-1.5 dark:bg-white">
-              <span className="font-mono text-base font-black text-white dark:text-zinc-900">
+            <div className="bg-primary px-2.5 py-0.5">
+              <span className="font-mono text-xs font-black text-primary-foreground">
                 {String(currentStepIndex + 1).padStart(2, "0")}
               </span>
             </div>
-            <span className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
-              Passo de {steps.length}
+            <span className="font-mono text-[9px] text-muted-foreground/40">
+              /{steps.length}
             </span>
           </div>
         </div>
-
-        {target !== undefined && (
-          <div className="flex flex-col items-end gap-1.5">
-            <span className="text-[9px] font-black uppercase tracking-widest text-zinc-400">
-              Target Value
-            </span>
-            <div
-              className={`flex min-w-[100px] items-center justify-center border-2 px-6 py-3 transition-all duration-500 ${
-                isFound
-                  ? "bg-emerald-500 border-emerald-500 text-white shadow-xl scale-105"
-                  : "bg-zinc-50 border-zinc-900 dark:bg-zinc-900 dark:border-zinc-100"
-              }`}
-            >
-              <span className="font-mono text-3xl font-black">{target}</span>
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Array Visualization */}
-      <div className="relative flex flex-col items-center py-6">
+      <div className="h-[2px] bg-border/20">
+        <motion.div
+          className="h-full bg-primary/60"
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 0.3, ease: "easeOut" }}
+        />
+      </div>
+
+      <div className="px-5 py-6">
+        <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-muted-foreground/40 mb-4">
+          Array
+        </p>
         <div className="flex flex-wrap justify-center gap-2.5">
           {nums.map((num, idx) => {
             const isI = idx === iIdx;
@@ -111,25 +120,6 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
 
             return (
               <div key={idx} className="relative flex flex-col items-center">
-                <motion.div
-                  layout
-                  className={`flex h-16 w-16 items-center justify-center border-2 font-mono text-xl font-black transition-all duration-300 ${
-                    isSolved
-                      ? "border-emerald-500 bg-emerald-500 text-white z-10 shadow-[8px_8px_0_0_rgba(16,185,129,0.15)]"
-                      : isI
-                        ? "border-blue-600 bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 scale-110 z-10 shadow-lg"
-                        : isJ
-                          ? "border-orange-500 bg-orange-50 text-orange-500 dark:bg-orange-900/20 dark:text-orange-400 scale-110 z-10 shadow-lg"
-                          : "border-zinc-100 bg-white text-zinc-200 dark:border-zinc-800 dark:bg-zinc-950"
-                  }`}
-                >
-                  {num}
-                </motion.div>
-
-                <div className="mt-2 font-mono text-[9px] font-bold text-zinc-300">
-                  #{idx}
-                </div>
-
                 <AnimatePresence>
                   {isI && (
                     <motion.div
@@ -137,13 +127,19 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 15 }}
-                      className="absolute -top-10 flex flex-col items-center"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="absolute -top-9 flex flex-col items-center"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
                     >
-                      <div className="bg-blue-600 px-2 py-0.5 shadow-sm">
-                        <span className="font-mono text-[10px] font-black text-white">I</span>
+                      <div className="bg-blue-500 px-1.5 py-0.5">
+                        <span className="font-mono text-[9px] font-black text-white">
+                          i
+                        </span>
                       </div>
-                      <div className="h-2 w-[2px] bg-blue-600" />
+                      <div className="h-1.5 w-[2px] bg-blue-500" />
                     </motion.div>
                   )}
                   {isJ && (
@@ -152,28 +148,51 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
                       initial={{ opacity: 0, y: 15 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 15 }}
-                      className="absolute -top-10 flex flex-col items-center"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                      className="absolute -top-9 flex flex-col items-center"
+                      transition={{
+                        type: "spring",
+                        stiffness: 400,
+                        damping: 30,
+                      }}
                     >
-                      <div className="bg-orange-500 px-2 py-0.5 shadow-sm">
-                        <span className="font-mono text-[10px] font-black text-white">J</span>
+                      <div className="bg-orange-500 px-1.5 py-0.5">
+                        <span className="font-mono text-[9px] font-black text-white">
+                          j
+                        </span>
                       </div>
-                      <div className="h-2 w-[2px] bg-orange-500" />
+                      <div className="h-1.5 w-[2px] bg-orange-500" />
                     </motion.div>
                   )}
                 </AnimatePresence>
+
+                <motion.div
+                  layout
+                  className={`flex h-14 w-14 items-center justify-center border font-mono text-lg font-black transition-all duration-300 ${
+                    isSolved
+                      ? "border-green-500 bg-green-500 text-white z-10 shadow-lg"
+                      : isI
+                        ? "border-blue-500 bg-blue-500/10 text-blue-500 scale-110 z-10"
+                        : isJ
+                          ? "border-orange-500 bg-orange-500/10 text-orange-500 scale-110 z-10"
+                          : "border-border/40 bg-muted/20 text-muted-foreground/30"
+                  }`}
+                >
+                  {num}
+                </motion.div>
+                <div className="mt-1.5 font-mono text-[8px] font-bold text-muted-foreground/25">
+                  #{idx}
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Logic Stage */}
       <div
-        className={`relative overflow-hidden border-2 p-10 transition-all duration-700 ${
+        className={`mx-5 border p-6 transition-all duration-500 ${
           isFound
-            ? "bg-emerald-50 border-emerald-500/40 dark:bg-emerald-950/20"
-            : "bg-zinc-50 border-zinc-100 dark:bg-zinc-900/40 dark:border-zinc-900"
+            ? "bg-green-500/5 border-green-500/30"
+            : "bg-muted/10 border-border/30"
         }`}
       >
         <AnimatePresence mode="wait">
@@ -183,33 +202,43 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
               initial={{ opacity: 0, scale: 0.98 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 1.02 }}
-              className="flex flex-col items-center gap-8"
+              className="flex flex-col items-center gap-6"
             >
-              <div className="flex items-center gap-3">
-                <div className="h-[1px] w-8 bg-zinc-200 dark:bg-zinc-800" />
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400">
-                  Lógica de Busca
+              <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-muted-foreground/40">
+                Lógica de Busca
+              </p>
+              <div className="flex items-center gap-8">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="font-mono text-[9px] text-muted-foreground/50">
+                    Target
+                  </span>
+                  <span className="font-mono text-3xl font-black text-foreground">
+                    {target}
+                  </span>
+                </div>
+                <span className="text-2xl font-light text-muted-foreground/20">
+                  −
                 </span>
-                <div className="h-[1px] w-8 bg-zinc-200 dark:bg-zinc-800" />
-              </div>
-              <div className="flex items-center gap-12">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold text-zinc-400">Target</span>
-                  <span className="font-mono text-4xl font-black">{target}</span>
+                  <span className="font-mono text-[9px] text-blue-500/60">
+                    Atual
+                  </span>
+                  <span className="font-mono text-3xl font-black text-blue-500">
+                    {val}
+                  </span>
                 </div>
-                <span className="text-3xl font-light text-zinc-200">−</span>
+                <span className="text-2xl font-light text-muted-foreground/20">
+                  =
+                </span>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold text-blue-600/60">Atual</span>
-                  <span className="font-mono text-4xl font-black text-blue-600">{val}</span>
-                </div>
-                <span className="text-3xl font-light text-zinc-200">=</span>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold text-orange-500/60">Complemento</span>
+                  <span className="font-mono text-[9px] text-orange-500/60">
+                    Complemento
+                  </span>
                   <motion.span
                     key={complement}
                     initial={{ y: 10, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
-                    className={`font-mono text-6xl font-black ${isFound ? "text-emerald-500" : "text-orange-500"}`}
+                    className={`font-mono text-4xl font-black ${isFound ? "text-green-500" : "text-orange-500"}`}
                   >
                     {complement}
                   </motion.span>
@@ -222,31 +251,41 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="flex flex-col items-center gap-8"
+              className="flex flex-col items-center gap-6"
             >
-              <div className="flex items-center gap-3">
-                <div className="h-[1px] w-8 bg-zinc-200 dark:bg-zinc-800" />
-                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-zinc-400">
-                  Verificação de Soma
+              <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-muted-foreground/40">
+                Verificação de Soma
+              </p>
+              <div className="flex items-center gap-8">
+                <div className="flex flex-col items-center gap-1">
+                  <span className="font-mono text-[9px] text-blue-500/60">
+                    nums[i]
+                  </span>
+                  <span className="font-mono text-3xl font-black text-blue-500">
+                    {nums[iIdx!]}
+                  </span>
+                </div>
+                <span className="text-2xl font-light text-muted-foreground/20">
+                  +
                 </span>
-                <div className="h-[1px] w-8 bg-zinc-200 dark:bg-zinc-800" />
-              </div>
-              <div className="flex items-center gap-12">
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold text-blue-600/60">num[i]</span>
-                  <span className="font-mono text-4xl font-black text-blue-600">{nums[iIdx!]}</span>
+                  <span className="font-mono text-[9px] text-orange-500/60">
+                    nums[j]
+                  </span>
+                  <span className="font-mono text-3xl font-black text-orange-500">
+                    {nums[jIdx!]}
+                  </span>
                 </div>
-                <span className="text-3xl font-light text-zinc-200">+</span>
+                <span className="text-2xl font-light text-muted-foreground/20">
+                  =
+                </span>
                 <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold text-orange-500/60">num[j]</span>
-                  <span className="font-mono text-4xl font-black text-orange-500">{nums[jIdx!]}</span>
-                </div>
-                <span className="text-3xl font-light text-zinc-200">=</span>
-                <div className="flex flex-col items-center gap-1">
-                  <span className="text-[10px] font-bold text-zinc-400">Total</span>
+                  <span className="font-mono text-[9px] text-muted-foreground/50">
+                    Total
+                  </span>
                   <motion.span
                     key={currentSum}
-                    className={`font-mono text-6xl font-black ${isFound ? "text-emerald-500" : "text-zinc-900 dark:text-white"}`}
+                    className={`font-mono text-4xl font-black ${isFound ? "text-green-500" : "text-foreground"}`}
                   >
                     {currentSum}
                   </motion.span>
@@ -257,62 +296,67 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
         </AnimatePresence>
       </div>
 
-      {/* Memory Area */}
       {(mapEntries.length > 0 || complement !== undefined) && (
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between border-b border-zinc-100 pb-3 dark:border-zinc-900">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">
-              Memória (Hash Map)
-            </h4>
-            <div className="flex items-center gap-2">
-              <div className="h-1.5 w-1.5 rounded-full bg-zinc-200" />
-              <span className="font-mono text-[9px] font-bold text-zinc-300 uppercase">
-                {mapEntries.length} entradas ativas
+        <div className="border-t border-border/30 bg-muted/10">
+          <div className="px-5 py-4">
+            <div className="flex items-center justify-between mb-3">
+              <p className="font-mono text-[8px] uppercase tracking-[0.3em] text-muted-foreground/40">
+                Hash Map
+              </p>
+              <span className="font-mono text-[9px] text-muted-foreground/30">
+                {mapEntries.length}{" "}
+                {mapEntries.length === 1 ? "entrada" : "entradas"}
               </span>
             </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3 min-h-[60px]">
-            <AnimatePresence mode="popLayout">
-              {mapEntries.map((entry) => {
-                const isTargeted = String(entry.key) === String(complement) && isFound;
-                return (
-                  <motion.div
-                    key={entry.key}
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className={`flex items-center border-2 px-4 py-3 transition-all duration-300 ${
-                      isTargeted
-                        ? "border-emerald-500 bg-emerald-500 text-white z-10 shadow-xl scale-110"
-                        : "border-zinc-100 bg-zinc-50 dark:border-zinc-900 dark:bg-zinc-900/30"
-                    }`}
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-[8px] font-black uppercase opacity-40 mb-0.5">Key</span>
-                      <span className="font-mono text-base font-black">{entry.key}</span>
-                    </div>
-                    <div className="mx-4 h-6 w-[1px] bg-zinc-200 dark:bg-zinc-800" />
-                    <div className="flex flex-col">
-                      <span className="text-[8px] font-black uppercase opacity-40 mb-0.5">Value</span>
-                      <span className="font-mono text-base font-bold text-zinc-400">{entry.value}</span>
-                    </div>
-                  </motion.div>
-                );
-              })}
-              {mapEntries.length === 0 && (
-                <div className="flex w-full items-center justify-center border-2 border-dashed border-zinc-100 py-10 dark:border-zinc-900">
-                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-200">
-                    Memória Vazia
+            <div className="flex flex-wrap gap-2 min-h-[44px] items-center">
+              <AnimatePresence mode="popLayout">
+                {mapEntries.map((entry) => {
+                  const isTargeted =
+                    String(entry.key) === String(complement) && isFound;
+                  return (
+                    <motion.div
+                      key={entry.key}
+                      layout
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      className={`inline-flex items-center gap-0 border overflow-hidden transition-all duration-300 ${
+                        isTargeted
+                          ? "border-green-500 bg-green-500 text-white scale-110 z-10 shadow-lg"
+                          : "border-primary/20"
+                      }`}
+                    >
+                      <span
+                        className={`px-3 py-1.5 font-mono text-xs font-semibold ${
+                          isTargeted
+                            ? "bg-green-600 text-white"
+                            : "bg-primary/10 text-primary"
+                        }`}
+                      >
+                        {entry.key}
+                      </span>
+                      <span
+                        className={`px-3 py-1.5 font-mono text-xs ${
+                          isTargeted
+                            ? "text-green-100"
+                            : "text-muted-foreground"
+                        }`}
+                      >
+                        →{entry.value}
+                      </span>
+                    </motion.div>
+                  );
+                })}
+                {mapEntries.length === 0 && (
+                  <span className="font-mono text-[10px] text-muted-foreground/30 italic">
+                    vazio
                   </span>
-                </div>
-              )}
-            </AnimatePresence>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       )}
 
-      {/* System Status */}
       <AnimatePresence mode="wait">
         {snapshot.caption && (
           <motion.div
@@ -320,24 +364,54 @@ export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className={`p-8 border-l-8 transition-all duration-500 ${
+            className={`px-5 py-4 border-t transition-all duration-500 ${
               isFound
-                ? "bg-emerald-500 border-emerald-600 text-white shadow-lg"
-                : "bg-zinc-900 border-zinc-700 text-white"
+                ? "bg-green-500 border-green-600 text-white"
+                : "bg-muted/20 border-border/30"
             }`}
           >
-            <div className="flex flex-col gap-1">
-              <span className={`text-[9px] font-black uppercase tracking-[0.4em] ${isFound ? 'text-emerald-200' : 'text-zinc-500'}`}>
-                Status do Sistema
-              </span>
-              <p className="text-xl font-black uppercase tracking-tight leading-tight">
-                {snapshot.caption}
-              </p>
-            </div>
+            <p
+              className={`font-mono text-[8px] uppercase tracking-[0.3em] mb-1 ${
+                isFound ? "text-green-200" : "text-muted-foreground/40"
+              }`}
+            >
+              Status
+            </p>
+            <p
+              className={`text-sm font-bold leading-tight ${
+                isFound ? "text-white" : "text-foreground/80"
+              }`}
+            >
+              {snapshot.caption}
+            </p>
           </motion.div>
         )}
       </AnimatePresence>
+
+      <div className="flex items-center justify-between px-5 py-2.5 border-t border-border/20 bg-muted/5">
+        <span className="font-mono text-[9px] text-muted-foreground/40">
+          Passo {currentStepIndex + 1}/{steps.length}
+        </span>
+        <div className="flex gap-1">
+          {steps.slice(0, 20).map((_, i) => (
+            <div
+              key={i}
+              className={`h-1 w-1 rounded-full transition-colors duration-300 ${
+                i === currentStepIndex
+                  ? "bg-primary"
+                  : i < currentStepIndex
+                    ? "bg-primary/30"
+                    : "bg-border/40"
+              }`}
+            />
+          ))}
+          {steps.length > 20 && (
+            <span className="font-mono text-[7px] text-muted-foreground/30 ml-1">
+              +{steps.length - 20}
+            </span>
+          )}
+        </div>
+      </div>
     </section>
   );
 }
-

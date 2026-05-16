@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Play, RotateCcw } from "lucide-react";
 import { useState } from "react";
@@ -12,42 +11,47 @@ interface Props {
   problemSlug: string;
 }
 
-export function DynamicInputForm({
-  onRun,
-  onReset,
-  problemSlug,
-}: Props) {
-  // Configurações por slug
-  const configs: Record<string, {
-    labels: string[];
-    placeholders: string[];
-    defaults: string[];
-    types: ("text" | "number")[];
-    parser: (vals: string[]) => unknown[];
-  }> = {
+export function DynamicInputForm({ onRun, onReset, problemSlug }: Props) {
+  const configs: Record<
+    string,
+    {
+      labels: string[];
+      placeholders: string[];
+      defaults: string[];
+      types: ("text" | "number")[];
+      parser: (vals: string[]) => unknown[];
+    }
+  > = {
     "two-sum": {
       labels: ["Dados de Entrada (Números)", "Alvo (Target)"],
       placeholders: ["Ex: 2, 7, 11, 15", "9"],
       defaults: ["2, 7, 11, 15", "9"],
       types: ["text", "number"],
       parser: (vals) => [
-        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number),
-        Number(vals[1])
-      ]
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+        Number(vals[1]),
+      ],
     },
     "minimum-window-substring": {
-      labels: ["String S (Texto Principal)", "String T (Caracteres Necessários)"],
+      labels: [
+        "String S (Texto Principal)",
+        "String T (Caracteres Necessários)",
+      ],
       placeholders: ["Ex: ADOBECODEBANC", "ABC"],
       defaults: ["ADOBECODEBANC", "ABC"],
       types: ["text", "text"],
-      parser: (vals) => [vals[0].trim(), vals[1].trim()]
+      parser: (vals) => [vals[0].trim(), vals[1].trim()],
     },
     "longest-substring-without-repeating": {
       labels: ["String de Entrada (S)"],
       placeholders: ["Ex: abcabcbb"],
       defaults: ["abcabcbb"],
       types: ["text"],
-      parser: (vals) => [vals[0].trim()]
+      parser: (vals) => [vals[0].trim()],
     },
     "subarray-sum-equals-k": {
       labels: ["Números (nums)", "Alvo (k)"],
@@ -55,9 +59,13 @@ export function DynamicInputForm({
       defaults: ["1, 1, 1", "2"],
       types: ["text", "number"],
       parser: (vals) => [
-        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number),
-        Number(vals[1])
-      ]
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+        Number(vals[1]),
+      ],
     },
     "trapping-rain-water": {
       labels: ["Alturas (height)"],
@@ -65,8 +73,12 @@ export function DynamicInputForm({
       defaults: ["0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1"],
       types: ["text"],
       parser: (vals) => [
-        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number)
-      ]
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+      ],
     },
     "group-anagrams": {
       labels: ["Lista de Palavras (strs)"],
@@ -74,8 +86,11 @@ export function DynamicInputForm({
       defaults: ["eat, tea, tan, ate, nat, bat"],
       types: ["text"],
       parser: (vals) => [
-        vals[0].split(",").map(s => s.trim()).filter(Boolean)
-      ]
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+      ],
     },
     "daily-temperatures": {
       labels: ["Temperaturas (Celsius)"],
@@ -83,8 +98,12 @@ export function DynamicInputForm({
       defaults: ["73, 74, 75, 71, 69, 72, 76, 73"],
       types: ["text"],
       parser: (vals) => [
-        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number)
-      ]
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+      ],
     },
     "3sum": {
       labels: ["Números (nums)"],
@@ -92,9 +111,13 @@ export function DynamicInputForm({
       defaults: ["-1, 0, 1, 2, -1, -4"],
       types: ["text"],
       parser: (vals) => [
-        vals[0].split(",").map(s => s.trim()).filter(Boolean).map(Number)
-      ]
-    }
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+      ],
+    },
   };
 
   const config = configs[problemSlug] || configs["two-sum"];
@@ -112,12 +135,23 @@ export function DynamicInputForm({
   };
 
   return (
-    <Card className="border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 shadow-none rounded-none mb-4 overflow-hidden">
-      <CardContent className="p-4">
+    <div className="border border-border/50 bg-background/80 backdrop-blur-md overflow-hidden mb-4">
+      <div className="flex items-center justify-between px-4 py-2.5 border-b border-border/30 bg-muted/20">
+        <div className="flex items-center gap-3">
+          <span className="font-mono text-[9px] uppercase tracking-[0.3em] text-muted-foreground/60">
+            Configuração de Teste
+          </span>
+        </div>
+      </div>
+
+      <div className="p-4">
         <div className="flex flex-col md:flex-row gap-4 items-end">
           {config.labels.map((label, i) => (
-            <div key={i} className={`space-y-1.5 ${i === 0 ? 'flex-1' : 'w-full md:w-48'}`}>
-              <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400">
+            <div
+              key={i}
+              className={`space-y-2 ${i === 0 ? "flex-1" : "w-full md:w-48"}`}
+            >
+              <label className="font-mono text-[8px] font-bold uppercase tracking-[0.3em] text-muted-foreground/40">
                 {label}
               </label>
               <Input
@@ -125,17 +159,17 @@ export function DynamicInputForm({
                 onChange={(e) => updateInput(i, e.target.value)}
                 placeholder={config.placeholders[i]}
                 type={config.types[i]}
-                className="bg-zinc-50 dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-none h-12 text-base font-mono focus-visible:ring-zinc-900"
+                className="bg-muted/20 border-border/40 rounded-none h-11 text-base font-mono focus-visible:ring-primary/50 focus-visible:border-primary/50"
               />
             </div>
           ))}
-          
+
           <div className="flex gap-2 w-full md:w-auto">
             <Button
               onClick={handleRun}
-              className="flex-1 md:flex-none bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-100 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 rounded-none px-8 h-12 font-black text-xs uppercase tracking-[0.2em] gap-3 transition-all active:translate-y-[1px]"
+              className="flex-1 md:flex-none bg-primary hover:bg-primary/90 text-primary-foreground rounded-none px-8 h-11 font-mono text-[10px] font-bold uppercase tracking-[0.2em] gap-2 transition-all active:translate-y-[1px]"
             >
-              <Play className="h-4 w-4 fill-current" />
+              <Play className="h-3.5 w-3.5 fill-current" />
               Executar
             </Button>
             <Button
@@ -144,17 +178,17 @@ export function DynamicInputForm({
                 setInputs(config.defaults);
                 onReset();
               }}
-              className="rounded-none h-12 px-4 border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-900"
+              className="rounded-none h-11 px-3 border-border/40 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"
               title="Resetar para o padrão"
             >
-              <RotateCcw className="h-4 w-4 text-zinc-500" />
+              <RotateCcw className="h-4 w-4" />
             </Button>
           </div>
         </div>
-        <p className="mt-2 text-[9px] text-zinc-400 font-bold uppercase tracking-tighter">
-          INFO: Configura o cenário de teste acima e dispara o motor de execução.
+        <p className="mt-3 font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground/30">
+          Configura o cenário de teste acima e dispara o motor de execução.
         </p>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

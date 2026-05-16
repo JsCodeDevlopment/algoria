@@ -1,18 +1,24 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { ChevronLeft, ChevronRight, Pause, Play, FastForward } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  FastForward,
+  Pause,
+  Play,
+} from "lucide-react";
+import { useEffect } from "react";
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
-import { usePlayerStore } from './use-player-store';
+import { usePlayerStore } from "./use-player-store";
 
 const SPEED_OPTIONS = [
-  { label: '0.5×', ms: 5000 },
-  { label: '1×', ms: 2500 },
-  { label: '2×', ms: 1200 },
-  { label: '4×', ms: 600 },
+  { label: "0.5×", ms: 5000 },
+  { label: "1×", ms: 2500 },
+  { label: "2×", ms: 1200 },
+  { label: "4×", ms: 600 },
 ];
 
 export function PlayerControls() {
@@ -28,14 +34,13 @@ export function PlayerControls() {
   const currentStepIndex = usePlayerStore((s) => s.currentStepIndex);
 
   const isTraceMode = traceSteps.length > 0 && currentStepIndex !== -1;
-  const idx = isTraceMode ? currentStepIndex : annotatedLines.indexOf(currentLine);
+  const idx = isTraceMode
+    ? currentStepIndex
+    : annotatedLines.indexOf(currentLine);
   const total = isTraceMode ? traceSteps.length : annotatedLines.length;
-  
+
   const progressPct = total > 0 ? ((idx + 1) / total) * 100 : 0;
 
-  // Autoplay loop. We re-evaluate `speedMs` and `isPlaying` whenever they
-  // change so the user can change speed mid-play and see it apply on the
-  // next tick (no double timers, no leak).
   useEffect(() => {
     if (!isPlaying) return;
     const t = setTimeout(() => next(), speedMs);
@@ -43,71 +48,83 @@ export function PlayerControls() {
   }, [isPlaying, speedMs, currentLine, currentStepIndex, next]);
 
   return (
-    <div className="border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-3 flex items-center gap-3">
-      <Button
-        variant="ghost"
-        size="icon"
-        className="rounded-none"
-        onClick={prev}
-        disabled={idx <= 0}
-        aria-label="Linha anterior (←)"
-        title="Linha anterior (←)"
-      >
-        <ChevronLeft className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="default"
-        size="icon"
-        className="rounded-none"
-        onClick={togglePlaying}
-        disabled={idx >= total - 1 && !isPlaying}
-        aria-label={isPlaying ? 'Pausar (espaço)' : 'Reproduzir (espaço)'}
-        title={isPlaying ? 'Pausar (espaço)' : 'Reproduzir (espaço)'}
-      >
-        {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-      </Button>
-      <Button
-        variant="ghost"
-        size="icon"
-        className="rounded-none"
-        onClick={next}
-        disabled={idx >= total - 1}
-        aria-label="Próxima linha (→)"
-        title="Próxima linha (→)"
-      >
-        <ChevronRight className="h-4 w-4" />
-      </Button>
-
-      <div className="flex-1 min-w-[6rem]">
-        <div className="h-1 bg-zinc-100 dark:bg-zinc-800 overflow-hidden">
-          <div
-            className="h-full bg-zinc-900 dark:bg-zinc-100 transition-[width]"
-            style={{ width: `${progressPct}%` }}
-            aria-hidden
-          />
-        </div>
-        <div className="text-xs font-black text-zinc-500 mt-1 tabular-nums uppercase tracking-tighter">
-          Step {String(idx + 1).padStart(3, '0')} / {String(total).padStart(3, '0')}
-        </div>
+    <div className="border border-border/50 bg-background/80 backdrop-blur-md overflow-hidden">
+      <div className="h-[2px] bg-border/20">
+        <div
+          className="h-full bg-primary/60 transition-[width] duration-300"
+          style={{ width: `${progressPct}%` }}
+          aria-hidden
+        />
       </div>
 
-      <div className="hidden sm:flex items-center gap-1">
-        <FastForward className="h-4 w-4 text-zinc-400" aria-hidden />
-        {SPEED_OPTIONS.map((opt) => (
-          <button
-            key={opt.ms}
-            onClick={() => setSpeed(opt.ms)}
-            className={cn(
-              'text-[11px] font-black px-2 py-1 transition-colors uppercase tracking-widest',
-              speedMs === opt.ms
-                ? 'bg-zinc-900 text-zinc-50 dark:bg-zinc-100 dark:text-zinc-900'
-                : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100',
-            )}
-            aria-label={`Velocidade ${opt.label}`}
-          >
-            {opt.label}
-          </button>
-        ))}
+      <div className="flex items-center gap-3 px-4 py-2.5">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-none h-8 w-8 hover:bg-primary/10"
+          onClick={prev}
+          disabled={idx <= 0}
+          aria-label="Linha anterior (←)"
+          title="Linha anterior (←)"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </Button>
+        <Button
+          size="icon"
+          className="rounded-none h-8 w-8 bg-primary hover:bg-primary/90 text-primary-foreground"
+          onClick={togglePlaying}
+          disabled={idx >= total - 1 && !isPlaying}
+          aria-label={isPlaying ? "Pausar (espaço)" : "Reproduzir (espaço)"}
+          title={isPlaying ? "Pausar (espaço)" : "Reproduzir (espaço)"}
+        >
+          {isPlaying ? (
+            <Pause className="h-3.5 w-3.5" />
+          ) : (
+            <Play className="h-3.5 w-3.5" />
+          )}
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="rounded-none h-8 w-8 hover:bg-primary/10"
+          onClick={next}
+          disabled={idx >= total - 1}
+          aria-label="Próxima linha (→)"
+          title="Próxima linha (→)"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </Button>
+
+        <div className="flex-1 min-w-[4rem] flex items-center gap-3">
+          <div className="bg-primary px-2 py-0.5">
+            <span className="font-mono text-[10px] font-black text-primary-foreground tabular-nums">
+              STEP {String(idx + 1).padStart(3, "0")} /{" "}
+              {String(total).padStart(3, "0")}
+            </span>
+          </div>
+        </div>
+
+        <div className="hidden sm:flex items-center gap-1">
+          <FastForward
+            className="h-3.5 w-3.5 text-muted-foreground/30 mr-1"
+            aria-hidden
+          />
+          {SPEED_OPTIONS.map((opt) => (
+            <button
+              key={opt.ms}
+              onClick={() => setSpeed(opt.ms)}
+              className={cn(
+                "font-mono text-[9px] font-bold px-2 py-1 transition-colors duration-200 uppercase tracking-wider",
+                speedMs === opt.ms
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground/40 hover:text-foreground hover:bg-muted/30",
+              )}
+              aria-label={`Velocidade ${opt.label}`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
