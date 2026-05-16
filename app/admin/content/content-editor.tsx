@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { createContent, updateContent } from "@/lib/actions/admin";
 import { SaveActions } from "./_components/form-elements";
 import { ConceptForm } from "./_components/forms/concept-form";
@@ -11,6 +12,7 @@ import { GenericForm } from "./_components/forms/generic-form";
 import { InterviewEnForm } from "./_components/forms/interview-en-form";
 import { ProblemForm } from "./_components/forms/problem-form";
 import { TechnicalTestForm } from "./_components/forms/technical-test-form";
+import { RawMetadataEditor } from "./_components/raw-metadata-editor";
 import {
   ContentEditorProps,
   DEFAULT_META,
@@ -125,13 +127,40 @@ export function ContentEditor({ mode, initialData }: ContentEditorProps) {
         </div>
       )}
 
-      {renderForm()}
+      <Tabs defaultValue="content" className="w-full">
+        <TabsList className="mb-6 h-12 w-full justify-start rounded-none border-b border-border bg-transparent p-0">
+          <TabsTrigger
+            value="content"
+            className="h-12 rounded-none border-b-2 border-transparent px-8 font-black uppercase tracking-widest data-[state=active]:border-primary data-[state=active]:bg-primary/5"
+          >
+            Conteúdo
+          </TabsTrigger>
+          <TabsTrigger
+            value="metadata"
+            className="h-12 rounded-none border-b-2 border-transparent px-8 font-black uppercase tracking-widest data-[state=active]:border-primary data-[state=active]:bg-primary/5"
+          >
+            Metadados
+          </TabsTrigger>
+        </TabsList>
 
-      <SaveActions
-        isPending={isPending}
-        onSave={handleSave}
-        onCancel={() => router.push("/admin/content")}
-      />
+        <TabsContent value="content" className="mt-0">
+          {renderForm()}
+        </TabsContent>
+
+        <TabsContent value="metadata" className="mt-0">
+          <div className="rounded-none border border-border bg-secondary/10 p-8">
+            <RawMetadataEditor meta={meta} setMeta={setMeta} />
+          </div>
+        </TabsContent>
+      </Tabs>
+
+      <div className="pt-6 border-t border-border/40">
+        <SaveActions
+          isPending={isPending}
+          onSave={handleSave}
+          onCancel={() => router.push("/admin/content")}
+        />
+      </div>
     </div>
   );
 }

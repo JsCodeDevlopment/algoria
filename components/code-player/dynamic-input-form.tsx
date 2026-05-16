@@ -2,6 +2,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Example } from "@/lib/content/schemas";
 import { Play, RotateCcw } from "lucide-react";
 import { useState } from "react";
 
@@ -9,9 +10,15 @@ interface Props {
   onRun: (...args: unknown[]) => void;
   onReset: () => void;
   problemSlug: string;
+  examples?: Example[];
 }
 
-export function DynamicInputForm({ onRun, onReset, problemSlug }: Props) {
+export function DynamicInputForm({
+  onRun,
+  onReset,
+  problemSlug,
+  examples,
+}: Props) {
   const configs: Record<
     string,
     {
@@ -121,7 +128,39 @@ export function DynamicInputForm({ onRun, onReset, problemSlug }: Props) {
   };
 
   const config = configs[problemSlug] || configs["two-sum"];
-  const [inputs, setInputs] = useState<string[]>(config.defaults);
+
+  const getDynamicDefaults = () => {
+    if (!examples || examples.length === 0) return config.defaults;
+
+    const firstInput = examples[0].input;
+
+    if (problemSlug === "two-sum") {
+      const numsMatch = firstInput.match(/nums\s*=\s*\[(.*?)\]/);
+      const targetMatch = firstInput.match(/target\s*=\s*(-?\d+)/);
+      if (numsMatch && targetMatch) {
+        return [numsMatch[1], targetMatch[1]];
+      }
+    }
+
+    if (problemSlug === "subarray-sum-equals-k") {
+      const numsMatch = firstInput.match(/nums\s*=\s*\[(.*?)\]/);
+      const kMatch = firstInput.match(/k\s*=\s*(-?\d+)/);
+      if (numsMatch && kMatch) {
+        return [numsMatch[1], kMatch[1]];
+      }
+    }
+
+    return config.defaults;
+  };
+
+  const [inputs, setInputs] = useState<string[]>(getDynamicDefaults());
+
+  const [prevExamples, setPrevExamples] = useState(examples);
+
+  if (examples !== prevExamples) {
+    setPrevExamples(examples);
+    setInputs(getDynamicDefaults());
+  }
 
   const handleRun = () => {
     const parsed = config.parser(inputs);
@@ -175,7 +214,8 @@ export function DynamicInputForm({ onRun, onReset, problemSlug }: Props) {
             <Button
               variant="outline"
               onClick={() => {
-                setInputs(config.defaults);
+                const defaults = getDynamicDefaults();
+                setInputs(defaults);
                 onReset();
               }}
               className="rounded-none h-11 px-3 border-border/40 hover:bg-primary hover:text-primary-foreground hover:border-primary transition-colors"

@@ -1,37 +1,43 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { headers } from 'next/headers';
-import { notFound } from 'next/navigation';
-import { Suspense } from 'react';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from "lucide-react";
+import type { Metadata } from "next";
+import { headers } from "next/headers";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
-import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Separator } from '@/components/ui/separator';
-import { DynamicPlayerWrapper } from '@/components/code-player/dynamic-player-wrapper';
-import { ComplexityBadge } from '@/components/complexity/complexity-badge';
-import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
-import { JsonLdScript } from '@/components/seo/json-ld';
-import { SolutionLanguageSelect } from '@/components/solution/solution-language-select';
-import { SolutionVisitTracker } from '@/components/solution/solution-visit-tracker';
-import { auth } from '@/lib/auth';
-import { userHasPro } from '@/lib/billing/entitlements';
-import { getProblemAccess, isProblemUnlockedForUser } from '@/lib/billing/tiering';
-import { getAllProblems, getConcept, getProblem } from '@/lib/content/loader';
+import { UpgradePrompt } from "@/components/billing/upgrade-prompt";
+import { DifficultyBadge } from "@/components/catalog/difficulty-badge";
+import { DynamicPlayerWrapper } from "@/components/code-player/dynamic-player-wrapper";
+import { ComplexityBadge } from "@/components/complexity/complexity-badge";
+import { JsonLdScript } from "@/components/seo/json-ld";
+import { SolutionLanguageSelect } from "@/components/solution/solution-language-select";
+import { SolutionVisitTracker } from "@/components/solution/solution-visit-tracker";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { auth } from "@/lib/auth";
+import { userHasPro } from "@/lib/billing/entitlements";
+import {
+  getProblemAccess,
+  isProblemUnlockedForUser,
+} from "@/lib/billing/tiering";
 import {
   LANGUAGE_LABEL_PT,
   LANGUAGE_ORDER_FOR_UI,
   LANGUAGE_READ_ONLY_PANEL_MD,
   isLineSyncLanguage,
   normalizeLanguage,
-} from '@/lib/content/language';
-import { highlightToLines } from '@/lib/content/shiki';
-import type { Language } from '@/lib/content/schemas';
-import { buildPublicMetadata, truncateMetaDescription } from '@/lib/seo/build-metadata';
-import { learningResourceJsonLd } from '@/lib/seo/structured-data';
-import { stripHtmlLoose } from '@/lib/seo/strip-html';
+} from "@/lib/content/language";
+import { getAllProblems, getConcept, getProblem } from "@/lib/content/loader";
+import type { Language } from "@/lib/content/schemas";
+import { highlightToLines } from "@/lib/content/shiki";
+import {
+  buildPublicMetadata,
+  truncateMetaDescription,
+} from "@/lib/seo/build-metadata";
+import { stripHtmlLoose } from "@/lib/seo/strip-html";
+import { learningResourceJsonLd } from "@/lib/seo/structured-data";
 
 interface Params {
   slug: string;
@@ -45,7 +51,11 @@ export async function generateStaticParams(): Promise<Params[]> {
   );
 }
 
-export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
   const { slug, solution } = await params;
   const problem = await getProblem(slug);
   const sol = problem?.solutions.find((s) => s.meta.slug === solution);
@@ -54,10 +64,14 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   const pitch =
     intro.length > 0
       ? intro
-      : `Solução ${sol.meta.kind === 'brute-force' ? 'brute-force' : sol.meta.kind === 'optimal' ? 'ótima' : 'alternativa'} de «${problem.meta.title}»: ${sol.meta.complexity.time} tempo, ${sol.meta.complexity.space} espaço — código com explicação linha-a-linha.`;
+      : `Solução ${sol.meta.kind === "brute-force" ? "brute-force" : sol.meta.kind === "optimal" ? "ótima" : "alternativa"} de «${problem.meta.title}»: ${sol.meta.complexity.time} tempo, ${sol.meta.complexity.space} espaço — código com explicação linha-a-linha.`;
   const description = truncateMetaDescription(pitch);
   const kindPt =
-    sol.meta.kind === 'brute-force' ? 'brute-force' : sol.meta.kind === 'optimal' ? 'solução ótima' : 'alternativa';
+    sol.meta.kind === "brute-force"
+      ? "brute-force"
+      : sol.meta.kind === "optimal"
+        ? "solução ótima"
+        : "alternativa";
   return buildPublicMetadata({
     title: `${problem.meta.title} · ${sol.meta.name}`,
     description,
@@ -66,12 +80,12 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       problem.meta.title,
       sol.meta.name,
       kindPt,
-      ...problem.meta.categories.map((c) => c.replace(/-/g, ' ')),
+      ...problem.meta.categories.map((c) => c.replace(/-/g, " ")),
       ...problem.meta.tags,
-      'complexidade algorítmica',
-      'code walkthrough',
+      "complexidade algorítmica",
+      "code walkthrough",
     ],
-    openGraphType: 'article',
+    openGraphType: "article",
   });
 }
 
@@ -95,14 +109,14 @@ export default async function SolutionPage({
   const access = getProblemAccess(problem.meta);
   const unlocked = isProblemUnlockedForUser(access, hasPro);
 
-  const availableLanguages = LANGUAGE_ORDER_FOR_UI.filter(
-    (l) => Boolean(solution.codeByLanguage[l]?.trim()),
+  const availableLanguages = LANGUAGE_ORDER_FOR_UI.filter((l) =>
+    Boolean(solution.codeByLanguage[l]?.trim()),
   ) as Language[];
   const canonical = solution.meta.language;
   const fallback =
     (availableLanguages.includes(canonical as Language)
       ? canonical
-      : availableLanguages[0]) ?? 'typescript';
+      : availableLanguages[0]) ?? "typescript";
 
   const requested = normalizeLanguage(qs.lang);
   const resolvedLang: Language =
@@ -115,11 +129,12 @@ export default async function SolutionPage({
 
   const lineSynced = isLineSyncLanguage(resolvedLang);
   const playerAnnotations = lineSynced ? solution.annotations : [];
-  const readOnlyExplanationMd = lineSynced ? undefined : LANGUAGE_READ_ONLY_PANEL_MD;
+  const readOnlyExplanationMd = lineSynced
+    ? undefined
+    : LANGUAGE_READ_ONLY_PANEL_MD;
 
   const lines = await highlightToLines(code, resolvedLang);
 
-  // Pre-resolve concept titles so the explanation panel can show them.
   const conceptSlugs = Array.from(
     new Set(solution.annotations.flatMap((a) => a.concepts ?? [])),
   );
@@ -129,8 +144,9 @@ export default async function SolutionPage({
     if (c) conceptTitles[cs] = c.meta.title;
   }
 
-  // Sibling solutions for the "compare" footer.
-  const otherSolutions = problem.solutions.filter((s) => s.meta.slug !== solutionSlug);
+  const otherSolutions = problem.solutions.filter(
+    (s) => s.meta.slug !== solutionSlug,
+  );
 
   const introPlain = stripHtmlLoose(solution.introHtml).trim();
   const jsonLdDescription =
@@ -140,8 +156,15 @@ export default async function SolutionPage({
   if (!unlocked) {
     return (
       <div className="mx-auto max-w-7xl px-6 py-16">
-        <Button asChild variant="outline" size="sm" className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
-          <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
+        <Button
+          asChild
+          variant="outline"
+          size="sm"
+          className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
+        >
+          <Link href={`/problems/${problem.meta.slug}`}>
+            <ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}
+          </Link>
         </Button>
         <UpgradePrompt
           context="Player e soluções Pro"
@@ -161,19 +184,38 @@ export default async function SolutionPage({
           pathname: `/problems/${problem.meta.slug}/${solutionSlug}`,
         })}
       />
-      <SolutionVisitTracker problemSlug={problem.meta.slug} solutionSlug={solutionSlug} />
+      <SolutionVisitTracker
+        problemSlug={problem.meta.slug}
+        solutionSlug={solutionSlug}
+      />
 
-      <Button asChild variant="outline" size="sm" className="mb-4 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
-        <Link href={`/problems/${problem.meta.slug}`}><ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}</Link>
+      <Button
+        asChild
+        variant="outline"
+        size="sm"
+        className="mb-4 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
+      >
+        <Link href={`/problems/${problem.meta.slug}`}>
+          <ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}
+        </Link>
       </Button>
 
       <div className="flex items-baseline gap-3 flex-wrap mb-2">
-        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">{solution.meta.name}</h1>
+        <h1 className="text-2xl md:text-3xl font-semibold tracking-tight">
+          {solution.meta.name}
+        </h1>
         <DifficultyBadge difficulty={problem.meta.difficulty} />
       </div>
       <div className="flex items-center gap-2 flex-wrap mb-6">
-        <Badge variant={solution.meta.kind === 'optimal' ? 'default' : 'secondary'} className="capitalize">
-          {solution.meta.kind === 'brute-force' ? 'Brute-force' : solution.meta.kind === 'optimal' ? 'Óptima' : 'Alternativa'}
+        <Badge
+          variant={solution.meta.kind === "optimal" ? "default" : "secondary"}
+          className="capitalize"
+        >
+          {solution.meta.kind === "brute-force"
+            ? "Brute-force"
+            : solution.meta.kind === "optimal"
+              ? "Óptima"
+              : "Alternativa"}
         </Badge>
         <ComplexityBadge label={solution.meta.complexity.time} kind="time" />
         <ComplexityBadge label={solution.meta.complexity.space} kind="space" />
@@ -184,7 +226,10 @@ export default async function SolutionPage({
             </span>
           }
         >
-          <SolutionLanguageSelect available={availableLanguages} value={resolvedLang} />
+          <SolutionLanguageSelect
+            available={availableLanguages}
+            value={resolvedLang}
+          />
         </Suspense>
         <span className="text-xs text-zinc-500">
           · explicações curadas em {LANGUAGE_LABEL_PT[canonical as Language]}
@@ -210,6 +255,7 @@ export default async function SolutionPage({
         problemSlug={problem.meta.slug}
         solutionSlug={solutionSlug}
         simulatorCode={solution.meta.simulatorCode}
+        examples={problem.meta.examples}
       />
 
       <Separator className="my-10" />
@@ -222,11 +268,16 @@ export default async function SolutionPage({
           <CardContent className="space-y-4 text-sm">
             <div>
               <div className="flex items-center gap-2 mb-1.5">
-                <ComplexityBadge label={solution.meta.complexity.time} kind="time" />
+                <ComplexityBadge
+                  label={solution.meta.complexity.time}
+                  kind="time"
+                />
               </div>
               <div
                 className="prose prose-sm dark:prose-invert prose-code:text-blue-600 dark:prose-code:text-blue-400 prose-code:before:content-none prose-code:after:content-none"
-                dangerouslySetInnerHTML={{ __html: renderInline(solution.meta.complexity.rationale) }}
+                dangerouslySetInnerHTML={{
+                  __html: renderInline(solution.meta.complexity.rationale),
+                }}
               />
             </div>
           </CardContent>
@@ -235,7 +286,9 @@ export default async function SolutionPage({
         {otherSolutions.length > 0 ? (
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg">Compara com outras soluções</CardTitle>
+              <CardTitle className="text-lg">
+                Compara com outras soluções
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
               {otherSolutions.map((s) => (
@@ -247,8 +300,16 @@ export default async function SolutionPage({
                   <div>
                     <div className="font-medium">{s.meta.name}</div>
                     <div className="flex gap-1.5 mt-1">
-                      <ComplexityBadge label={s.meta.complexity.time} kind="time" className="text-[10px]" />
-                      <ComplexityBadge label={s.meta.complexity.space} kind="space" className="text-[10px]" />
+                      <ComplexityBadge
+                        label={s.meta.complexity.time}
+                        kind="time"
+                        className="text-[10px]"
+                      />
+                      <ComplexityBadge
+                        label={s.meta.complexity.space}
+                        kind="space"
+                        className="text-[10px]"
+                      />
                     </div>
                   </div>
                   <ArrowRight className="h-4 w-4 text-zinc-400" />
@@ -273,11 +334,11 @@ export default async function SolutionPage({
 function renderInline(text: string): string {
   // Tiny inline markdown: backticks for code only.
   return text
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/`([^`]+)`/g, '<code>$1</code>')
-    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/`([^`]+)`/g, "<code>$1</code>")
+    .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
 }
 
 export const dynamicParams = false;

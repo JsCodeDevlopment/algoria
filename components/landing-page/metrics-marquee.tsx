@@ -1,15 +1,20 @@
 import { getContentRepository } from "@/lib/content/content-repository";
 import { getAllProblems } from "@/lib/content/loader";
+import Link from "next/link";
 
 interface MetricProps {
   label: string;
   value: string;
   hint: string;
+  href: string;
 }
 
-function Metric({ label, value, hint }: MetricProps) {
+function Metric({ label, value, hint, href }: MetricProps) {
   return (
-    <div className="group w-[220px] shrink-0 border-r border-border bg-background px-6 py-5 text-left transition-colors duration-300 hover:bg-primary hover:border-primary">
+    <Link
+      href={href}
+      className="group w-[220px] shrink-0 border-r border-border bg-background px-6 py-5 text-left transition-colors duration-300 hover:bg-primary hover:border-primary"
+    >
       <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-muted-foreground transition-colors duration-300 group-hover:text-primary-foreground/70">
         {label}
       </p>
@@ -19,10 +24,9 @@ function Metric({ label, value, hint }: MetricProps) {
       <p className="mt-2 line-clamp-1 text-[10px] leading-snug text-muted-foreground transition-colors duration-300 group-hover:text-primary-foreground/60">
         {hint}
       </p>
-    </div>
+    </Link>
   );
 }
-
 
 export async function MetricsMarquee() {
   const [problems, counts] = await Promise.all([
@@ -42,38 +46,50 @@ export async function MetricsMarquee() {
       label: "Problemas",
       value: String(totalByType("problem")),
       hint: "Temas de entrevista",
+      href: "/problems",
     },
     {
       label: "Soluções",
       value: String(totalSolutions),
       hint: "Abordagens lado a lado",
+      href: "#featured-problems",
     },
     {
       label: "Conceitos",
       value: String(totalByType("concept")),
       hint: "Artigos e fundamentos",
+      href: "/concepts",
     },
     {
       label: "Engenharia",
       value: String(totalByType("engineering-work")),
       hint: "Guias práticos de prod",
+      href: "/engineering-work",
     },
     {
       label: "Inglês",
       value: String(totalByType("interview-en")),
       hint: "Technical interviews",
+      href: "/interview-en",
     },
     {
       label: "Simulados",
       value: String(totalByType("technical-test")),
       hint: "Testes técnicos reais",
+      href: "/tests",
     },
     {
       label: "Cursos",
       value: String(totalByType("course")),
       hint: "Trilhas guiadas",
+      href: "/course",
     },
-    { label: "Certificados", value: "8", hint: "Disponíveis no curso" },
+    {
+      label: "Certificados",
+      value: "8",
+      hint: "Disponíveis no curso",
+      href: "/course",
+    },
   ];
 
   return (
@@ -90,6 +106,7 @@ export async function MetricsMarquee() {
                 label={s.label}
                 value={s.value}
                 hint={s.hint}
+                href={s.href}
               />
             ))}
           </div>

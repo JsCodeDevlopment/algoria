@@ -1,6 +1,10 @@
 "use client";
 
-import { ExecutionTraceStep, LineAnnotation } from "@/lib/content/schemas";
+import {
+  Example,
+  ExecutionTraceStep,
+  LineAnnotation,
+} from "@/lib/content/schemas";
 import { HighlightedLine } from "@/lib/content/shiki";
 import { getSimulator } from "@/lib/simulators";
 import { useCallback, useState } from "react";
@@ -18,6 +22,7 @@ interface Props {
   solutionSlug: string;
   autoPlay?: boolean;
   simulatorCode?: string;
+  examples?: Example[];
 }
 
 export function DynamicPlayerWrapper(props: Props) {
@@ -30,18 +35,16 @@ export function DynamicPlayerWrapper(props: Props) {
 
   const handleRun = useCallback(
     (...args: unknown[]) => {
-      // 1. Prioridade para o código vindo do banco (Admin)
       if (props.simulatorCode) {
         try {
-          // Criamos uma função que aceita argumentos variáveis
           const dynamicSim = new Function(
             "...args",
             `const simulate = ${props.simulatorCode};
-             return typeof simulate === 'function' ? simulate(...args) : null;`
+             return typeof simulate === 'function' ? simulate(...args) : null;`,
           );
 
           const trace = dynamicSim(...args);
-          
+
           if (trace && Array.isArray(trace) && trace.length > 0) {
             setDynamicTrace(trace);
             setShouldAutoPlay(true);
@@ -52,7 +55,6 @@ export function DynamicPlayerWrapper(props: Props) {
         }
       }
 
-      // 2. Fallback para simuladores locais (legado)
       const simulator = getSimulator(props.problemSlug, props.solutionSlug);
       if (simulator) {
         const trace = simulator(...args);
@@ -77,6 +79,7 @@ export function DynamicPlayerWrapper(props: Props) {
           onRun={handleRun}
           onReset={handleReset}
           problemSlug={props.problemSlug}
+          examples={props.examples}
         />
       )}
 

@@ -29,7 +29,6 @@ export function Hero() {
         />
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.06] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_40%,black_20%,transparent_100%)]" />
 
-        {/* Geometric decorations */}
         <div className="absolute top-0 left-1/2 z-0 w-full max-w-[1400px] -translate-x-1/2 overflow-hidden opacity-10 md:opacity-20">
           <div className="absolute top-[-140px] left-[-40px] h-[460px] w-[460px] rotate-45 border border-primary/25" />
           <div className="absolute top-[80px] right-[-80px] h-[380px] w-[380px] -rotate-6 border border-primary/15" />
@@ -107,6 +106,17 @@ export function Hero() {
                 <Link href="/course/fundamentos-fase-1">
                   Curso guiado
                   <Sparkles className="ml-2 h-4 w-4 opacity-70" aria-hidden />
+                </Link>
+              </Button>
+              <Button
+                asChild
+                variant="ghost"
+                size="xl"
+                className="rounded-none border-b-2 border-primary/40 hover:bg-primary/5 hover:border-primary px-8 font-bold uppercase tracking-wider"
+              >
+                <Link href="/problems/two-sum/brute-force">
+                  Testar Player
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </motion.div>

@@ -31,7 +31,7 @@ function Feature({ icon, title, description }: FeatureProps) {
 
 export function PedagogicalPillars() {
   return (
-    <section className="relative z-10 mx-auto max-w-7xl px-6 py-20 md:py-28">
+    <section id="pedagogical-pillars" className="relative z-10 mx-auto max-w-7xl px-6 pb-20 md:py-28">
       <SectionHeading
         kicker="Diferenciação"
         title="Pilares pedagógicos explícitos"

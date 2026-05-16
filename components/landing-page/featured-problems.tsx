@@ -29,7 +29,7 @@ export async function FeaturedProblems() {
     .map((x) => x.problem);
 
   return (
-    <section className="relative z-10 mx-auto max-w-7xl px-6 pb-20 md:pb-28">
+    <section id="featured-problems" className="relative z-10 mx-auto max-w-7xl px-6 pb-20 md:pb-28">
       <div className="flex flex-col gap-8 border-t border-border pt-14 md:flex-row md:items-end md:justify-between">
         <SectionHeading
           kicker=""
