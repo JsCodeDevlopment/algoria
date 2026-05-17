@@ -34,7 +34,16 @@ export function CodeView({
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {}, [currentLine, interactiveSteps]);
+  useEffect(() => {
+    if (!interactiveSteps || !currentLine || !containerRef.current) return;
+    const activeEl = containerRef.current.querySelector(`[data-line="${currentLine}"]`);
+    if (activeEl) {
+      activeEl.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }
+  }, [currentLine, interactiveSteps]);
 
   return (
     <div

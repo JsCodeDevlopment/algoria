@@ -139,6 +139,78 @@ export function DynamicInputForm({
         Number(vals[1]),
       ],
     },
+    "autocomplete-trie": {
+      labels: [
+        "Dicionário de Palavras (words)",
+        "Pesos correspondentes (weights)",
+        "Prefixo (prefix)",
+        "K",
+      ],
+      placeholders: [
+        "Ex: casa, carro, cachorro, cama",
+        "Ex: 100, 80, 90, 70",
+        "Ex: ca",
+        "2",
+      ],
+      defaults: [
+        "casa, carro, cachorro, cama",
+        "100, 80, 90, 70",
+        "ca",
+        "2",
+      ],
+      types: ["text", "text", "text", "number"],
+      parser: (vals) => [
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean),
+        vals[1]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+        vals[2].trim(),
+        Number(vals[3]),
+      ],
+    },
+    "cidade-inteligente-dijkstra": {
+      labels: [
+        "Número de Bairros (n)",
+        "Lista de Estradas (roads)",
+        "Bairro Inicial (start)",
+        "Bairro Hospital (hospital)",
+      ],
+      placeholders: [
+        "Ex: 4",
+        "Ex: [[0,1,4],[0,2,1],[1,2,2],[1,3,1],[2,3,5]]",
+        "Ex: 0",
+        "Ex: 3",
+      ],
+      defaults: [
+        "4",
+        "[[0,1,4],[0,2,1],[1,2,2],[1,3,1],[2,3,5]]",
+        "0",
+        "3",
+      ],
+      types: ["number", "text", "number", "number"],
+      parser: (vals) => {
+        let parsedRoads = [];
+        try {
+          parsedRoads = JSON.parse(vals[1]);
+        } catch {
+          const clean = vals[1].replace(/[\[\]]/g, "").trim();
+          parsedRoads = clean
+            .split(";")
+            .map((chunk) => chunk.split(",").map(Number));
+        }
+        return [
+          Number(vals[0]),
+          parsedRoads,
+          Number(vals[2]),
+          Number(vals[3]),
+        ];
+      },
+    },
   };
 
   const config = configs[problemSlug] || configs["two-sum"];
@@ -169,6 +241,27 @@ export function DynamicInputForm({
       const kMatch = firstInput.match(/k\s*=\s*(-?\d+)/);
       if (eventsMatch && kMatch) {
         return [eventsMatch[1], kMatch[1]];
+      }
+    }
+
+    if (problemSlug === "autocomplete-trie") {
+      const wordsMatch = firstInput.match(/words\s*=\s*\[(.*?)\]/);
+      const weightsMatch = firstInput.match(/weights\s*=\s*\[(.*?)\]/);
+      const prefixMatch = firstInput.match(/prefix\s*=\s*"(.*?)"/);
+      const kMatch = firstInput.match(/k\s*=\s*(-?\d+)/);
+      if (wordsMatch && weightsMatch && prefixMatch && kMatch) {
+        const cleanedWords = wordsMatch[1].replace(/"/g, "").replace(/'/g, "");
+        return [cleanedWords, weightsMatch[1], prefixMatch[1], kMatch[1]];
+      }
+    }
+
+    if (problemSlug === "cidade-inteligente-dijkstra") {
+      const nMatch = firstInput.match(/n\s*=\s*(\d+)/);
+      const roadsMatch = firstInput.match(/roads\s*=\s*(\[.*?\])/);
+      const startMatch = firstInput.match(/start\s*=\s*(-?\d+)/);
+      const hospitalMatch = firstInput.match(/hospital\s*=\s*(-?\d+)/);
+      if (nMatch && roadsMatch && startMatch && hospitalMatch) {
+        return [nMatch[1], roadsMatch[1], startMatch[1], hospitalMatch[1]];
       }
     }
 

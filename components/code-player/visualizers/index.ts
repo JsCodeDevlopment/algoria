@@ -18,6 +18,8 @@ export const BESPOKE_VISUALIZERS: Record<string, React.ComponentType<{ steps: Ex
   'daily-temperatures': GenericVisualizer,
   '3sum': GenericVisualizer,
   'top-k-streams-heap': GenericVisualizer,
+  'autocomplete-trie': GenericVisualizer,
+  'cidade-inteligente-dijkstra': GenericVisualizer,
 };
 
 /**
