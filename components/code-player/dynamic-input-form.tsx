@@ -125,6 +125,20 @@ export function DynamicInputForm({
           .map(Number),
       ],
     },
+    "top-k-streams-heap": {
+      labels: ["Eventos (events)", "K"],
+      placeholders: ["Ex: 1, 1, 1, 2, 2, 3", "2"],
+      defaults: ["1, 1, 1, 2, 2, 3", "2"],
+      types: ["text", "number"],
+      parser: (vals) => [
+        vals[0]
+          .split(",")
+          .map((s) => s.trim())
+          .filter(Boolean)
+          .map(Number),
+        Number(vals[1]),
+      ],
+    },
   };
 
   const config = configs[problemSlug] || configs["two-sum"];
@@ -147,6 +161,14 @@ export function DynamicInputForm({
       const kMatch = firstInput.match(/k\s*=\s*(-?\d+)/);
       if (numsMatch && kMatch) {
         return [numsMatch[1], kMatch[1]];
+      }
+    }
+
+    if (problemSlug === "top-k-streams-heap") {
+      const eventsMatch = firstInput.match(/events\s*=\s*\[(.*?)\]/);
+      const kMatch = firstInput.match(/k\s*=\s*(-?\d+)/);
+      if (eventsMatch && kMatch) {
+        return [eventsMatch[1], kMatch[1]];
       }
     }
 

@@ -17,6 +17,7 @@ export const BESPOKE_VISUALIZERS: Record<string, React.ComponentType<{ steps: Ex
   'group-anagrams': GenericVisualizer,
   'daily-temperatures': GenericVisualizer,
   '3sum': GenericVisualizer,
+  'top-k-streams-heap': GenericVisualizer,
 };
 
 /**
