@@ -1,4 +1,4 @@
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Scale, ShieldAlert, Award } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -7,14 +7,14 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 
 export const metadata: Metadata = buildPublicMetadata({
   title: "Termos de Uso",
-  description: "Termos e condições de uso da plataforma Algoria.",
+  description: "Termos de Uso e condições gerais de contratação da plataforma Algoria em conformidade com o CDC e a LGPD.",
   pathname: "/legal/terms",
-  keywords: ["termos de uso", "condições", "legal", "Algoria"],
+  keywords: ["termos de uso", "condições gerais", "reembolso", "CDC", "Algoria"],
 });
 
 export default function TermsPage() {
   return (
-    <div className="mx-auto max-w-4xl px-6 py-20">
+    <div className="mx-auto max-w-7xl px-6 py-20">
       <Button
         asChild
         variant="outline"
@@ -27,178 +27,143 @@ export default function TermsPage() {
       </Button>
 
       <header className="mt-12 mb-16">
+        <div className="inline-flex items-center gap-2 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-primary border border-primary/25 bg-primary/5 mb-4">
+          <Scale className="h-3 w-3" /> Condições de Contratação e Uso
+        </div>
         <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl border-l-4 border-primary pl-6">
           Termos de Uso
         </h1>
         <p className="mt-4 text-muted-foreground">
-          Última atualização: 07 de Maio de 2026
+          Última atualização: 18 de Maio de 2026
         </p>
       </header>
 
       <div className="prose prose-zinc dark:prose-invert max-w-none space-y-12">
         <section>
-          <h2 className="text-2xl font-bold">1. Aceitação dos Termos</h2>
-          <p>
-            Ao acessar e utilizar a plataforma Algoria (&quot;Serviço&quot;), você
-            concorda em cumprir e estar vinculado aos seguintes Termos de Uso.
-            Se você não concordar com qualquer parte destes termos, não deverá
-            utilizar o Serviço. Estes termos aplicam-se a todos os visitantes,
-            usuários e outros que acessam ou usam o Serviço.
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">01.</span> Vinculação Contratual
+          </h2>
+          <p className="leading-relaxed">
+            Bem-vindo à <strong>Algoria</strong>. Ao criar uma conta, navegar ou contratar os planos pagos da plataforma (&quot;Serviço&quot;), você celebra um contrato de prestação de serviços educacionais juridicamente vinculativo e concorda integralmente com estes Termos de Uso.
           </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold">2. Elegibilidade e Conta</h2>
-          <p>
-            Para utilizar certas funcionalidades da Algoria, você deve criar uma
-            conta. Ao fazê-lo, você garante que:
-          </p>
-          <ul className="list-disc pl-6 mt-4 space-y-2">
-            <li>As informações fornecidas são precisas, completas e atuais.</li>
-            <li>
-              Você é responsável por manter a confidencialidade da sua senha e
-              conta.
-            </li>
-            <li>
-              Você notificará imediatamente a Algoria sobre qualquer violação de
-              segurança ou uso não autorizado de sua conta.
-            </li>
-          </ul>
           <p className="mt-4">
-            Reservamo-nos o direito de recusar serviço, encerrar contas ou
-            remover conteúdo a nosso critério exclusivo.
+            Caso discorde de qualquer cláusula ou regra estabelecida neste documento, você deve abster-se imediatamente de utilizar os serviços e funcionalidades da plataforma.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold">3. Propriedade Intelectual</h2>
-          <p>
-            O Serviço e seu conteúdo original (excluindo conteúdo fornecido
-            pelos usuários), recursos e funcionalidades são e continuarão sendo
-            propriedade exclusiva da Algoria e de seus licenciadores. O conteúdo
-            é protegido por direitos autorais, marcas registradas e outras leis
-            de propriedade intelectual.
-          </p>
-          <p className="mt-4 font-semibold text-destructive">
-            É terminantemente proibido:
-          </p>
-          <ul className="list-disc pl-6 mt-2 space-y-2">
-            <li>
-              Copiar, modificar ou distribuir o conteúdo da plataforma para fins
-              comerciais ou recreativos fora do escopo do aprendizado pessoal.
-            </li>
-            <li>
-              Realizar engenharia reversa, descompilar ou tentar extrair o
-              código-fonte do Serviço.
-            </li>
-            <li>
-              Utilizar &quot;web scraping&quot;, &quot;crawlers&quot; ou qualquer método
-              automatizado para extrair dados ou conteúdo de forma massiva.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold">4. Assinaturas e Pagamentos</h2>
-          <p>
-            Algumas partes do Serviço são faturadas em base de assinatura
-            (&quot;Algoria Pro&quot;). Você será faturado antecipadamente em uma base
-            recorrente e periódica (como mensal ou anual).
-          </p>
-          <ul className="list-disc pl-6 mt-4 space-y-2">
-            <li>
-              Os pagamentos são processados via <strong>Stripe</strong>. Não
-              armazenamos os dados do seu cartão de crédito em nossos
-              servidores.
-            </li>
-            <li>
-              A renovação ocorre automaticamente, a menos que o cancelamento
-              seja solicitado antes da data de renovação.
-            </li>
-            <li>
-              Reservamo-nos o direito de alterar as taxas de assinatura a
-              qualquer momento, mediante aviso prévio razoável através da
-              plataforma ou e-mail.
-            </li>
-          </ul>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold">
-            5. Conduta do Usuário e Segurança
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">02.</span> Cadastro de Contas e Segurança das Credenciais
           </h2>
-          <p>
-            Você concorda em não usar o Serviço para qualquer finalidade ilegal
-            ou proibida por estes Termos. Você não deve:
+          <p className="leading-relaxed">
+            Para desfrutar de toda a jornada acadêmica e submissões práticas, é necessário realizar o registro de sua conta de usuário. 
+            Você concorda em:
           </p>
-          <ul className="list-disc pl-6 mt-4 space-y-2">
+          <ul className="list-disc pl-6 mt-4 space-y-3">
+            <li>Fornecer dados cadastrais estritamente verdadeiros, exatos e atualizados.</li>
+            <li>Manter a guarda confidencial e secreta de suas senhas de acesso.</li>
+            <li>Assumir total responsabilidade por todas as ações realizadas em sua conta.</li>
+            <li>Notificar nosso suporte imediatamente caso suspeite de vazamentos ou acesso não autorizado à sua conta.</li>
+          </ul>
+          <p className="mt-4 font-semibold text-amber-500 flex items-center gap-1.5 text-xs">
+            <ShieldAlert className="h-4 w-4" /> REGRAS DE COMPARTILHAMENTO:
+          </p>
+          <p className="text-xs leading-relaxed text-muted-foreground mt-1">
+            Cada conta na Algoria é de natureza **individual e intransferível**. O compartilhamento de credenciais de login para acesso simultâneo de terceiros configura infração contratual de pirataria e quebra de propriedade intelectual, resultando no **bloqueio imediato e definitivo da conta**, sem qualquer direito a estorno ou reembolso das mensalidades pagas.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">03.</span> Assinatura Pro, Pagamentos e Renovação
+          </h2>
+          <p className="leading-relaxed">
+            O plano **Algoria Pro** garante acesso integral ao catálogo premium de problemas resolvidos, trilhas de backend/frontend, testes técnicos simulados e explicações de código avançadas.
+          </p>
+          <ul className="list-disc pl-6 mt-4 space-y-3">
             <li>
-              Tentar obter acesso não autorizado a qualquer parte do Serviço ou
-              sistemas relacionados.
+              <strong>Faturamento Recorrente:</strong> Os pagamentos são faturados de forma recorrente e antecipada (mensal ou anual, conforme opção selecionada na contratação).
             </li>
             <li>
-              Interferir na segurança ou abusar dos recursos do sistema, rede ou
-              serviços da plataforma.
+              <strong>Checkout Seguro via Stripe:</strong> Todas as cobranças são operacionalizadas pelo processador de pagamentos certificado **Stripe Inc.**, garantindo conformidade com padrões PCI-DSS.
             </li>
             <li>
-              Compartilhar sua conta com terceiros (&quot;compartilhamento de
-              login&quot;), o que resultará no banimento imediato da conta sem
-              direito a reembolso.
+              <strong>Renovação Automática:</strong> A assinatura é renovada automaticamente pelo mesmo período contratado. Caso não deseje a renovação, o usuário deverá solicitar o cancelamento da recorrência no seu painel de faturamento antes da data do débito subsequente.
+            </li>
+          </ul>
+        </section>
+
+        <section className="bg-primary/5 border border-primary/20 p-6 rounded-none">
+          <h2 className="text-xl font-bold mt-0 flex items-center gap-2 text-primary">
+            <Award className="h-5 w-5" /> 04. Direito de Arrependimento e Reembolso (Artigo 49 do CDC)
+          </h2>
+          <p className="text-sm leading-relaxed mb-3">
+            Em pleno respeito ao **Código de Defesa do Consumidor (Lei nº 8.078/1990 - CDC, Artigo 49)**, a Algoria assegura ao aluno o prazo de **7 (sete) dias corridos**, contados a partir da data de assinatura/compra inicial do plano Pro, para exercer seu direito de arrependimento.
+          </p>
+          <p className="text-sm leading-relaxed">
+            Caso opte por desistir do plano Pro dentro deste prazo de reflexão de 7 dias, você receberá o **reembolso integral e incondicional** de todo o valor pago, sem qualquer cobrança de taxas administrativas ou burocracias. Para solicitar, basta formalizar o pedido diretamente pelo nosso e-mail oficial de suporte legal.
+          </p>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">05.</span> Exclusão de Contas, Direito ao Esquecimento e LGPD
+          </h2>
+          <p className="leading-relaxed">
+            Você pode requerer a exclusão de seus dados a qualquer momento diretamente no seu painel de Perfil, clicando em **&quot;Excluir Conta&quot;**. 
+            Nossa plataforma adota políticas estritas de proteção ao consumidor e titular de dados nos termos da LGPD:
+          </p>
+          <ul className="list-disc pl-6 mt-4 space-y-3">
+            <li>
+              A exclusão da conta pelo usuário no painel aciona a Server Action que **cancela imediatamente e preventivamente a recorrência ativa de cobranças no Stripe**, de modo a resguardar sua segurança e afastar cobranças indevidas de contas inativas.
+            </li>
+            <li>
+              Todos os seus registros de progresso acadêmico, testes técnicos concluídos e dados cadastrais serão permanentemente excluídos do banco de dados, sem possibilidade de recuperação posterior.
             </li>
           </ul>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold">6. Isenção de Garantias</h2>
-          <p>
-            O uso do Serviço é por sua conta e risco. O Serviço é fornecido
-            &quot;COMO ESTÁ&quot; e &quot;CONFORME DISPONÍVEL&quot;. A Algoria não garante que (i) o
-            Serviço funcionará de forma ininterrupta, segura ou disponível em
-            qualquer momento ou local específico; (ii) quaisquer erros ou
-            defeitos serão corrigidos; ou (iii) os resultados do uso do Serviço
-            atenderão aos seus requisitos profissionais ou acadêmicos.
-          </p>
-        </section>
-
-        <section>
-          <h2 className="text-2xl font-bold">
-            7. Limitação de Responsabilidade
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">06.</span> Propriedade Intelectual e Proteção Antiscraping
           </h2>
-          <p>
-            Em nenhum caso a Algoria, seus diretores ou funcionários serão
-            responsáveis por quaisquer danos indiretos, incidentais, especiais,
-            consequenciais ou punitivos, incluindo, sem limitação, perda de
-            lucros, dados, uso, fundo de comércio ou outras perdas intangíveis,
-            resultantes do seu acesso ou uso do Serviço.
+          <p className="leading-relaxed">
+            Todo o código-fonte, didática textual explicativa em três níveis de profundidade, ilustrações técnicas e arquitetura lógica exposta na plataforma constituem propriedade intelectual exclusiva da Algoria ou de seus licenciadores. 
+            É **expressamente proibido**:
+          </p>
+          <ul className="list-disc pl-6 mt-4 space-y-3">
+            <li>Copiar, republicar, traduzir ou redistribuir o material pedagógico sem autorização por escrito.</li>
+            <li>Utilizar robôs, rastreadores automatizados (&quot;web scrapers&quot;, &quot;crawlers&quot;), inteligência artificial ou scripts manuais para varredura ou extração massiva de nossos códigos acadêmicos para alimentação de bases externas.</li>
+            <li>A infração acarretará o banimento da conta e responsabilidade civil e penal sob a Lei de Direitos Autorais (Lei nº 9.610/98).</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">07.</span> Limitação de Responsabilidade
+          </h2>
+          <p className="leading-relaxed">
+            Os conteúdos didáticos da Algoria servem como suporte e aprimoramento pedagógico profissional para engenharia de software. Não asseguramos aprovação garantida em processos seletivos ou entrevistas específicas de mercado, dependendo o aproveitamento exclusivamente do engajamento individual do estudante nas práticas recomendadas.
           </p>
         </section>
 
         <section>
-          <h2 className="text-2xl font-bold">8. Alterações nos Termos</h2>
-          <p>
-            Reservamo-nos o direito, a nosso exclusivo critério, de modificar ou
-            substituir estes Termos a qualquer momento. Se uma revisão for
-            material, tentaremos fornecer um aviso com pelo menos 30 dias de
-            antecedência antes que quaisquer novos termos entrem em vigor.
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <span className="text-primary text-lg">08.</span> Legislação Aplicável e Resolução de Disputas
+          </h2>
+          <p className="leading-relaxed">
+            Este termo é regido e deve ser interpretado em conformidade com as Leis da República Federativa do Brasil (incluindo o Código Civil, o Código de Defesa do Consumidor e a LGPD). 
+            Para dirimir controvérsias decorrentes deste contrato, as partes elegem o foro da Comarca do domicílio do Consumidor, conforme garantia expressa na legislação de consumo brasileira.
           </p>
         </section>
 
-        <section>
-          <h2 className="text-2xl font-bold">9. Legislação Aplicável e Foro</h2>
-          <p>
-            Estes Termos serão regidos e interpretados de acordo com as leis do
-            Brasil, sem levar em conta suas disposições sobre conflitos de leis.
-            Qualquer disputa decorrente destes termos será resolvida no foro da
-            comarca da sede da empresa administradora da Algoria.
-          </p>
-        </section>
-
-        <section className="bg-muted p-6 rounded-lg border border-border">
-          <h2 className="text-xl font-bold mt-0">Dúvidas?</h2>
-          <p className="mb-0">
-            Se você tiver alguma dúvida sobre estes Termos, entre em contato
-            através do nosso canal de suporte oficial ou pelo e-mail listado no
-            rodapé da aplicação.
+        <section className="bg-muted/30 p-6 rounded-none border border-border">
+          <h2 className="text-xl font-bold mt-0">Canal de Suporte e Ouvidoria</h2>
+          <p className="text-sm leading-relaxed mb-0">
+            Dúvidas acerca destes termos de contratação, pedidos de cancelamento, direito de arrependimento (7 dias) ou problemas com acesso Pro devem ser encaminhados ao suporte central em:{" "}
+            <a href="mailto:suporte@algoria.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
+              suporte@algoria.com.br
+            </a>.
           </p>
         </section>
       </div>
