@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
 import { AlgoriaPostHogProvider } from "@/components/analytics/posthog-provider";
+import { CookieBanner } from "@/components/analytics/cookie-banner";
 import { ProgressSyncOnLogin } from "@/components/billing/progress-sync";
 import { Sidebar } from "@/components/layout/sidebar";
 import { SidebarProvider } from "@/components/layout/sidebar-context";
@@ -97,6 +98,7 @@ export default function RootLayout({
             </SidebarProvider>
             <SiteFooter />
             <ToastContainer />
+            <CookieBanner />
           </AlgoriaPostHogProvider>
         </ThemeProvider>
       </body>

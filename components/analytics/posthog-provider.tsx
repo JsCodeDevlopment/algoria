@@ -35,20 +35,48 @@ function PostHogPageView(): null {
   return null;
 }
 
-/** Provedor de Analytics: Captura acessos, cliques e performance automaticamente. */
+/** Provedor de Analytics: Captura acessos, cliques e performance com consentimento da LGPD. */
 export function AlgoriaPostHogProvider({ children }: { children: React.ReactNode }) {
   const didInit = useRef(false);
 
   useEffect(() => {
     if (!key || typeof window === 'undefined' || didInit.current) return;
     didInit.current = true;
+
+    // Verificar consentimento prévio do usuário
+    const consent = localStorage.getItem('algoria-cookie-consent');
+    const isAccepted = consent === 'accepted';
+
     posthog.init(key, {
       api_host: host,
       persistence: 'localStorage',
-      autocapture: true, // Captura cliques, inputs e interações automaticamente
+      autocapture: true, // Captura cliques e interações de quem consentiu
       capture_pageview: false, // Desativado aqui para usar o PostHogPageView (evita duplicados no Next.js)
       capture_performance: true,
+      opt_out_capturing_by_default: true, // LGPD Compliance: inicia bloqueado por padrão (opt-out por default)
     });
+
+    if (isAccepted) {
+      posthog.opt_in_capturing();
+    } else {
+      posthog.opt_out_capturing();
+    }
+
+    // Ouvir alterações dinâmicas de consentimento em tempo real (disparadas pelo CookieBanner)
+    const handleConsentChange = () => {
+      const currentConsent = localStorage.getItem('algoria-cookie-consent');
+      if (currentConsent === 'accepted') {
+        posthog.opt_in_capturing();
+      } else {
+        posthog.opt_out_capturing();
+      }
+    };
+
+    window.addEventListener('algoria-cookie-consent-updated', handleConsentChange);
+    
+    return () => {
+      window.removeEventListener('algoria-cookie-consent-updated', handleConsentChange);
+    };
   }, []);
 
   if (!key) {
