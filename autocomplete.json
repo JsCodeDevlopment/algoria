@@ -1,0 +1,764 @@
+{
+  "title": "Autocomplete Engine — sugestões instantâneas de pesquisa",
+  "slug": "autocomplete-trie",
+  "body": "## O problema (sem saberes programar… ainda)\n\nRecebes um **dicionário de palavras** (array `words`), cada uma associada a um **peso** (ou frequência) — por exemplo, o número de vezes que os utilizadores pesquisaram essa palavra. Também recebes um **prefixo** (string `prefix`) e um inteiro `k`.\n\nQueres responder: **quais são as `k` palavras do dicionário que começam com esse prefixo e têm os maiores pesos?**\n\nÉ o coração de sistemas como:\n\n- Google Suggest\n- Spotify Search\n- IDE autocomplete (VS Code, IntelliJ)\n- Comandos em shells (bash, zsh)\n\n---\n\n## Analogia rápida\n\nImagina que és o responsável pelo **campo de busca** de uma loja online. Milhões de clientes começam a escrever `\"tén\"` e tu tens de mostrar instantaneamente os produtos mais populares cujo nome começa assim: `\"ténis\"`, `\"ténis de corrida\"`, `\"ténis de mesa\"`.\n\nNão podes varrer todo o catálogo a cada tecla pressionada — isso seria lento. Precisas de uma estrutura que **responda em tempo proporcional ao tamanho do prefixo**, não ao tamanho do dicionário.\n\nÉ exactamente isto que uma **Trie** (árvore de prefixos) faz, combinada com uma estratégia de **manter as melhores sugestões** em cada nó.\n\n---\n\n## O que este exercício realmente ensina\n\nO objectivo não é apenas construir uma Trie, mas perceber:\n\n> **Compartilhar prefixos evita trabalho repetido. Se muitas palavras começam da mesma forma, podemos armazenar as melhores candidatas logo no prefixo comum.**\n\nEssa mentalidade aparece em:\n\n- Motores de busca (sugestões instantâneas)\n- Corretores ortográficos\n- Sistemas de recomendação\n- Roteamento IP (longest prefix match)\n- Bancos de dados (índices tipo trie)\n\n---\n\n## A abordagem ingénua (e porque não escala)\n\nUma primeira ideia:\n\n1. Filtrar todas as palavras que começam com o prefixo (varrer o array inteiro).\n2. Ordenar as palavras filtradas por peso decrescente.\n3. Devolver as primeiras `k`.\n\nFunciona, mas cada consulta custa **O(n + m log m)**, onde `n` é o número total de palavras e `m` é o número de palavras que casam com o prefixo. Num sistema com milhões de palavras e muitas consultas por segundo, isso é inviável.\n\n---\n\n## A solução eficiente: Trie com sugestões pré‑calculadas\n\nConstruímos uma **Trie** onde cada nó guarda:\n\n- Os seus filhos (mapeamento caractere → nó)\n- Uma **lista (ou min‑heap)** com as `k` melhores palavras que passam por aquele nó (isto é, palavras que têm o prefixo representado pelo nó).\n\n**Processo de construção:**\n\n1. Insere cada palavra na Trie, caractere a caractere.\n2. No nó final (marcado como fim da palavra), armazena a palavra e o seu peso.\n3. Durante a inserção, **sobe** actualizando as listas de sugestões em cada nó ancestral: se a palavra actual for melhor que alguma na lista do nó, insere-a e mantém apenas as `k` melhores (usando uma min‑heap ou ordenação local).\n4. No final, cada nó já contém as `k` palavras mais populares entre todas as que têm o prefixo daquele nó.\n\n**Consulta:**\n\n1. Percorre a Trie seguindo os caracteres do `prefixo`.\n2. Se o nó não existir, devolve lista vazia.\n3. Caso contrário, devolve as sugestões já armazenadas nesse nó (pré‑calculadas).\n\n**Complexidade:**\n\n- Construção: `O(N * L * log k)` onde `N` é número de palavras, `L` é comprimento médio, e `k` é pequeno.\n- Consulta: `O(L)` para percorrer o prefixo + `O(k)` para devolver as sugestões.\n- Espaço: `O(N * L)` para a Trie + `O(k * nós)` para as listas.\n\n---\n\n## Visualização intuitiva\n\n```\nDicionário:\n(\"casa\", peso 100)\n(\"carro\", peso 80)\n(\"cachorro\", peso 90)\n(\"cama\", peso 70)\n\nk = 2\n\nNó raiz → sugestões: []\nNó 'c' → sugestões: [casa(100), cachorro(90)]\nNó 'ca' → sugestões: [casa(100), cachorro(90)]\nNó 'cas' → sugestões: [casa(100)]\nNó 'casa' → (fim) sugestões: [casa(100)]\n\nConsulta prefixo \"ca\" → devolve [\"casa\", \"cachorro\"]\n```\n\n---\n\n## Porque isto aparece em entrevistas\n\nEste problema testa:\n\n- **Tries** (árvores de prefixos)\n- **Heaps / ordenação parcial** para manter os top K\n- **Pré‑processamento vs. consulta online**\n- **Otimização de memória** (evitar guardar listas gigantes em cada nó)\n\nÉ um clássico em empresas como Google, Amazon, Microsoft, pois modela um sistema de busca real.\n\n---\n\n## Edge Cases importantes\n\n| Caso | Exemplo | Comportamento esperado |\n|------|---------|------------------------|\n| Prefixo sem correspondência | `\"xyz\"` | `[]` |\n| k maior que número de sugestões | `k=10`, apenas 3 palavras | devolve todas as 3 |\n| Palavras com mesmo peso | `[(\"a\",5),(\"b\",5)]`, prefixo `\"\"` | qualquer ordem |\n| Prefixo vazio | `\"\"` | as `k` palavras mais populares do dicionário inteiro |\n\n---\n\n## Conclusão\n\nA Trie com sugestões pré‑calculadas transforma uma consulta `O(n)` em `O(L)`, essencial para interfaces responsivas. A combinação com uma min‑heap (ou ordenação local) mantém a memória sob controle.\n\n> “Não procures na lista toda cada vez que o utilizador digita uma letra — prepara as respostas com antecedência na árvore de prefixos.”",
+  "meta": {
+    "slug": "autocomplete-trie",
+    "title": "Autocomplete Engine — sugestões instantâneas de pesquisa",
+    "difficulty": "medium",
+    "categories": [
+      "trie",
+      "heap",
+      "hash-tables"
+    ],
+    "prerequisites": [
+      "trie",
+      "heap-priority-queue",
+      "big-o"
+    ],
+    "tags": [
+      "autocomplete",
+      "trie",
+      "prefix",
+      "top-k",
+      "search"
+    ],
+    "estimatedMinutes": 35,
+    "recommendedOrder": 1,
+    "access": "free",
+    "examples": [
+      {
+        "input": "words = [\"casa\",\"carro\",\"cachorro\",\"cama\"], weights = [100,80,90,70], prefix = \"ca\", k = 2",
+        "output": "[\"casa\",\"cachorro\"]",
+        "explanation": "Todas as palavras começam com \"ca\". As duas com maior peso são casa (100) e cachorro (90)."
+      },
+      {
+        "input": "words = [\"apple\",\"application\",\"apply\"], weights = [50,100,30], prefix = \"app\", k = 1",
+        "output": "[\"application\"]",
+        "explanation": "Entre as que começam com \"app\", a de maior peso é application (100)."
+      },
+      {
+        "input": "words = [\"dog\",\"cat\",\"dolphin\"], weights = [10,20,30], prefix = \"do\", k = 3",
+        "output": "[\"dog\",\"dolphin\"]",
+        "explanation": "Apenas duas palavras começam com \"do\", devolvem-se ambas."
+      }
+    ],
+    "constraints": [
+      "1 ≤ words.length ≤ 10⁵",
+      "1 ≤ words[i].length ≤ 100",
+      "1 ≤ weights[i] ≤ 10⁹",
+      "1 ≤ k ≤ 50",
+      "prefix é uma string não vazia (ou pode ser vazia, dependendo da interpretação)",
+      "Todos os caracteres são letras minúsculas inglesas (a-z)"
+    ],
+    "solutions": [
+      {
+        "meta": {
+          "slug": "brute-force-filter-sort",
+          "name": "Filtro + Ordenação total (força bruta)",
+          "kind": "brute-force",
+          "language": "typescript",
+          "entryFunction": "autocomplete",
+          "simulatorCode": "(words, weights, prefix, k) => {\n  const steps = [];\n  steps.push({ line: 1, snapshot: { caption: `Iniciando busca por prefixo \"${prefix}\", k=${k}`, scalars: { prefix, k } } });\n  const matches = [];\n  for (let i = 0; i < words.length; i++) {\n    steps.push({ line: 3, snapshot: { caption: `Verificando palavra \"${words[i]}\"`, scalars: { i, word: words[i] }, arrays: [{ label: 'words', values: words, highlightIndices: [i] }] } });\n    if (words[i].startsWith(prefix)) {\n      matches.push({ word: words[i], weight: weights[i] });\n      steps.push({ line: 4, snapshot: { caption: `\"${words[i]}\" começa com \"${prefix}\". Adicionada.`, matches: matches.map(m => `${m.word}(${m.weight})`) } });\n    }\n  }\n  steps.push({ line: 6, snapshot: { caption: `Encontradas ${matches.length} palavras. A ordenar por peso...`, matches: matches.map(m => `${m.word}(${m.weight})`) } });\n  matches.sort((a, b) => b.weight - a.weight);\n  steps.push({ line: 6, snapshot: { caption: `Ordenadas: ${matches.map(m => `${m.word}(${m.weight})`).join(', ')}` } });\n  const result = matches.slice(0, k).map(item => item.word);\n  steps.push({ line: 7, snapshot: { caption: `Resultado final: ${result.join(', ')}`, result } });\n  return steps;\n}",
+          "complexity": {
+            "time": "O(n * L + m log m)",
+            "space": "O(m)",
+            "rationale": "Percorremos todas as `n` palavras, verificando o prefixo (custo `L` por palavra, onde `L` é comprimento médio). Depois ordenamos as `m` palavras que casaram (`O(m log m)`). No pior caso `m = n`. Espaço para armazenar as candidatas."
+          }
+        },
+        "codeByLanguage": {
+          "csharp": "public class Solution {\n    public IList<string> Autocomplete(string[] words, int[] weights, string prefix, int k) {\n        var matches = new List<(string word, int weight)>();\n        for (int i = 0; i < words.Length; i++) {\n            if (words[i].StartsWith(prefix)) {\n                matches.Add((words[i], weights[i]));\n            }\n        }\n        var sorted = matches.OrderByDescending(m => m.weight).ToList();\n        return sorted.Take(k).Select(m => m.word).ToList();\n    }\n}\n",
+          "go": "func autocomplete(words []string, weights []int, prefix string, k int) []string {\n    type pair struct{ word string; weight int }\n    var matches []pair\n    for i, w := range words {\n        if strings.HasPrefix(w, prefix) {\n            matches = append(matches, pair{w, weights[i]})\n        }\n    }\n    sort.Slice(matches, func(i, j int) bool {\n        return matches[i].weight > matches[j].weight\n    })\n    if k > len(matches) {\n        k = len(matches)\n    }\n    res := make([]string, k)\n    for i := 0; i < k; i++ {\n        res[i] = matches[i].word\n    }\n    return res\n}\n",
+          "java": "class Solution {\n    public List<String> autocomplete(String[] words, int[] weights, String prefix, int k) {\n        List<Pair> matches = new ArrayList<>();\n        for (int i = 0; i < words.length; i++) {\n            if (words[i].startsWith(prefix)) {\n                matches.add(new Pair(words[i], weights[i]));\n            }\n        }\n        matches.sort((a, b) -> b.weight - a.weight);\n        return matches.stream().limit(k).map(p -> p.word).collect(Collectors.toList());\n    }\n    class Pair { String word; int weight; Pair(String w, int wt) { word = w; weight = wt; } }\n}\n",
+          "javascript": "function autocomplete(words, weights, prefix, k) {\n    const matches = [];\n    for (let i = 0; i < words.length; i++) {\n        if (words[i].startsWith(prefix)) {\n            matches.push({ word: words[i], weight: weights[i] });\n        }\n    }\n    matches.sort((a, b) => b.weight - a.weight);\n    return matches.slice(0, k).map(item => item.word);\n}\n",
+          "python": "def autocomplete(words, weights, prefix, k):\n    matches = []\n    for w, wt in zip(words, weights):\n        if w.startswith(prefix):\n            matches.append((wt, w))\n    matches.sort(reverse=True)\n    return [w for _, w in matches[:k]]\n",
+          "typescript": "function autocomplete(words: string[], weights: number[], prefix: string, k: number): string[] {\n  const matches: { word: string; weight: number }[] = [];\n  for (let i = 0; i < words.length; i++) {\n    if (words[i].startsWith(prefix)) {\n      matches.push({ word: words[i], weight: weights[i] });\n    }\n  }\n  matches.sort((a, b) => b.weight - a.weight);\n  return matches.slice(0, k).map(item => item.word);\n}\n"
+        },
+        "introMd": "## A ideia\n\nA forma mais directa: **filtra todas as palavras que começam com o prefixo** e depois **ordena** por peso decrescente. Os primeiros `k` elementos são a resposta.\n\n## Quando é \"boa o suficiente\"\n\n- Quando o dicionário é pequeno (≤ 1000 palavras).\n- Quando a consulta é feita raramente (ex: num script de configuração).\n- Como baseline para verificar a lógica.\n\n## Porque não escala para autocomplete real\n\nNum sistema interactivo, cada tecla do utilizador dispara uma consulta. Se o dicionário tiver 1 milhão de palavras, este algoritmo custaria cerca de 1 milhão de operações por consulta – inaceitável para latência < 100ms.\n\nA Trie resolve isso pré‑computando as respostas.",
+        "annotations": [
+          {
+            "line": 1,
+            "level1": "Declara a função `autocomplete` – recebe array de palavras, array de pesos, prefixo e k.",
+            "level2": "Assinatura simples: `words[i]` corresponde a `weights[i]`. Garantimos que têm o mesmo comprimento.",
+            "level3": "Poderíamos usar um `Map<string, number>` como dicionário, mas o problema fornece arrays paralelos.",
+            "concepts": [
+              "big-o"
+            ]
+          },
+          {
+            "line": 2,
+            "level1": "Inicializa um array vazio para guardar as palavras que casam com o prefixo, juntamente com os seus pesos.",
+            "level2": "Cada elemento será um objecto com `word` e `weight`. Em TypeScript, é seguro tipar.",
+            "level3": "Alternativa: guardar apenas os índices para poupar memória, mas a clareza é preferível para demonstração.",
+            "concepts": []
+          },
+          {
+            "line": 3,
+            "level1": "Loop `for` sobre todas as palavras do dicionário.",
+            "level2": "Complexidade: `O(n)`, onde `n` é o número total de palavras. Não há como evitar ler todas pelo menos uma vez no pré‑processamento, mas aqui fazemos isso a cada consulta.",
+            "level3": "Num sistema real, o dicionário é pré‑processado (ex: construída a Trie) e a consulta não percorre tudo.",
+            "concepts": [
+              "big-o"
+            ]
+          },
+          {
+            "line": 4,
+            "level1": "Verifica se a palavra actual começa com o prefixo usando `startsWith`.",
+            "level2": "`startsWith` percorre os primeiros `|prefix|` caracteres da palavra, custo `O(L)`. Multiplicado por `n`, total `O(n * L)`.",
+            "level3": "Para prefixos curtos (ex: 3 letras), o custo é aceitável, mas ainda linear no número de palavras.",
+            "concepts": []
+          },
+          {
+            "line": 5,
+            "level1": "Se a condição for verdadeira, adiciona a palavra e o peso ao array `matches`.",
+            "level2": "Guardamos o objecto completo para podermos ordenar depois. O espaço extra é `O(m)`, onde `m` é número de candidatas.",
+            "level3": "Se `m` for muito grande (ex: prefixo vazio), podemos encher a memória. Em produção, limitaríamos `m` ou usaríamos uma heap.",
+            "concepts": []
+          },
+          {
+            "line": 8,
+            "level1": "Ordena o array `matches` por peso decrescente.",
+            "level2": "Usamos `sort` com comparador `(a,b) => b.weight - a.weight`. A ordenação custa `O(m log m)`.",
+            "level3": "Se `k` for muito menor que `m`, podemos optimizar usando uma min‑heap de tamanho `k` em vez de ordenar tudo. É a abordagem da solução óptima.",
+            "concepts": [
+              "big-o"
+            ]
+          },
+          {
+            "line": 9,
+            "level1": "Extrai as primeiras `k` palavras do array ordenado e devolve como resultado.",
+            "level2": "Se `k > matches.length`, `slice` simplesmente devolve todas as candidatas (sem erro).",
+            "level3": "O problema garante que `k` é positivo, mas não que seja menor que o número de sugestões.",
+            "concepts": []
+          }
+        ]
+      },
+      {
+        "meta": {
+          "slug": "trie-with-suggestions",
+          "name": "Trie com sugestões pré‑calculadas (ótimo)",
+          "kind": "optimal",
+          "language": "typescript",
+          "entryFunction": "AutocompleteSystem",
+          "simulatorCode": "(words, weights, prefix, k) => {\n  const steps = [];\n  class TrieNode {\n    children = new Map();\n    suggestions = [];\n  }\n  const root = new TrieNode();\n  const insert = (word, weight) => {\n    steps.push({ line: 18, snapshot: { caption: `Inserindo \"${word}\" com peso ${weight}.` } });\n    let node = root;\n    for (let i = 0; i < word.length; i++) {\n      const ch = word[i];\n      if (!node.children.has(ch)) node.children.set(ch, new TrieNode());\n      node = node.children.get(ch);\n      node.suggestions.push({ word, weight });\n      node.suggestions.sort((a, b) => b.weight - a.weight);\n      if (node.suggestions.length > k) node.suggestions.pop();\n      steps.push({ line: 22, snapshot: { caption: `Nó para prefixo \"${word.slice(0, i+1)}\". Sugestões acumuladas:`, suggestions: node.suggestions.map(s => `${s.word}(${s.weight})`) } });\n    }\n  };\n  for (let i = 0; i < words.length; i++) insert(words[i], weights[i]);\n  \n  steps.push({ line: 29, snapshot: { caption: \"Trie totalmente construída. Iniciando a busca pelo prefixo...\" } });\n  let node = root;\n  for (const ch of prefix) {\n    if (!node.children.has(ch)) {\n      steps.push({ line: 31, snapshot: { caption: `Prefixo \"${prefix}\" não encontrado na Trie.` } });\n      return steps;\n    }\n    node = node.children.get(ch);\n    steps.push({ line: 32, snapshot: { caption: `Navegando pela letra '${ch}'. Prefixo atual acumulado: \"${prefix.slice(0, prefix.indexOf(ch) + 1)}\"` } });\n  }\n  const result = node.suggestions.map(item => item.word);\n  steps.push({ line: 34, snapshot: { caption: `Sugestões encontradas para o prefixo \"${prefix}\": [${result.join(', ')}]`, result } });\n  return steps;\n}",
+          "complexity": {
+            "time": "O(N * L * log k) para construção, O(|prefix| + k) por consulta",
+            "space": "O(N * L + nós * k)",
+            "rationale": "Na construção, inserimos cada palavra, percorrendo os seus L caracteres. Em cada caractere, mantemos uma lista ordenada de tamanho ≤ k (custo O(log k) para inserção se usarmos heap, ou O(k) com ordenação simples). O espaço inclui nós da Trie (um por caractere de cada palavra) mais as listas de sugestões (até k por nó)."
+          }
+        },
+        "codeByLanguage": {
+          "csharp": "public class AutocompleteSystem {\n    private class TrieNode {\n        public Dictionary<char, TrieNode> Children = new();\n        public List<(string word, int weight)> Suggestions = new();\n    }\n    private readonly TrieNode _root = new();\n    private readonly int _k;\n\n    public AutocompleteSystem(string[] words, int[] weights, int k) {\n        _k = k;\n        for (int i = 0; i < words.Length; i++) {\n            Insert(words[i], weights[i]);\n        }\n    }\n\n    private void Insert(string word, int weight) {\n        TrieNode node = _root;\n        foreach (char c in word) {\n            if (!node.Children.ContainsKey(c))\n                node.Children[c] = new TrieNode();\n            node = node.Children[c];\n            // Atualiza sugestões\n            node.Suggestions.Add((word, weight));\n            node.Suggestions = node.Suggestions.OrderByDescending(x => x.weight).Take(_k).ToList();\n        }\n    }\n\n    public List<string> Autocomplete(string prefix) {\n        TrieNode node = _root;\n        foreach (char c in prefix) {\n            if (!node.Children.ContainsKey(c)) return new List<string>();\n            node = node.Children[c];\n        }\n        return node.Suggestions.Select(s => s.word).ToList();\n    }\n}\n",
+          "go": "type TrieNode struct {\n    children    map[rune]*TrieNode\n    suggestions []struct{ word string; weight int }\n}\n\ntype AutocompleteSystem struct {\n    root *TrieNode\n    k    int\n}\n\nfunc Constructor(words []string, weights []int, k int) AutocompleteSystem {\n    as := AutocompleteSystem{root: &TrieNode{children: make(map[rune]*TrieNode)}, k: k}\n    for i, w := range words {\n        as.insert(w, weights[i])\n    }\n    return as\n}\n\nfunc (as *AutocompleteSystem) insert(word string, weight int) {\n    node := as.root\n    for _, ch := range word {\n        if node.children[ch] == nil {\n            node.children[ch] = &TrieNode{children: make(map[rune]*TrieNode)}\n        }\n        node = node.children[ch]\n        // manter top k\n        node.suggestions = append(node.suggestions, struct{ word string; weight int }{word, weight})\n        sort.Slice(node.suggestions, func(i, j int) bool {\n            return node.suggestions[i].weight > node.suggestions[j].weight\n        })\n        if len(node.suggestions) > as.k {\n            node.suggestions = node.suggestions[:as.k]\n        }\n    }\n}\n\nfunc (as *AutocompleteSystem) Autocomplete(prefix string) []string {\n    node := as.root\n    for _, ch := range prefix {\n        if node.children[ch] == nil {\n            return []string{}\n        }\n        node = node.children[ch]\n    }\n    res := make([]string, len(node.suggestions))\n    for i, s := range node.suggestions {\n        res[i] = s.word\n    }\n    return res\n}\n",
+          "java": "class AutocompleteSystem {\n    class TrieNode {\n        Map<Character, TrieNode> children = new HashMap<>();\n        List<Pair> suggestions = new ArrayList<>();\n    }\n    class Pair { String word; int weight; Pair(String w, int wt) { word = w; weight = wt; } }\n    \n    private TrieNode root = new TrieNode();\n    private int k;\n\n    public AutocompleteSystem(String[] words, int[] weights, int k) {\n        this.k = k;\n        for (int i = 0; i < words.length; i++) {\n            insert(words[i], weights[i]);\n        }\n    }\n\n    private void insert(String word, int weight) {\n        TrieNode node = root;\n        for (char c : word.toCharArray()) {\n            node.children.putIfAbsent(c, new TrieNode());\n            node = node.children.get(c);\n            node.suggestions.add(new Pair(word, weight));\n            node.suggestions.sort((a, b) -> b.weight - a.weight);\n            if (node.suggestions.size() > k) node.suggestions.remove(node.suggestions.size() - 1);\n        }\n    }\n\n    public List<String> autocomplete(String prefix) {\n        TrieNode node = root;\n        for (char c : prefix.toCharArray()) {\n            if (!node.children.containsKey(c)) return List.of();\n            node = node.children.get(c);\n        }\n        return node.suggestions.stream().map(p -> p.word).collect(Collectors.toList());\n    }\n}\n",
+          "javascript": "class TrieNode {\n    constructor() {\n        this.children = new Map();\n        this.suggestions = [];\n    }\n}\n\nclass AutocompleteSystem {\n    constructor(words, weights, k) {\n        this.k = k;\n        this.root = new TrieNode();\n        for (let i = 0; i < words.length; i++) {\n            this._insert(words[i], weights[i]);\n        }\n    }\n\n    _insert(word, weight) {\n        let node = this.root;\n        for (const ch of word) {\n            if (!node.children.has(ch)) node.children.set(ch, new TrieNode());\n            node = node.children.get(ch);\n            node.suggestions.push({ word, weight });\n            node.suggestions.sort((a, b) => b.weight - a.weight);\n            if (node.suggestions.length > this.k) node.suggestions.pop();\n        }\n    }\n\n    autocomplete(prefix) {\n        let node = this.root;\n        for (const ch of prefix) {\n            if (!node.children.has(ch)) return [];\n            node = node.children.get(ch);\n        }\n        return node.suggestions.map(item => item.word);\n    }\n}\n",
+          "python": "class TrieNode:\n    def __init__(self):\n        self.children = {}\n        self.suggestions = []\n\nclass AutocompleteSystem:\n    def __init__(self, words, weights, k):\n        self.k = k\n        self.root = TrieNode()\n        for w, wt in zip(words, weights):\n            self._insert(w, wt)\n\n    def _insert(self, word, weight):\n        node = self.root\n        for ch in word:\n            if ch not in node.children:\n                node.children[ch] = TrieNode()\n            node = node.children[ch]\n            node.suggestions.append((weight, word))\n            node.suggestions.sort(reverse=True)\n            if len(node.suggestions) > self.k:\n                node.suggestions.pop()\n\n    def autocomplete(self, prefix):\n        node = self.root\n        for ch in prefix:\n            if ch not in node.children:\n                return []\n            node = node.children[ch]\n        return [word for _, word in node.suggestions]\n",
+          "typescript": "class TrieNode {\n  children = new Map<string, TrieNode>();\n  suggestions: { word: string; weight: number }[] = [];\n}\n\nclass AutocompleteSystem {\n  private root = new TrieNode();\n  private k: number;\n\n  constructor(words: string[], weights: number[], k: number) {\n    this.k = k;\n    for (let i = 0; i < words.length; i++) {\n      this.insert(words[i], weights[i]);\n    }\n  }\n\n  private insert(word: string, weight: number): void {\n    let node = this.root;\n    for (const ch of word) {\n      if (!node.children.has(ch)) node.children.set(ch, new TrieNode());\n      node = node.children.get(ch)!;\n      node.suggestions.push({ word, weight });\n      node.suggestions.sort((a, b) => b.weight - a.weight);\n      if (node.suggestions.length > this.k) node.suggestions.pop();\n    }\n  }\n\n  autocomplete(prefix: string): string[] {\n    let node = this.root;\n    for (const ch of prefix) {\n      if (!node.children.has(ch)) return [];\n      node = node.children.get(ch)!;\n    }\n    return node.suggestions.map(item => item.word);\n  }\n}\n"
+        },
+        "introMd": "## A grande ideia: pré‑computar as sugestões na Trie\n\nReformulamos o problema: **não queremos procurar as palavras a cada consulta; queremos ter as respostas já preparadas nos nós da Trie.**\n\nCada nó representa um prefixo. Se armazenarmos nesse nó as `k` palavras mais populares entre todas as que têm esse prefixo, a consulta torna‑se apenas:\n\n1. Caminhar pela Trie seguindo o prefixo.\n2. Devolver a lista guardada no nó final.\n\n## Porquê armazenar apenas `k` sugestões?\n\nSe guardássemos *todas* as palavras em cada nó, o espaço explodiria. Como o utilizador só vê as `k` melhores, podemos descartar as restantes logo na construção. Uma min‑heap ou ordenação parcial mantém a lista eficiente.\n\n## A ordem de inserção importa?\n\nSim, porque vamos actualizando as listas. A estratégia correcta: ao inserir uma palavra, adicionamo‑la às sugestões de **todos os nós do seu caminho** e depois mantemos apenas as `k` maiores. Isto garante que, no final, cada nó tenha as `k` palavras mais pesadas entre as que passam por ele.\n\n## Complexidade em detalhe\n\n- **Tempo de construção:** para cada palavra de comprimento `L`, fazemos `L` inserções em listas de tamanho ≤ `k`. Ordenar uma lista de tamanho `k` custa `O(k log k)` se usarmos `sort`, mas como `k` é pequeno (≤ 50), é aceitável. Podemos optimizar com uma min‑heap para `O(log k)` por inserção.\n- **Espaço:** `O(∑ L_i)` para os nós mais `O(k * número_de_nós)`. Na prática, `k` pequeno torna o overhead aceitável.\n\n## Consulta em tempo real\n\nApós a construção, cada consulta custa `O(|prefix|)` para percorrer a Trie mais `O(k)` para devolver o resultado. Isso é **independente do número total de palavras** – ideal para sistemas interactivos.",
+        "annotations": [
+          {
+            "line": 1,
+            "level1": "Define a classe `TrieNode` que representa um nó da nossa árvore de prefixos (Trie).",
+            "level2": "Cada nó na árvore atua como um ponto de ramificação que representa um caractere ou um prefixo comum compartilhado por múltiplas palavras.",
+            "level3": "Uma das maiores vantagens da Trie é a economia de espaço para prefixos muito repetidos (ex: 'carro', 'casa', 'cama' compartilham a raiz 'ca').",
+            "concepts": [
+              "trie"
+            ]
+          },
+          {
+            "line": 2,
+            "level1": "Cada nó possui um mapa `children` ligando caracteres a outros nós descendentes.",
+            "level2": "Usamos um `Map<string, TrieNode>` em vez de um array de tamanho fixo 26. Isso permite acomodar caracteres acentuados, maiúsculas ou símbolos sem desperdiçar memória.",
+            "level3": "A busca por chaves num Map do ES6 tem complexidade amortecida de `O(1)`, o que torna a navegação extremamente rápida.",
+            "concepts": [
+              "trie"
+            ]
+          },
+          {
+            "line": 3,
+            "level1": "Define a lista `suggestions` para armazenar as `k` melhores palavras que passam por este nó.",
+            "level2": "Esta lista é o segredo da eficiência do algoritmo: pré-calculamos as melhores sugestões diretamente em cada nó durante a inserção, evitando buscas em tempo de consulta.",
+            "level3": "Cada item da lista é um objeto composto por `{ word, weight }`, permitindo-nos saber a palavra recomendada e a sua popularidade.",
+            "concepts": [
+              "trie",
+              "heap-priority-queue"
+            ]
+          },
+          {
+            "line": 6,
+            "level1": "Define a classe principal `AutocompleteSystem` que gerencia a árvore e responde a pesquisas.",
+            "level2": "A classe encapsula toda a estrutura de dados (raiz e limite `k`), facilitando consultas subsequentes em tempo real.",
+            "level3": "Esse padrão de encapsulamento é essencial para expor uma API limpa aos consumidores do sistema.",
+            "concepts": []
+          },
+          {
+            "line": 7,
+            "level1": "Inicializa o nó raiz (`root`) da Trie.",
+            "level2": "O nó raiz representa o prefixo vazio `\"\"`. As suas sugestões seriam as `k` palavras mais populares de todo o dicionário.",
+            "level3": "A raiz é o ponto de entrada para qualquer inserção ou busca na árvore.",
+            "concepts": [
+              "trie"
+            ]
+          },
+          {
+            "line": 8,
+            "level1": "Declara a propriedade privada `k` para armazenar o número máximo de sugestões.",
+            "level2": "Esse limite é usado tanto para truncar as listas na inserção quanto para restringir o retorno da busca.",
+            "level3": "Armazenar o valor de `k` na classe evita passá-lo como parâmetro em todos os métodos privados.",
+            "concepts": []
+          },
+          {
+            "line": 10,
+            "level1": "O construtor inicializa o sistema a partir de um conjunto inicial de palavras e pesos.",
+            "level2": "O construtor recebe arrays paralelos `words` e `weights`, além do limite `k`, e popula a Trie.",
+            "level3": "Se a base de palavras mudar, precisaríamos reconstruir a Trie ou adicionar novos elementos sob demanda.",
+            "concepts": []
+          },
+          {
+            "line": 11,
+            "level1": "Guarda o parâmetro `k` de sugestões na instância da classe.",
+            "level2": "Isso permite que os métodos `insert` e `autocomplete` saibam qual é o limite configurado.",
+            "level3": "Em TypeScript, a atribuição é direta e fortemente tipada.",
+            "concepts": []
+          },
+          {
+            "line": 12,
+            "level1": "Itera sobre o array de palavras para inseri-las na estrutura.",
+            "level2": "A inserção é feita de forma sequencial para cada índice `i` de 0 até `words.length`.",
+            "level3": "Como assumimos que `words` e `weights` têm comprimentos correspondentes, usamos o índice comum.",
+            "concepts": []
+          },
+          {
+            "line": 13,
+            "level1": "Chama o método privado `insert` para a palavra e peso atuais.",
+            "level2": "Essa linha delega a lógica de navegação e preenchimento da Trie para o método especializado.",
+            "level3": "A complexidade total de inicialização é `O(N * L * k log k)` onde `N` é o número de palavras e `L` o comprimento médio.",
+            "concepts": []
+          },
+          {
+            "line": 17,
+            "level1": "Define o método privado `insert` para adicionar uma palavra e seu peso na Trie.",
+            "level2": "Este método percorre os caracteres da palavra, criando os nós necessários e atualizando as listas de sugestões no caminho.",
+            "level3": "A atualização no caminho garante que todos os nós ancestrais reflitam o novo elemento se ele for qualificado.",
+            "concepts": [
+              "trie"
+            ]
+          },
+          {
+            "line": 18,
+            "level1": "Começa a inserção a partir do nó raiz (`root`).",
+            "level2": "A variável `node` funciona como um ponteiro móvel que nos ajudará a descer pelos níveis da árvore.",
+            "level3": "Inicializar `node` com `this.root` é o primeiro passo para qualquer travessia na Trie.",
+            "concepts": []
+          },
+          {
+            "line": 19,
+            "level1": "Percorre cada caractere (`ch`) da palavra inserida.",
+            "level2": "A palavra é inserida caractere por caractere, de cima para baixo, do início ao fim.",
+            "level3": "Para uma palavra de comprimento `L`, este loop executará exatamente `L` vezes.",
+            "concepts": []
+          },
+          {
+            "line": 20,
+            "level1": "Verifica se o caractere atual já tem um nó filho correspondente, caso contrário, cria-o.",
+            "level2": "Se `node.children.has(ch)` for falso, instanciamos um novo `TrieNode` e associamo-lo à chave `ch`.",
+            "level3": "Este passo dinâmico é o que expande a Trie sob demanda à medida que novas palavras são aprendidas.",
+            "concepts": [
+              "trie"
+            ]
+          },
+          {
+            "line": 21,
+            "level1": "Avança o ponteiro `node` para o nó filho do caractere atual.",
+            "level2": "Usamos o operador non-null assertion `!` para garantir ao TypeScript que o nó definitivamente existe (já que o criamos ou verificamos na linha anterior).",
+            "level3": "O novo `node` agora representa o prefixo da palavra acumulado até este caractere.",
+            "concepts": []
+          },
+          {
+            "line": 22,
+            "level1": "Adiciona o par `{ word, weight }` à lista de sugestões deste nó.",
+            "level2": "Qualquer palavra que passa por este nó compartilha o prefixo representado por ele. Portanto, ela se torna uma candidata a sugestão.",
+            "level3": "Isso pode temporariamente estender a lista de sugestões além do tamanho limite de `k`.",
+            "concepts": []
+          },
+          {
+            "line": 23,
+            "level1": "Ordena a lista de sugestões por peso decrescente.",
+            "level2": "Ordenamos a lista de forma que a palavra de maior peso (mais popular) fique sempre no índice 0.",
+            "level3": "Usamos o método `.sort((a, b) => b.weight - a.weight)` nativo, que é extremamente veloz para coleções minúsculas.",
+            "concepts": []
+          },
+          {
+            "line": 24,
+            "level1": "Se a lista de sugestões ultrapassar `k`, descarta o elemento de menor peso.",
+            "level2": "Como a lista está ordenada decrescentemente, o último elemento (`node.suggestions.pop()`) é garantido como o de menor peso, mantendo a lista estritamente limitada a `k`.",
+            "level3": "Essa poda contínua evita o desperdício de memória e mantém a complexidade de espaço sob controle restrito.",
+            "concepts": [
+              "heap-priority-queue"
+            ]
+          },
+          {
+            "line": 28,
+            "level1": "Define o método público `autocomplete` para buscar as melhores sugestões por prefixo.",
+            "level2": "Este método caminha pela Trie de acordo com os caracteres do prefixo fornecido.",
+            "level3": "Ele substitui a varredura linear do dicionário por uma descida de complexidade proporcional apenas ao tamanho do prefixo.",
+            "concepts": []
+          },
+          {
+            "line": 29,
+            "level1": "Inicia a busca a partir do nó raiz da Trie.",
+            "level2": "Assim como na inserção, usamos um ponteiro temporário `node` para navegar na árvore.",
+            "level3": "O tempo de acesso inicial na raiz é instantâneo.",
+            "concepts": []
+          },
+          {
+            "line": 30,
+            "level1": "Itera sobre cada caractere (`ch`) do prefixo de busca.",
+            "level2": "Cada caractere nos guia um nível mais profundo na Trie.",
+            "level3": "Se o prefixo tiver comprimento `P`, o loop fará no máximo `P` iterações.",
+            "concepts": []
+          },
+          {
+            "line": 31,
+            "level1": "Retorna uma lista vazia se algum caractere do prefixo não existir na árvore.",
+            "level2": "Se a árvore não tem ramificação para a letra atual, significa que nenhuma palavra cadastrada começa com esse prefixo. Retornamos `[]` imediatamente.",
+            "level3": "Essa saída antecipada (poda rápida) economiza tempo valioso em pesquisas que não produziriam resultados.",
+            "concepts": []
+          },
+          {
+            "line": 32,
+            "level1": "Desce para o nó filho correspondente ao caractere atual.",
+            "level2": "Usamos novamente o operador `!` indicando que a existência do filho está assegurada pela verificação da linha anterior.",
+            "level3": "O ponteiro `node` avança um nível abaixo na hierarquia de caracteres.",
+            "concepts": []
+          },
+          {
+            "line": 34,
+            "level1": "Retorna os nomes das palavras das sugestões pré-calculadas.",
+            "level2": "O nó final alcançado já contém as `k` melhores palavras pré-calculadas. Usamos `.map(item => item.word)` para retornar apenas os nomes (strings) sem os pesos.",
+            "level3": "Essa consulta é extremamente rápida: tempo constante `O(k)` após navegar o prefixo.",
+            "concepts": []
+          }
+        ],
+        "executionTrace": {
+          "steps": [
+            {
+              "line": 10,
+              "snapshot": {
+                "caption": "Inicialização do sistema com palavras [\"casa\",\"carro\",\"cachorro\",\"cama\"], pesos [100,80,90,70], k=2.",
+                "arrays": [
+                  {
+                    "label": "words",
+                    "values": [
+                      "casa",
+                      "carro",
+                      "cachorro",
+                      "cama"
+                    ]
+                  },
+                  {
+                    "label": "weights",
+                    "values": [
+                      100,
+                      80,
+                      90,
+                      70
+                    ]
+                  }
+                ],
+                "scalars": {
+                  "k": 2
+                }
+              }
+            },
+            {
+              "line": 13,
+              "snapshot": {
+                "caption": "Inserindo \"casa\" com peso 100.",
+                "scalars": {
+                  "word": "casa",
+                  "weight": 100
+                }
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando caractere 'c' do prefixo \"c\"",
+                "suggestions": []
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Após inserir, nó 'c' tem sugestões: [casa(100)]",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando caractere 'a' do prefixo \"ca\"",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'ca' tem sugestões: [casa(100)]",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando caractere 's' do prefixo \"cas\"",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'cas' tem sugestões: [casa(100)]",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando caractere 'a' do prefixo \"casa\"",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'casa' (final) tem sugestões: [casa(100)]",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 13,
+              "snapshot": {
+                "caption": "Inserindo \"carro\" com peso 80.",
+                "scalars": {
+                  "word": "carro",
+                  "weight": 80
+                }
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'c'",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'c' agora tem: [casa(100), carro(80)]",
+                "suggestions": [
+                  "casa(100)",
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'a'",
+                "suggestions": [
+                  "casa(100)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'ca' tem: [casa(100), carro(80)]",
+                "suggestions": [
+                  "casa(100)",
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'r'",
+                "suggestions": [
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'car' tem: [carro(80)]",
+                "suggestions": [
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'r'",
+                "suggestions": [
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'carr' tem: [carro(80)]",
+                "suggestions": [
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'o'",
+                "suggestions": [
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'carro' (final) tem: [carro(80)]",
+                "suggestions": [
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 13,
+              "snapshot": {
+                "caption": "Inserindo \"cachorro\" com peso 90.",
+                "scalars": {
+                  "word": "cachorro",
+                  "weight": 90
+                }
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'c'",
+                "suggestions": [
+                  "casa(100)",
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'c' após inserir cachorro: [casa(100), cachorro(90), carro(80)] → mantém top 2: [casa(100), cachorro(90)]",
+                "suggestions": [
+                  "casa(100)",
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'a'",
+                "suggestions": [
+                  "casa(100)",
+                  "carro(80)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'ca' após inserir cachorro: [casa(100), cachorro(90), carro(80)] → mantém [casa(100), cachorro(90)]",
+                "suggestions": [
+                  "casa(100)",
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'c' (segundo 'c' de cachorro)",
+                "suggestions": []
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'cac' tem: [cachorro(90)]",
+                "suggestions": [
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'h'",
+                "suggestions": [
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'cach' tem: [cachorro(90)]",
+                "suggestions": [
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 13,
+              "snapshot": {
+                "caption": "Inserindo \"cama\" com peso 70.",
+                "scalars": {
+                  "word": "cama",
+                  "weight": 70
+                }
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'c'",
+                "suggestions": [
+                  "casa(100)",
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'c' após inserir cama: candidatas [casa(100), cachorro(90), cama(70)] → mantém [casa(100), cachorro(90)]",
+                "suggestions": [
+                  "casa(100)",
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'a'",
+                "suggestions": [
+                  "casa(100)",
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'ca' após inserir cama: [casa(100), cachorro(90), cama(70)] → mantém [casa(100), cachorro(90)]",
+                "suggestions": [
+                  "casa(100)",
+                  "cachorro(90)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'm'",
+                "suggestions": []
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'cam' tem: [cama(70)]",
+                "suggestions": [
+                  "cama(70)"
+                ]
+              }
+            },
+            {
+              "line": 19,
+              "snapshot": {
+                "caption": "Processando 'a'",
+                "suggestions": [
+                  "cama(70)"
+                ]
+              }
+            },
+            {
+              "line": 22,
+              "snapshot": {
+                "caption": "Nó 'cama' (final) tem: [cama(70)]",
+                "suggestions": [
+                  "cama(70)"
+                ]
+              }
+            },
+            {
+              "line": 28,
+              "snapshot": {
+                "caption": "Consulta: prefixo = \"ca\"",
+                "scalars": {
+                  "prefix": "ca"
+                }
+              }
+            },
+            {
+              "line": 30,
+              "snapshot": {
+                "caption": "Seguindo 'c'",
+                "currentNode": "raiz → nó 'c'"
+              }
+            },
+            {
+              "line": 30,
+              "snapshot": {
+                "caption": "Seguindo 'a'",
+                "currentNode": "nó 'c' → nó 'ca'"
+              }
+            },
+            {
+              "line": 34,
+              "snapshot": {
+                "caption": "Nó 'ca' tem sugestões: [casa(100), cachorro(90)]",
+                "result": [
+                  "casa",
+                  "cachorro"
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "hasBespokeVisualizer": true
+  }
+}

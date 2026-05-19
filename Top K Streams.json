@@ -1,0 +1,683 @@
+{
+  "title": "Top K Streams — os elementos mais populares em tempo real",
+  "slug": "top-k-streams-heap",
+  "body": "## O problema (sem saberes programar… ainda)\n\nRecebes um **stream de eventos** (array `events`) e um número inteiro `k`.\n\nA qualquer momento, alguém pode perguntar: **quais são os `k` elementos que apareceram mais vezes até agora?**\n\nÉ o problema do **Top K mais frequentes** num fluxo contínuo de dados — um dos padrões mais importantes em sistemas de recomendação, trending topics, análise de logs e motores de busca.\n\n---\n\n## Analogia rápida\n\nImagina que és o responsável por manter o placar dos **jogadores mais pontuados** num torneio de videojogos. Milhares de pontos de experiência chegam a cada segundo.\n\nNão podes ordenar a lista completa de todos os jogadores cada vez que alguém pede o Top 10 — isso seria lento e desperdiçaria recursos. Precisas de uma estrutura que **automaticamente mantenha apenas os K melhores**, descartando os outros assim que possível.\n\nÉ exactamente isto que uma **Min‑Heap** faz.\n\n---\n\n## O que este exercício realmente ensina\n\nO objectivo escondido não é apenas aprender a sintaxe de uma heap. É perceber uma ideia fundamental:\n\n> **Não precisamos ordenar o universo inteiro quando só queremos os melhores K.**\n\nEssa mentalidade aparece em:\n\n- Sistemas distribuídos (Top K queries num cluster)\n- Motores de busca (documentos mais relevantes)\n- Recomendação em tempo real (vídeos, músicas, produtos)\n- Análise de logs e detecção de anomalias\n- Algoritmos de machine learning (KNN, feature selection)\n\n---\n\n## A abordagem ingénua (e porque não escala)\n\nUma primeira ideia é:\n\n```txt\n1. Contar frequências de todos os elementos (Map)\n2. Ordenar o array de pares (freq, valor) por frequência decrescente\n3. Devolver os primeiros K valores\n```\n\nFunciona, mas ordenar `m` elementos únicos custa **O(m log m)**. Num stream com milhões de valores únicos, isso torna-se inviável — especialmente quando precisamos de responder muitas vezes ao longo do tempo.\n\n---\n\n## A solução eficiente: Min‑Heap de tamanho K\n\nA observação chave: **nunca precisamos guardar mais do que K candidatos**.\n\nMantemos uma **min‑heap** (priority queue) que armazena pares `(frequência, valor)`, ordenada pelo **menor** `frequência` no topo. A heap terá no máximo `K` elementos.\n\n**Processo:**\n\n1. Conta as frequências de todos os elementos (usando um `Map`).\n2. Para cada `(valor, frequência)`:\n   - Insere na heap (`push`).\n   - Se a heap ficar com tamanho > K, remove o elemento de **menor frequência** (o topo da min‑heap).\n3. No final, a heap contém exactamente os K elementos com maior frequência.\n\n**Complexidade:**\n\n- Contagem: `O(n)`\n- Inserções/remoções na heap: `O(m log K)`\n- Espaço: `O(m)` para o mapa + `O(K)` para a heap\n\nQuando `K` é pequeno (por exemplo, 10, 100), `log K` é uma constante baixíssima — muito melhor que ordenar tudo.\n\n---\n\n## Visualização intuitiva\n\n```\nK = 3\n\nHeap (min‑heap) mantém os 3 maiores:\n[(5, B), (7, C), (10, D)]\n\nChega novo elemento com frequência 12:\n- Inserir: [(5,B), (7,C), (10,D), (12,E)]\n- Remover o menor (5,B): [(7,C), (10,D), (12,E)]\n```\n\nA heap **expulsa automaticamente** o menor candidato, mantendo sempre os K maiores.\n\n---\n\n## Porque isto aparece em entrevistas\n\nEste problema testa várias competências ao mesmo tempo:\n\n- **Uso de Hash Maps** para contagem eficiente.\n- **Heaps / Priority Queues** para manter os K extremos.\n- **Otimização de memória** (nunca guardar mais do que o necessário).\n- **Pensamento em fluxo** (streaming / online algorithms).\n\nÉ um dos padrões mais pedidos em big tech (Google, Amazon, Meta) porque modela um problema real de sistemas de larga escala.\n\n---\n\n## Edge Cases importantes\n\n| Caso | Exemplo | Comportamento esperado |\n|------|---------|------------------------|\n| Todos os elementos iguais | `[5,5,5,5]`, `k=2` | `[5]` (apenas um único) |\n| Todos diferentes | `[1,2,3,4]`, `k=2` | Quaisquer dois (por ex. `[1,2]`) |\n| `k` maior que o número de elementos únicos | `[1,2]`, `k=5` | Devolve todos os elementos únicos |\n| Empates em frequência | `[1,1,2,2,3]`, `k=2` | Qualquer ordem dos dois primeiros (`[1,2]` ou `[2,1]`) |\n\n---\n\n## Conclusão\n\nA combinação de **Map para contagem** + **Min‑Heap de tamanho K** é um padrão de ouro para problemas de Top K. Memoriza-o, porque vais encontrá-lo em muitas variações:\n\n- Top K palavras mais frequentes num livro\n- Top K produtos mais vendidos no minuto passado\n- Top K utilizadores mais activos num jogo online\n\n> “Não ordenes tudo se só precisas do pódio.”\n",
+  "meta": {
+    "slug": "top-k-streams-heap",
+    "title": "Top K Streams — os elementos mais populares em tempo real",
+    "difficulty": "medium",
+    "categories": ["heap", "hash-tables"],
+    "prerequisites": ["hash-tables", "heap-priority-queue", "big-o"],
+    "tags": ["top-k", "stream", "priority-queue", "neetcode-150"],
+    "estimatedMinutes": 25,
+    "recommendedOrder": 1,
+    "access": "free",
+    "examples": [
+      {
+        "input": "events = [1,1,1,2,2,3], k = 2",
+        "output": "[1,2]",
+        "explanation": "Frequências: 1→3, 2→2, 3→1. Os dois mais frequentes são 1 e 2."
+      },
+      {
+        "input": "events = [4], k = 1",
+        "output": "[4]",
+        "explanation": "Apenas um elemento, logo ele é o mais frequente."
+      },
+      {
+        "input": "events = [1,2,3,1,2,1], k = 2",
+        "output": "[1,2]",
+        "explanation": "1 aparece 3 vezes, 2 aparece 2 vezes, 3 aparece 1 vez. Top 2: 1 e 2."
+      }
+    ],
+    "constraints": [
+      "1 ≤ events.length ≤ 10⁵",
+      "-10⁴ ≤ events[i] ≤ 10⁴",
+      "1 ≤ k ≤ número de elementos únicos em events"
+    ],
+    "solutions": [
+      {
+        "meta": {
+          "slug": "sorting-total",
+          "name": "Ordenação total (força bruta)",
+          "kind": "brute-force",
+          "language": "typescript",
+          "entryFunction": "topKFrequent",
+          "simulatorCode": "(events, k) => {\n  const steps = [];\n  const freq = new Map();\n  for (let i = 0; i < events.length; i++) {\n    const val = events[i];\n    steps.push({ line: 3, snapshot: { caption: `Processando ${val}`, scalars: { i }, arrays: [{ label: 'events', values: events, highlightIndices: [i] }], mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n    freq.set(val, (freq.get(val) || 0) + 1);\n    steps.push({ line: 4, snapshot: { caption: `Freq ${val} = ${freq.get(val)}`, mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n  }\n  steps.push({ line: 6, snapshot: { caption: 'Contagem concluída. A ordenar por frequência...', mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n  const sorted = Array.from(freq.entries()).sort((a, b) => b[1] - a[1]);\n  steps.push({ line: 6, snapshot: { caption: 'Lista ordenada (freq decrescente)', sortedEntries: sorted } });\n  const result = sorted.slice(0, k).map(item => item[0]);\n  steps.push({ line: 7, snapshot: { caption: `Resultado final: ${result.join(', ')}`, result } });\n  return steps;\n}",
+          "complexity": {
+            "time": "O(n + m log m)",
+            "space": "O(m)",
+            "rationale": "Percorremos o array uma vez para contar (`O(n)`). Depois ordenamos os `m` elementos únicos (`O(m log m)`). No pior caso `m = n`, logo `O(n log n)`. O espaço é dominado pelo mapa de frequências, que guarda até `m` pares chave‑valor."
+          }
+        },
+        "codeByLanguage": {
+          "csharp": "public class Solution {\n    public int[] TopKFrequent(int[] events, int k) {\n        var freq = new Dictionary<int, int>();\n        foreach (int val in events) {\n            freq[val] = freq.GetValueOrDefault(val) + 1;\n        }\n        var sorted = freq.OrderByDescending(pair => pair.Value).ToList();\n        return sorted.Take(k).Select(pair => pair.Key).ToArray();\n    }\n}\n",
+          "go": "func topKFrequent(events []int, k int) []int {\n    freq := make(map[int]int)\n    for _, val := range events {\n        freq[val]++\n    }\n    type pair struct{ val, cnt int }\n    pairs := make([]pair, 0, len(freq))\n    for v, c := range freq {\n        pairs = append(pairs, pair{v, c})\n    }\n    sort.Slice(pairs, func(i, j int) bool {\n        return pairs[i].cnt > pairs[j].cnt\n    })\n    res := make([]int, k)\n    for i := 0; i < k; i++ {\n        res[i] = pairs[i].val\n    }\n    return res\n}\n",
+          "java": "class Solution {\n    public int[] topKFrequent(int[] events, int k) {\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int val : events) {\n            freq.put(val, freq.getOrDefault(val, 0) + 1);\n        }\n        List<Map.Entry<Integer, Integer>> list = new ArrayList<>(freq.entrySet());\n        list.sort((a, b) -> b.getValue() - a.getValue());\n        int[] res = new int[k];\n        for (int i = 0; i < k; i++) {\n            res[i] = list.get(i).getKey();\n        }\n        return res;\n    }\n}\n",
+          "javascript": "function topKFrequent(events, k) {\n    const freq = new Map();\n    for (const val of events) {\n        freq.set(val, (freq.get(val) || 0) + 1);\n    }\n    const sorted = [...freq.entries()].sort((a, b) => b[1] - a[1]);\n    return sorted.slice(0, k).map(item => item[0]);\n}\n",
+          "python": "def topKFrequent(events, k):\n    from collections import Counter\n    freq = Counter(events)\n    most_common = freq.most_common(k)\n    return [val for val, _ in most_common]\n",
+          "typescript": "function topKFrequent(events: number[], k: number): number[] {\n  const freq = new Map<number, number>();\n  for (const val of events) {\n    freq.set(val, (freq.get(val) || 0) + 1);\n  }\n  const sorted = Array.from(freq.entries()).sort((a, b) => b[1] - a[1]);\n  return sorted.slice(0, k).map(item => item[0]);\n}\n"
+        },
+        "introMd": "## A ideia\n\nA forma mais directa: **conta todas as frequências** e depois **ordena** os pares (frequência, valor) por ordem decrescente de frequência. Os primeiros `k` elementos da lista ordenada são a resposta.\n\n## Quando é \"boa o suficiente\"\n\n- Quando `n` (total de eventos) é moderado (≤ 10⁵) e o número de elementos únicos também não é gigantesco.\n- Quando estás a resolver um problema num ambiente que não exige respostas em tempo real e podes fazer uma ordenação total.\n- Como primeira implementação para validar a lógica – é simples, legível e difícil de errar.\n\n## Porque não é ideal para streams\n\nNum fluxo contínuo, cada novo lote de eventos obrigaria a reordenar tudo novamente (`O(m log m)`). Com heaps, conseguimos manter os K maiores sem ordenação total a cada iteração.",
+        "annotations": [
+          {
+            "line": 1,
+            "level1": "Declara a função `topKFrequent` – recebe um array de números e um inteiro `k`.",
+            "level2": "A assinatura é padrão para problemas de Top K. O retorno é um array com os K valores mais frequentes, sem qualquer ordem específica exigida (mas por convenção usamos ordem decrescente de frequência).",
+            "level3": "Se quisesses ser mais rigoroso, poderias marcar `events` como `readonly` porque a função não o modifica. O tipo de retorno `number[]` é suficiente.",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 2,
+            "level1": "Cria um `Map` para guardar a contagem de cada valor.",
+            "level2": "Usamos `Map<number, number>` porque as chaves são números (os valores do array). Um objecto simples `{}` também funcionaria, mas converteria as chaves para string, o que é desnecessário e pode causar confusão com propriedades herdadas. `Map` é mais semântico e eficiente.",
+            "level3": "Em Python, usamos `Counter`; em Java, `HashMap<Integer, Integer>`; em Go, `map[int]int`. A ideia é a mesma em todas as linguagens.",
+            "concepts": ["hash-tables"]
+          },
+          {
+            "line": 3,
+            "level1": "Loop `for..of` sobre cada evento do array.",
+            "level2": "Para cada valor, actualizamos a sua contagem no mapa. O operador `||` garante que, se ainda não existir, começamos em 0.",
+            "level3": "Complexidade: cada iteração é `O(1)` amortizado (acesso e atualização no mapa). O loop total é `O(n)`.",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 4,
+            "level1": "Atualiza a contagem do valor actual.",
+            "level2": "`freq.get(val)` devolve o valor actual ou `undefined`. O `|| 0` converte `undefined` em 0. Somamos 1 e guardamos de volta com `set`.",
+            "level3": "Uma alternativa mais concisa: `freq.set(val, (freq.get(val) ?? 0) + 1)`. O operador `??` (nullish coalescing) é mais seguro que `||` quando o valor pode ser 0 (o que não é o caso aqui).",
+            "concepts": ["hash-tables"],
+            "warnings": []
+          },
+          {
+            "line": 5,
+            "level1": "Fim do loop de contagem. Agora `freq` contém todas as frequências.",
+            "level2": "Nota: não há mais iterações sobre o array original – o resto do algoritmo trabalha apenas sobre o mapa de frequências.",
+            "level3": "Em termos de memória, guardamos no máximo `m` entradas, onde `m` é o número de elementos distintos.",
+            "concepts": []
+          },
+          {
+            "line": 6,
+            "level1": "Converte o mapa numa lista de pares `[valor, frequência]` e ordena por frequência decrescente.",
+            "level2": "`Array.from(freq.entries())` produz um array como `[[1,3], [2,2], [3,1]]`. O `sort` recebe uma função de comparação: `(a,b) => b[1] - a[1]` ordena do maior para o menor frequência.",
+            "level3": "A ordenação custa `O(m log m)`, que é o gargalo desta solução. Quando `m` é grande (ex: 10⁵ elementos únicos), este passo pode ser lento.",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 7,
+            "level1": "Extrai os primeiros `k` elementos do array ordenado e mapeia para obter apenas os valores (ignorando as frequências).",
+            "level2": "`slice(0, k)` é seguro mesmo se `k` for maior que o tamanho da lista – retorna a lista toda nesse caso. O problema garante que `k ≤ número de elementos únicos`, então não precisamos de protecção extra.",
+            "level3": "Se a ordem do resultado não for relevante, esta linha é suficiente. Se for exigida ordem crescente de valor ou algo assim, seria necessário ordenar novamente.",
+            "concepts": []
+          }
+        ]
+      },
+      {
+        "meta": {
+          "slug": "min-heap-k",
+          "name": "Min Heap de tamanho K (ótimo)",
+          "kind": "optimal",
+          "language": "typescript",
+          "entryFunction": "topKFrequent",
+          "simulatorCode": "(events, k) => {\n  const steps = [];\n  const freq = new Map();\n  for (let i = 0; i < events.length; i++) {\n    const val = events[i];\n    steps.push({ line: 3, snapshot: { caption: `Processando evento ${val} (índice ${i})`, scalars: { i }, arrays: [{ label: 'events', values: events, highlightIndices: [i] }], mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n    freq.set(val, (freq.get(val) || 0) + 1);\n    steps.push({ line: 4, snapshot: { caption: `Frequência de ${val} agora = ${freq.get(val)}`, mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n  }\n  steps.push({ line: 6, snapshot: { caption: 'Contagem concluída. Construindo min-heap de tamanho K...', mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n  const heap = [];\n  const push = (item) => {\n    heap.push(item);\n    let idx = heap.length - 1;\n    while (idx > 0) {\n      const parent = (idx - 1) >> 1;\n      if (heap[parent][0] <= heap[idx][0]) break;\n      [heap[parent], heap[idx]] = [heap[idx], heap[parent]];\n      idx = parent;\n    }\n    steps.push({ line: 37, snapshot: { caption: `Inserido (${item[0]}, ${item[1]}) na heap`, arrays: [{ label: 'minHeap', values: heap.map(h => `(${h[0]}, ${h[1]})`) }] } });\n  };\n  const pop = () => {\n    const min = heap[0];\n    const last = heap.pop();\n    if (heap.length) {\n      heap[0] = last;\n      let idx = 0;\n      while (true) {\n        let left = idx * 2 + 1;\n        let right = left + 1;\n        let smallest = idx;\n        if (left < heap.length && heap[left][0] < heap[smallest][0]) smallest = left;\n        if (right < heap.length && heap[right][0] < heap[smallest][0]) smallest = right;\n        if (smallest === idx) break;\n        [heap[idx], heap[smallest]] = [heap[smallest], heap[idx]];\n        idx = smallest;\n      }\n    }\n    steps.push({ line: 38, snapshot: { caption: `Removido o menor (${min[0]}, ${min[1]}) da heap`, arrays: [{ label: 'minHeap', values: heap.map(h => `(${h[0]}, ${h[1]})`) }] } });\n    return min;\n  };\n  for (const [val, count] of freq.entries()) {\n    steps.push({ line: 36, snapshot: { caption: `Considerando (${count}, ${val})`, scalars: { val: String(val), count: String(count) }, mapEntries: Array.from(freq.entries()).map(([k, v]) => ({ key: String(k), value: String(v) })) } });\n    push([count, val]);\n    if (heap.length > k) {\n      pop();\n    }\n  }\n  const result = heap.map(item => item[1]);\n  steps.push({ line: 40, snapshot: { caption: `Resultado final: ${result.join(', ')}`, result } });\n  return steps;\n}",
+          "complexity": {
+            "time": "O(n + m log k)",
+            "space": "O(m + k)",
+            "rationale": "Percorremos o array uma vez para contar (`O(n)`). Depois, para cada um dos `m` elementos únicos, realizamos uma inserção (`O(log k)`) e, no máximo, uma remoção (`O(log k)`). No pior caso, `m = n`, mas `k` geralmente é pequeno, resultando em `O(n log k)` tempo. O espaço inclui o mapa de frequências (`O(m)`) e a heap (`O(k)`)."
+          }
+        },
+        "codeByLanguage": {
+          "csharp": "public class Solution {\n    public int[] TopKFrequent(int[] events, int k) {\n        var freq = new Dictionary<int, int>();\n        foreach (int val in events) {\n            freq[val] = freq.GetValueOrDefault(val) + 1;\n        }\n        var minHeap = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => a.CompareTo(b)));\n        var heapMap = new Dictionary<int, int>();\n        foreach (var (val, count) in freq) {\n            minHeap.Enqueue(val, count);\n            heapMap[val] = count;\n            if (minHeap.Count > k) {\n                int removed = minHeap.Dequeue();\n                heapMap.Remove(removed);\n            }\n        }\n        return heapMap.Keys.ToArray();\n    }\n}\n",
+          "go": "func topKFrequent(events []int, k int) []int {\n    freq := make(map[int]int)\n    for _, v := range events {\n        freq[v]++\n    }\n    h := &minHeap{}\n    heap.Init(h)\n    for val, cnt := range freq {\n        heap.Push(h, pair{cnt, val})\n        if h.Len() > k {\n            heap.Pop(h)\n        }\n    }\n    res := make([]int, h.Len())\n    for i := 0; i < len(res); i++ {\n        res[i] = heap.Pop(h).(pair).val\n    }\n    return res\n}\n\ntype pair struct{ cnt, val int }\ntype minHeap []pair\nfunc (h minHeap) Len() int           { return len(h) }\nfunc (h minHeap) Less(i, j int) bool { return h[i].cnt < h[j].cnt }\nfunc (h minHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }\nfunc (h *minHeap) Push(x any)        { *h = append(*h, x.(pair)) }\nfunc (h *minHeap) Pop() any          { old := *h; n := len(old); x := old[n-1]; *h = old[:n-1]; return x }\n",
+          "java": "class Solution {\n    public int[] topKFrequent(int[] events, int k) {\n        Map<Integer, Integer> freq = new HashMap<>();\n        for (int val : events) {\n            freq.put(val, freq.getOrDefault(val, 0) + 1);\n        }\n        PriorityQueue<Map.Entry<Integer, Integer>> minHeap =\n            new PriorityQueue<>(Comparator.comparingInt(Map.Entry::getValue));\n        for (Map.Entry<Integer, Integer> entry : freq.entrySet()) {\n            minHeap.offer(entry);\n            if (minHeap.size() > k) minHeap.poll();\n        }\n        int[] res = new int[k];\n        for (int i = 0; i < k; i++) {\n            res[i] = minHeap.poll().getKey();\n        }\n        return res;\n    }\n}\n",
+          "javascript": "function topKFrequent(events, k) {\n    const freq = new Map();\n    for (const val of events) {\n        freq.set(val, (freq.get(val) || 0) + 1);\n    }\n    const minHeap = [];\n    const push = (item) => {\n        minHeap.push(item);\n        let i = minHeap.length - 1;\n        while (i > 0) {\n            const p = (i - 1) >> 1;\n            if (minHeap[p][0] <= minHeap[i][0]) break;\n            [minHeap[p], minHeap[i]] = [minHeap[i], minHeap[p]];\n            i = p;\n        }\n    };\n    const pop = () => {\n        const min = minHeap[0];\n        const last = minHeap.pop();\n        if (minHeap.length) {\n            minHeap[0] = last;\n            let i = 0;\n            while (true) {\n                let left = i * 2 + 1;\n                let right = left + 1;\n                let smallest = i;\n                if (left < minHeap.length && minHeap[left][0] < minHeap[smallest][0]) smallest = left;\n                if (right < minHeap.length && minHeap[right][0] < minHeap[smallest][0]) smallest = right;\n                if (smallest === i) break;\n                [minHeap[i], minHeap[smallest]] = [minHeap[smallest], minHeap[i]];\n                i = smallest;\n            }\n        }\n        return min;\n    };\n    for (const [val, count] of freq.entries()) {\n        push([count, val]);\n        if (minHeap.length > k) pop();\n    }\n    return minHeap.map(item => item[1]);\n}\n",
+          "python": "def topKFrequent(events, k):\n    from collections import Counter\n    import heapq\n    freq = Counter(events)\n    heap = []\n    for val, count in freq.items():\n        heapq.heappush(heap, (count, val))\n        if len(heap) > k:\n            heapq.heappop(heap)\n    return [val for _, val in heap]\n",
+          "typescript": "function topKFrequent(events: number[], k: number): number[] {\n  const freq = new Map<number, number>();\n  for (const val of events) {\n    freq.set(val, (freq.get(val) || 0) + 1);\n  }\n  const minHeap: [number, number][] = [];\n  const push = (item: [number, number]) => {\n    minHeap.push(item);\n    let i = minHeap.length - 1;\n    while (i > 0) {\n      const parent = (i - 1) >> 1;\n      if (minHeap[parent][0] <= minHeap[i][0]) break;\n      [minHeap[parent], minHeap[i]] = [minHeap[i], minHeap[parent]];\n      i = parent;\n    }\n  };\n  const pop = (): [number, number] => {\n    const min = minHeap[0];\n    const last = minHeap.pop()!;\n    if (minHeap.length) {\n      minHeap[0] = last;\n      let i = 0;\n      while (true) {\n        let left = i * 2 + 1;\n        let right = left + 1;\n        let smallest = i;\n        if (left < minHeap.length && minHeap[left][0] < minHeap[smallest][0]) smallest = left;\n        if (right < minHeap.length && minHeap[right][0] < minHeap[smallest][0]) smallest = right;\n        if (smallest === i) break;\n        [minHeap[i], minHeap[smallest]] = [minHeap[smallest], minHeap[i]];\n        i = smallest;\n      }\n    }\n    return min;\n  };\n  for (const [val, count] of freq.entries()) {\n    push([count, val]);\n    if (minHeap.length > k) pop();\n  }\n  return minHeap.map(item => item[1]);\n}\n"
+        },
+        "introMd": "## A grande ideia: manter apenas os K maiores\n\nReformulamos o problema: **não precisamos de todos os elementos ordenados, apenas dos K com maior frequência**.\n\nUma **min‑heap** de tamanho K mantém automaticamente os K maiores elementos, porque:\n\n- Quando inserimos um novo elemento, se a heap ultrapassar K, removemos o **menor** (o topo da min‑heap).\n- No final, os K elementos que sobraram são exactamente os K maiores.\n\n## Porquê uma min‑heap e não max‑heap?\n\nIntuitivamente, queremos remover o menor dos candidatos quando temos K+1 elementos. Uma min‑heap permite aceder a esse menor em `O(1)` e removê-lo em `O(log K)`. Se usássemos uma max‑heap, teríamos de remover o maior, o que não nos ajudaria – acabaríamos por ficar com os K *menores*.\n\n## O truque da ordem: primeiro contamos, depois heap\n\nDiferente de um stream infinito (onde cada evento chega um a um), aqui recebemos todo o array de uma vez. Ainda assim, a heap reduz drasticamente o trabalho de ordenação: de `O(m log m)` para `O(m log K)`.",
+        "annotations": [
+          {
+            "line": 1,
+            "level1": "Declara a função `topKFrequent` – mesmo contrato que a solução anterior.",
+            "level2": "Nota: a interface pública não muda. Quem chama a função não precisa saber se implementámos com ordenação total ou com heap. É um bom princípio de encapsulamento.",
+            "level3": "Poderias marcar `events` como `readonly` e usar um tipo de retorno mais específico (`readonly [number, ...number[]]`), mas para LeetCode o mais simples é suficiente.",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 2,
+            "level1": "Cria o mapa de frequências – idêntico à solução anterior.",
+            "level2": "A primeira fase (contagem) é comum a qualquer abordagem. A partir daqui é que as soluções divergem.",
+            "level3": "Se o stream fosse infinito (evento a evento), teríamos de actualizar a heap a cada novo evento, sem esperar pelo fim da contagem. Esse é o problema clássico de **Top K em stream**.",
+            "concepts": ["hash-tables"]
+          },
+          {
+            "line": 3,
+            "level1": "Loop de contagem – mesma lógica da solução ingénua.",
+            "level2": "A complexidade continua `O(n)` e não há como melhorar – qualquer algoritmo precisa pelo menos ler todos os eventos uma vez.",
+            "level3": "Se os eventos chegassem já com chave e valor agregados, poderíamos saltar esta fase, mas aqui não é o caso.",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 4,
+            "level1": "Actualização da frequência – `O(1)` amortizado.",
+            "level2": "Após o loop, `freq` contém a contagem completa de cada valor distinto.",
+            "level3": "Para valores muito grandes ou negativos, o `Map` lida correctamente com chaves numéricas.",
+            "concepts": ["hash-tables"]
+          },
+          {
+            "line": 6,
+            "level1": "Declaração do array que representará a min‑heap. Cada elemento é um tuplo `[frequência, valor]`.",
+            "level2": "A heap será mantida manualmente através das funções `push` e `pop` definidas a seguir. Esta implementação explícita é didática; em produção usar-se-ia `PriorityQueue` (disponível em algumas linguagens).",
+            "level3": "A escolha de armazenar `(frequência, valor)` (primeiro a frequência) permite que a ordenação na heap seja natural pela frequência. Em caso de empate, o valor também será comparado, mas o problema aceita qualquer ordem.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 7,
+            "level1": "Define a função `push` que insere um novo elemento na heap e restaura a propriedade de min‑heap (subindo o elemento).",
+            "level2": "O algoritmo de subida: coloca o novo elemento na última posição, depois compara com o pai; se for menor, troca; repete até a raiz ou até ser maior/igual ao pai. `(i - 1) >> 1` é uma forma rápida de calcular `Math.floor((i-1)/2)`.",
+            "level3": "**Complexidade:** `O(log tamanho)` porque a altura da heap é logarítmica. O número máximo de trocas é a altura da heap.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 8,
+            "level1": "Insere o novo item no final do array da heap (como um filho folha).",
+            "level2": "Qualquer inserção numa heap começa no final do array para manter a árvore binária completa e perfeitamente balanceada.",
+            "level3": "Esta operação de array `push` é executada em tempo constante `O(1)`.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 9,
+            "level1": "Inicia o índice do elemento que acabou de ser inserido no fim da fila.",
+            "level2": "O índice do último elemento inserido é sempre `tamanho - 1`.",
+            "level3": "A partir deste índice `i`, subiremos o elemento para a sua posição correta.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 10,
+            "level1": "Loop de subida (up-heap / bubble-up): continua enquanto o nó não for a raiz.",
+            "level2": "Se `i === 0`, o elemento já está no topo (raiz), logo não há pai com quem comparar.",
+            "level3": "Este loop sobe o elemento no máximo até a altura da árvore (`O(log k)`).",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 11,
+            "level1": "Calcula o índice do pai do nó atual.",
+            "level2": "Numa árvore binária representada em array (0-indexada), o pai de um nó no índice `i` está no índice `(i - 1) / 2` arredondado para baixo.",
+            "level3": "O operador binário `>> 1` realiza uma divisão inteira por 2 de forma extremamente rápida.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 12,
+            "level1": "Compara o pai com o elemento atual e para se a propriedade da min-heap for satisfeita.",
+            "level2": "Como esta é uma min-heap, o pai deve ser sempre menor ou igual ao filho. Se `minHeap[parent] <= minHeap[i]`, a árvore já está correta e podemos parar.",
+            "level3": "Comparamos `[0]`, que corresponde à frequência do evento.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 13,
+            "level1": "Se o filho for menor que o pai, troca as posições de ambos na heap.",
+            "level2": "Trocamos os tuplos `[frequência, valor]` inteiros recorrendo à desestruturação de arrays do JavaScript/TypeScript.",
+            "level3": "Esta troca física no array move o elemento menor uma posição para cima em direção à raiz.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 14,
+            "level1": "Atualiza o índice `i` para a posição do pai para continuar a subida.",
+            "level2": "Na próxima iteração do loop `while`, compararemos o elemento na sua nova posição com o seu novo pai.",
+            "level3": "Isto faz o elemento subir sucessivamente até encontrar um pai menor ou igual.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 17,
+            "level1": "Define a função `pop` que remove e retorna o menor elemento (raiz da min‑heap).",
+            "level2": "Passos: guarda a raiz, move o último elemento para a raiz, depois desce esse elemento trocando com o menor filho até restaurar a propriedade. O uso de `>> 1` é um shift bit a bit que equivale a divisão por 2 para inteiros.",
+            "level3": "Se a heap estiver vazia, `pop` nunca é chamada (só chamamos quando `heap.length > k`). O `!` in `pop()!` é um non‑null assertion porque sabemos que a heap não está vazia.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 18,
+            "level1": "Guarda o menor elemento (a raiz, no índice 0) para o retornar no final.",
+            "level2": "Numa min-heap, o menor elemento de todos está sempre garantido na raiz (índice 0).",
+            "level3": "Isto permite acesso ao mínimo global em tempo constante `O(1)`.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 19,
+            "level1": "Remove o último elemento da heap (o elemento folha mais à direita).",
+            "level2": "O método `pop()` do array remove-o de forma eficiente (`O(1)`). O operador `!` indica que a heap não está vazia.",
+            "level3": "Este elemento removido será colocado temporariamente no topo para restaurar a estrutura.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 20,
+            "level1": "Verifica se a heap ainda contém elementos após a remoção.",
+            "level2": "Se o array ficar vazio, não há nada a reorganizar.",
+            "level3": "Caso contrário, precisamos de reordenar a heap chamando o processo de descida.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 21,
+            "level1": "Coloca o último elemento na raiz (índice 0) temporariamente.",
+            "level2": "Como a raiz foi removida, preenchemo-la com o elemento que estava no final, de forma a manter a árvore binária completa.",
+            "level3": "Como este elemento veio do fim, é provável que seja grande e precise de descer.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 22,
+            "level1": "Inicia o índice de descida a partir da raiz (índice 0).",
+            "level2": "A descida (down-heap / bubble-down) começará no topo e progredirá para baixo.",
+            "level3": "Iremos descendo o elemento até que ele seja menor ou igual aos seus filhos.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 23,
+            "level1": "Loop infinito para descer o elemento até à sua posição correta.",
+            "level2": "O loop terminará quando o nó for menor que ambos os seus filhos, ou quando se tornar um nó folha (sem filhos).",
+            "level3": "A altura da árvore garante que este loop corre no máximo `O(log k)` passos.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 24,
+            "level1": "Calcula o índice do filho esquerdo do nó atual.",
+            "level2": "Num array 0-indexado, o filho esquerdo do nó `i` está sempre no índice `i * 2 + 1`.",
+            "level3": "Esta propriedade permite navegar na árvore binária rápida e aritmeticamente.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 25,
+            "level1": "Calcula o índice do filho direito do nó atual.",
+            "level2": "O filho direito está sempre no índice `left + 1`, ou seja, `i * 2 + 2`.",
+            "level3": "Sendo vizinho do filho esquerdo, o seu cálculo é imediato.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 26,
+            "level1": "Cria uma variável `smallest` para registar o índice do menor elemento entre o pai e os filhos.",
+            "level2": "Iniciamos assumindo que o pai `i` é o menor de todos.",
+            "level3": "Comparamos depois com os dois filhos para ver se algum é ainda menor.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 27,
+            "level1": "Verifica se o filho esquerdo existe e se tem menor frequência que o nó atual.",
+            "level2": "Primeiro garantimos que `left` está dentro dos limites do array (`left < minHeap.length`). Se sim, comparamos as frequências no índice `[0]`.",
+            "level3": "Se for menor, atualizamos `smallest` para apontar para `left`.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 28,
+            "level1": "Verifica se o filho direito existe e se tem menor frequência que o atual menor.",
+            "level2": "Mesma lógica: se `right` for válido e tiver menor frequência que o elemento em `smallest`, atualizamos `smallest = right`.",
+            "level3": "Isto garante que escolhemos o menor absoluto entre pai, filho esquerdo e filho direito.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 29,
+            "level1": "Se o menor elemento continuar a ser o nó atual, a min-heap está estabilizada.",
+            "level2": "Se `smallest === i`, significa que o pai já é menor que os dois filhos. A invariante da min-heap foi restaurada, por isso terminamos.",
+            "level3": "Usamos a instrução `break` para sair imediatamente do loop `while`.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 30,
+            "level1": "Caso contrário, troca o pai com o filho que tem menor frequência.",
+            "level2": "Trocamos o pai no índice `i` com o menor filho no índice `smallest`.",
+            "level3": "Esta troca faz o elemento maior descer uma posição na árvore e o menor subir.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 31,
+            "level1": "Atualiza o índice `i` para a nova posição do elemento e continua a descida.",
+            "level2": "O elemento desceu para o índice `smallest`. Continuamos a descida a partir daí.",
+            "level3": "O loop continuará a comparar a partir deste novo nível.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 34,
+            "level1": "Retorna o menor elemento que foi removido da raiz.",
+            "level2": "Este elemento é o tuplo `[frequência, valor]` completo do topo original da min-heap.",
+            "level3": "É o elemento de menor frequência que foi expulso para manter a heap com tamanho no máximo K.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 36,
+            "level1": "Loop sobre as entradas do mapa de frequências.",
+            "level2": "A cada iteração, temos um par `(valor, frequência)`. Inserimos esse par na heap e, se o tamanho exceder `k`, removemos o menor (o que tem menor frequência).",
+            "level3": "Este é o coração da optimização: a heap nunca cresce além de `k+1` elementos, garantindo que cada operação custa `O(log k)`.",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 37,
+            "level1": "Insere o par `[count, val]` na heap chamando `push`.",
+            "level2": "A ordem dos elementos na heap é determinada pela frequência (primeiro elemento do tuplo). Como é uma min‑heap, o topo será sempre o par com a **menor** frequência – exactamente o que queremos remover quando a heap está cheia.",
+            "level3": "Se houvesse empates de frequência, o valor também influenciaria a ordem, mas isso é irrelevante para a correcção.",
+            "concepts": ["heap-priority-queue"]
+          },
+          {
+            "line": 38,
+            "level1": "Verifica se a heap excedeu o limite `k`. Se sim, remove o menor elemento (que tem a frequência mais baixa entre os candidatos).",
+            "level2": "Este passo garante que a heap contenha **no máximo** `k` elementos. Como acabámos de adicionar um, o tamanho só pode ser `k+1` no momento da verificação.",
+            "level3": "Se `k` for muito grande (próximo do número total de elementos únicos), esta condição raramente será verdadeira e a heap crescerá até perto de `m`, mas ainda assim cada operação é `O(log m)` – pior que `O(log k)`, mas ainda melhor que ordenar tudo (`O(m log m)`).",
+            "concepts": ["big-o"]
+          },
+          {
+            "line": 40,
+            "level1": "Após processar todas as entradas, a heap contém exactamente os `k` elementos com maior frequência.",
+            "level2": "Convertemos a heap num array de valores (`map` extrai o segundo elemento de cada tuplo). A ordem dos elementos no resultado não é especificada, pode ser qualquer uma.",
+            "level3": "Se a ordem importasse (ex: decrescente por frequência), teríamos de ordenar a heap antes de devolver, o que adicionaria `O(k log k)` – aceitável porque `k` é pequeno.",
+            "concepts": []
+          }
+        ],
+        "executionTrace": {
+          "steps": [
+            {
+              "line": 2,
+              "snapshot": {
+                "caption": "Inicialização do mapa de frequências.",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": []
+                  }
+                ],
+                "mapEntries": [],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 3,
+              "snapshot": {
+                "caption": "Processando evento 1 (índice 0)",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": [0]
+                  }
+                ],
+                "mapEntries": [],
+                "scalars": { "i": 0, "val": 1 }
+              }
+            },
+            {
+              "line": 4,
+              "snapshot": {
+                "caption": "Frequência de 1 agora = 1",
+                "mapEntries": [
+                  { "key": "1", "value": "1" }
+                ],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 3,
+              "snapshot": {
+                "caption": "Processando evento 1 (índice 1)",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": [1]
+                  }
+                ],
+                "mapEntries": [
+                  { "key": "1", "value": "1" }
+                ],
+                "scalars": { "i": 1, "val": 1 }
+              }
+            },
+            {
+              "line": 4,
+              "snapshot": {
+                "caption": "Frequência de 1 agora = 2",
+                "mapEntries": [
+                  { "key": "1", "value": "2" }
+                ],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 3,
+              "snapshot": {
+                "caption": "Processando evento 1 (índice 2)",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": [2]
+                  }
+                ],
+                "mapEntries": [
+                  { "key": "1", "value": "2" }
+                ],
+                "scalars": { "i": 2, "val": 1 }
+              }
+            },
+            {
+              "line": 4,
+              "snapshot": {
+                "caption": "Frequência de 1 agora = 3",
+                "mapEntries": [
+                  { "key": "1", "value": "3" }
+                ],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 3,
+              "snapshot": {
+                "caption": "Processando evento 2 (índice 3)",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": [3]
+                  }
+                ],
+                "mapEntries": [
+                  { "key": "1", "value": "3" }
+                ],
+                "scalars": { "i": 3, "val": 2 }
+              }
+            },
+            {
+              "line": 4,
+              "snapshot": {
+                "caption": "Frequência de 2 agora = 1",
+                "mapEntries": [
+                  { "key": "1", "value": "3" },
+                  { "key": "2", "value": "1" }
+                ],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 3,
+              "snapshot": {
+                "caption": "Processando evento 2 (índice 4)",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": [4]
+                  }
+                ],
+                "mapEntries": [
+                  { "key": "1", "value": "3" },
+                  { "key": "2", "value": "1" }
+                ],
+                "scalars": { "i": 4, "val": 2 }
+              }
+            },
+            {
+              "line": 4,
+              "snapshot": {
+                "caption": "Frequência de 2 agora = 2",
+                "mapEntries": [
+                  { "key": "1", "value": "3" },
+                  { "key": "2", "value": "2" }
+                ],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 3,
+              "snapshot": {
+                "caption": "Processando evento 3 (índice 5)",
+                "arrays": [
+                  {
+                    "label": "events",
+                    "values": [1, 1, 1, 2, 2, 3],
+                    "highlightIndices": [5]
+                  }
+                ],
+                "mapEntries": [
+                  { "key": "1", "value": "3" },
+                  { "key": "2", "value": "2" }
+                ],
+                "scalars": { "i": 5, "val": 3 }
+              }
+            },
+            {
+              "line": 4,
+              "snapshot": {
+                "caption": "Frequência de 3 agora = 1",
+                "mapEntries": [
+                  { "key": "1", "value": "3" },
+                  { "key": "2", "value": "2" },
+                  { "key": "3", "value": "1" }
+                ],
+                "scalars": {}
+              }
+            },
+            {
+              "line": 6,
+              "snapshot": {
+                "caption": "Contagem concluída. Construindo min‑heap com k=2",
+                "mapEntries": [
+                  { "key": "1", "value": "3" },
+                  { "key": "2", "value": "2" },
+                  { "key": "3", "value": "1" }
+                ],
+                "scalars": { "k": 2 }
+              }
+            },
+            {
+              "line": 36,
+              "snapshot": {
+                "caption": "Considerando (3, 1)",
+                "scalars": { "val": 1, "count": 3 }
+              }
+            },
+            {
+              "line": 37,
+              "snapshot": {
+                "caption": "Inserido (3,1) na heap",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(3,1)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 38,
+              "snapshot": {
+                "caption": "heap.length = 1, não excede k=2",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(3,1)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 36,
+              "snapshot": {
+                "caption": "Considerando (2, 2)",
+                "scalars": { "val": 2, "count": 2 }
+              }
+            },
+            {
+              "line": 37,
+              "snapshot": {
+                "caption": "Inserido (2,2) na heap",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(2,2)", "(3,1)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 38,
+              "snapshot": {
+                "caption": "heap.length = 2, igual a k, não remove",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(2,2)", "(3,1)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 36,
+              "snapshot": {
+                "caption": "Considerando (1, 3)",
+                "scalars": { "val": 3, "count": 1 }
+              }
+            },
+            {
+              "line": 37,
+              "snapshot": {
+                "caption": "Inserido (1,3) na heap",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(1,3)", "(3,1)", "(2,2)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 38,
+              "snapshot": {
+                "caption": "heap.length = 3 > k=2 → removendo menor",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(1,3)", "(3,1)", "(2,2)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 38,
+              "snapshot": {
+                "caption": "Removido o menor (1,3) da heap",
+                "arrays": [
+                  {
+                    "label": "minHeap",
+                    "values": ["(2,2)", "(3,1)"]
+                  }
+                ]
+              }
+            },
+            {
+              "line": 40,
+              "snapshot": {
+                "caption": "Resultado final: 2, 1",
+                "result": [2, 1]
+              }
+            }
+          ]
+        }
+      }
+    ],
+    "hasBespokeVisualizer": true
+  }
+}
