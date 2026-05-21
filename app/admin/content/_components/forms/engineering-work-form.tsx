@@ -84,6 +84,7 @@ export function EngineeringWorkForm({
         </div>
 
         <div className="flex shrink-0 gap-2">
+          {/* Import Dialog */}
           <Dialog open={isImportOpen} onOpenChange={setIsImportOpen}>
             <DialogTrigger asChild>
               <Button
@@ -103,12 +104,57 @@ export function EngineeringWorkForm({
                   automaticamente.
                 </DialogDescription>
               </DialogHeader>
-              <div className="py-4">
+
+              {/* Creator Kit Helper */}
+              <div className="rounded-lg border border-border bg-secondary/20 p-4 space-y-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">📦</span>
+                  <p className="text-sm font-semibold text-foreground">Kit do Criador de Conteúdo</p>
+                </div>
+                <p className="text-xs text-muted-foreground leading-relaxed">
+                  Novo por aqui? Use o kit abaixo para escrever seu artigo em Markdown e gerar o JSON automaticamente.
+                </p>
+                <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                  <a
+                    href="/creator-support/README.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-accent hover:border-primary/40 transition-colors"
+                  >
+                    <span>📖</span>
+                    <span>Guia Rápido<br /><span className="font-normal text-muted-foreground">README.md</span></span>
+                  </a>
+                  <a
+                    href="/creator-support/exemplo-conteudo.md"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-accent hover:border-primary/40 transition-colors"
+                  >
+                    <span>📝</span>
+                    <span>Exemplos<br /><span className="font-normal text-muted-foreground">exemplo-conteudo.md</span></span>
+                  </a>
+                  <a
+                    href="/creator-support/compilar-json.js"
+                    download
+                    className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 text-xs font-medium text-foreground hover:bg-accent hover:border-primary/40 transition-colors"
+                  >
+                    <span>⬇️</span>
+                    <span>Script<br /><span className="font-normal text-muted-foreground">compilar-json.js</span></span>
+                  </a>
+                </div>
+                <ol className="text-[11px] text-muted-foreground space-y-1 pl-4 list-decimal">
+                  <li>Baixe o <strong className="text-foreground">script</strong> e escreva seu artigo em <code className="bg-muted px-1 rounded">conteudo.md</code></li>
+                  <li>Configure os metadados no script e execute: <code className="bg-muted px-1 rounded">node compilar-json.js</code></li>
+                  <li>Copie o conteúdo do <code className="bg-muted px-1 rounded">importar.json</code> gerado e cole abaixo</li>
+                </ol>
+              </div>
+
+              <div className="py-2">
                 <textarea
                   value={importJson}
                   onChange={(e) => setImportJson(e.target.value)}
                   placeholder='{"title": "Novo Guia", "body": "...", "meta": { ... }}'
-                  rows={12}
+                  rows={10}
                   className="w-full bg-[#080808] text-emerald-400 p-4 font-mono text-xs rounded-none border-2 border-border focus:border-primary outline-none"
                 />
               </div>

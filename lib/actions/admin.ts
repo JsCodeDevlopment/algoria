@@ -950,3 +950,93 @@ export async function syncAllProContent() {
 
   return { success: true, count: proContents.length };
 }
+
+export async function importContent(params: {
+  title: string;
+  slug: string;
+  type: string;
+  body: string;
+  publish?: boolean;
+  meta: Record<string, unknown>;
+}) {
+  const staff = await getAuthenticatedStaff();
+  if (!staff) return { error: 'Não autorizado' };
+
+  if (staff.role !== 'ADMIN' && staff.role !== 'EDITOR') {
+    return { error: 'Apenas administradores e editores podem importar conteúdo.' };
+  }
+
+  if (!params.title || !params.slug || !params.type || !params.body) {
+    return { error: 'Campos obrigatórios ausentes: title, slug, type, body.' };
+  }
+
+  const allowedTypes = ['problem', 'concept', 'interview-en', 'engineering-work', 'course', 'technical-test'];
+  if (!allowedTypes.includes(params.type)) {
+    return { error: `Tipo de conteúdo inválido: ${params.type}` };
+  }
+
+  const existing = await db
+    .select({
+      id: contents.id,
+      authorId: contents.authorId,
+      version: contents.version,
+      access: contents.access,
+      status: contents.status
+    })
+    .from(contents)
+    .where(and(eq(contents.slug, params.slug), eq(contents.type, params.type as never)))
+    .limit(1);
+
+  const hash = sha256(params.body + JSON.stringify(params.meta));
+  const access = (params.meta.access as 'free' | 'pro') || 'free';
+  const status = params.publish ? 'PUBLISHED' : 'DRAFT';
+
+  try {
+    if (existing[0]) {
+      const record = existing[0];
+      await db
+        .update(contents)
+        .set({
+          title: params.title,
+          body: params.body,
+          metadata: params.meta,
+          access,
+          status: params.publish ? 'PUBLISHED' : record.status,
+          contentHash: hash,
+          version: record.version + 1,
+          updatedBy: staff.id,
+          updatedAt: new Date(),
+          ...(params.publish ? { publishedAt: new Date() } : {}),
+        })
+        .where(eq(contents.id, record.id));
+
+      await syncPricingInventorySync(record.id, access, params.type);
+      return { success: true, action: 'updated', id: record.id };
+    } else {
+      const id = crypto.randomUUID();
+      await db.insert(contents).values({
+        id,
+        slug: params.slug,
+        type: params.type as never,
+        title: params.title,
+        body: params.body,
+        metadata: params.meta,
+        access,
+        status,
+        contentHash: hash,
+        authorId: staff.id,
+        updatedBy: staff.id,
+        publishedAt: params.publish ? new Date() : null,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
+
+      await syncPricingInventorySync(id, access, params.type);
+      return { success: true, action: 'created', id };
+    }
+  } catch (error: any) {
+    console.error('Error importing content:', error);
+    return { error: `Erro no banco de dados: ${error.message}` };
+  }
+}
+
