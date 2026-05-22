@@ -101,7 +101,7 @@ export function NetworkSection({
                   size="sm"
                   className="h-8 rounded-none text-[9px] uppercase font-black tracking-widest border-border gap-1"
                 >
-                  <Link href={`/user/${item.id}`}>
+                  <Link href={`/user/${item.id}`} prefetch={false}>
                     Ver <ArrowUpRight className="h-3 w-3" />
                   </Link>
                 </Button>

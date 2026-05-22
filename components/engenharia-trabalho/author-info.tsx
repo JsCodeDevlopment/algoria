@@ -38,6 +38,7 @@ export function AuthorInfo({ name, role, href, image }: AuthorInfoProps) {
         <Link
           href={href}
           className="text-base font-black tracking-tighter text-foreground uppercase hover:text-primary transition-colors"
+          prefetch={false}
         >
           {name}
         </Link>

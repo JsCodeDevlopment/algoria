@@ -178,6 +178,7 @@ export function EngineeringShowcase() {
               <Link
                 href="/engineering-work/frontend-seo-tecnico-cenarios-producao"
                 className="font-semibold text-primary underline-offset-4 hover:underline"
+                prefetch={false}
               >
                 Guia extensivo: SEO técnico — cenários de produção (SPA,
                 e-commerce, multi-idioma, staging…)

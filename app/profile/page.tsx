@@ -159,7 +159,7 @@ export default async function ProfilePage() {
           size="sm"
           className="mb-10 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
         >
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <ArrowLeft className="h-3.5 w-3.5" /> Início
           </Link>
         </Button>
@@ -208,7 +208,7 @@ export default async function ProfilePage() {
                   size="sm"
                   className="h-7 rounded-none text-[9px] uppercase font-black tracking-widest border-primary/20"
                 >
-                  <Link href={`/user/${sessionUser.id}`}>
+                  <Link href={`/user/${sessionUser.id}`} prefetch={false}>
                     Visualizar Perfil Público
                   </Link>
                 </Button>

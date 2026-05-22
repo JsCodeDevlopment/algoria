@@ -36,7 +36,7 @@ export const UserCard = memo(function UserCard({ user }: UserCardProps) {
     totalMonths > 0 ? formatExperienceString(totalMonths) : null;
 
   return (
-    <Link href={`/user/${user.id}`} className="group block">
+    <Link href={`/user/${user.id}`} className="group block" prefetch={false}>
       <Card className="relative h-full overflow-hidden border-2 border-border bg-background/50 p-6 transition-all duration-300 hover:border-primary hover:shadow-[8px_8px_0_0_rgba(var(--primary-rgb),0.1)] rounded-none">
         <div className="absolute -right-4 -top-4 opacity-[0.03] transition-opacity group-hover:opacity-[0.08]">
           <Code2 size={120} />

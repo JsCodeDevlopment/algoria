@@ -63,7 +63,7 @@ export default async function TrackDetailPage({ params }: { params: Promise<Para
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-0 border border-border">
           {cards.map((p, idx) => (
-            <Link key={p.slug} href={`/problems/${p.slug}`} className="group relative border border-border p-px hover:z-10">
+            <Link key={p.slug} href={`/problems/${p.slug}`} className="group relative border border-border p-px hover:z-10" prefetch={false}>
               <Card className="h-full rounded-none border-none bg-background transition-all duration-200 group-hover:bg-muted/50">
                 <CardHeader className="px-6 pt-6">
                   <div className="flex items-center gap-2 mb-2">

@@ -50,6 +50,7 @@ export async function FeaturedProblems() {
             key={p.meta.slug}
             href={`/problems/${p.meta.slug}`}
             className="group relative"
+            prefetch={false}
           >
             <Card className="h-full border-border/60 bg-card/70 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/55 hover:shadow-xl hover:shadow-primary/10">
               <CardHeader>

@@ -168,7 +168,7 @@ export default async function PublicProfilePage({
           size="sm"
           className="mb-10 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
         >
-          <Link href="/">
+          <Link href="/" prefetch={false}>
             <ArrowLeft className="h-3.5 w-3.5" /> Início
           </Link>
         </Button>

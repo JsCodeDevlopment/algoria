@@ -189,6 +189,7 @@ export function ProblemsCatalogClient({ problems }: Props) {
               key={p.slug}
               href={`/problems/${p.slug}`}
               className="group relative border border-border p-px hover:z-10"
+              prefetch={false}
             >
               <Card className="h-full rounded-none border-none bg-background transition-all duration-200 group-hover:bg-muted/50">
                 <CardHeader className="px-6 pt-6">
