@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Script de Criação do JSON para Importação na Algoria
  * 

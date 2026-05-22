@@ -1034,9 +1034,10 @@ export async function importContent(params: {
       await syncPricingInventorySync(id, access, params.type);
       return { success: true, action: 'created', id };
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error('Error importing content:', error);
-    return { error: `Erro no banco de dados: ${error.message}` };
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    return { error: `Erro no banco de dados: ${errorMessage}` };
   }
 }
 
