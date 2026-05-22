@@ -129,6 +129,21 @@ export default async function ConceptPage({
         />
       )}
 
+      {courseSlug && moduleId ? (
+        <div className="mt-12 mb-8 rounded-none border border-primary/40 bg-primary/5 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <span>
+            Estás dentro do <strong>curso guiado</strong>. Quando terminares a página, volta ao módulo atual para marcar a
+            leitura e continuar os exercícios.
+          </span>
+          <Link
+            href={`/course/${encodeURIComponent(courseSlug)}/module/${encodeURIComponent(moduleId)}`}
+            className="shrink-0 text-center text-xs font-semibold uppercase tracking-widest px-3 py-2 rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Voltar ao módulo
+          </Link>
+        </div>
+      ) : null}
+
       <ContentNavigation
         sectionLabel="Navegar conceitos"
         prev={adjacent.prev ? { slug: adjacent.prev.slug, title: adjacent.prev.title, href: `/concepts/${adjacent.prev.slug}` } : null}

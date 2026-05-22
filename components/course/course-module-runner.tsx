@@ -1,6 +1,8 @@
 'use client';
 
+import { useTransition } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { ArrowRight, BookOpenCheck, CheckCircle2, ChevronRight, Lock, Trophy } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -20,6 +22,9 @@ interface Props {
 
 /** Experiência interactiva dentro de um único “capítulo”: leituras, exemplos densos duplos e MCQs. */
 export function CourseModuleRunner({ pack, module, previousModuleCertificateTitle }: Props) {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+
   const moduleIndex = pack.modules.findIndex((m) => m.id === module.id);
   const orderedIds = pack.modules.map((m) => m.id);
   const getSlice = useCourseProgressStore((s) => s.getModuleSlice);
@@ -118,11 +123,23 @@ export function CourseModuleRunner({ pack, module, previousModuleCertificateTitl
               </div>
               
               <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Button asChild className="rounded-none font-black uppercase tracking-widest h-11">
-                  <Link href={studyHref}>
-                    {module.linkedResourceKind === 'interview-en' ? 'Abrir Artigo (Interview EN)' : 'Abrir Conceito Teórico'}
-                    <ChevronRight className="ml-2 h-4 w-4" />
-                  </Link>
+                <Button
+                  disabled={isPending}
+                  onClick={() => {
+                    startTransition(() => {
+                      router.push(studyHref);
+                    });
+                  }}
+                  className="rounded-none font-black uppercase tracking-widest h-11"
+                >
+                  {isPending ? (
+                    <>A carregar...</>
+                  ) : (
+                    <>
+                      {module.linkedResourceKind === 'interview-en' ? 'Abrir Artigo (Interview EN)' : 'Abrir Conceito Teórico'}
+                      <ChevronRight className="ml-2 h-4 w-4" />
+                    </>
+                  )}
                 </Button>
                 
                 <label className="flex items-center gap-3 cursor-pointer select-none group">

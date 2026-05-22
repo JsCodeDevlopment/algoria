@@ -55,7 +55,13 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
   });
 }
 
-export default async function InterviewEnglishTopicPage({ params }: { params: Promise<Params> }) {
+export default async function InterviewEnglishTopicPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<Params>;
+  searchParams?: Promise<{ course?: string; module?: string; curso?: string; modulo?: string }>;
+}) {
   const { slug } = await params;
   const topic = await getInterviewEnglishTopic(slug);
   if (!topic) notFound();
@@ -63,6 +69,10 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
   const isLocked = !isContentUnlockedForUser(topic.meta.access || 'pro', hasPro);
+
+  const q = (await searchParams) ?? {};
+  const courseSlug = q.course ?? q.curso;
+  const moduleId = q.module ?? q.modulo;
 
   const adjacent = await getAdjacentInterviewEnglish(slug);
 
@@ -79,6 +89,21 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
       <Button asChild variant="outline" size="sm" className="mb-6 rounded-none gap-2 text-xs font-bold uppercase tracking-wide">
         <Link href="/interview-en"><ArrowLeft className="h-3.5 w-3.5" /> Interview English hub</Link>
       </Button>
+
+      {courseSlug && moduleId ? (
+        <div className="mb-8 rounded-none border border-primary/40 bg-primary/5 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <span>
+            Estás dentro do <strong>curso guiado</strong>. Quando terminares a página, volta ao módulo atual para marcar a
+            leitura e continuar os exercícios.
+          </span>
+          <Link
+            href={`/course/${encodeURIComponent(courseSlug)}/module/${encodeURIComponent(moduleId)}`}
+            className="shrink-0 text-center text-xs font-semibold uppercase tracking-widest px-3 py-2 rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Voltar ao módulo
+          </Link>
+        </div>
+      ) : null}
 
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Badge variant="outline" className="rounded-none text-[10px] uppercase">
@@ -109,6 +134,21 @@ export default async function InterviewEnglishTopicPage({ params }: { params: Pr
           dangerouslySetInnerHTML={{ __html: topic.bodyHtml }}
         />
       )}
+
+      {courseSlug && moduleId ? (
+        <div className="mt-12 mb-8 rounded-none border border-primary/40 bg-primary/5 px-4 py-3 text-sm text-zinc-700 dark:text-zinc-200 leading-relaxed flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <span>
+            Estás dentro do <strong>curso guiado</strong>. Quando terminares a página, volta ao módulo atual para marcar a
+            leitura e continuar os exercícios.
+          </span>
+          <Link
+            href={`/course/${encodeURIComponent(courseSlug)}/module/${encodeURIComponent(moduleId)}`}
+            className="shrink-0 text-center text-xs font-semibold uppercase tracking-widest px-3 py-2 rounded-none bg-primary text-primary-foreground hover:bg-primary/90"
+          >
+            Voltar ao módulo
+          </Link>
+        </div>
+      ) : null}
 
       <ContentNavigation
         sectionLabel="Mais conteúdo de inglês"
