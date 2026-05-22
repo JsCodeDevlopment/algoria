@@ -2,7 +2,7 @@
 
 import { Clock } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useDeferredValue } from "react";
 
 import { DifficultyBadge } from "@/components/catalog/difficulty-badge";
 import { Badge } from "@/components/ui/badge";
@@ -45,8 +45,11 @@ export function ConceptsCatalogClient({ concepts }: Props) {
   );
   const [sortMode, setSortMode] = useState<SortMode>("title_az");
 
+  const deferredQ = useDeferredValue(q);
+  const deferredDifficultyFilter = useDeferredValue(difficultyFilter);
+
   const filteredSorted = useMemo(() => {
-    const query = q.trim().toLowerCase();
+    const query = deferredQ.trim().toLowerCase();
     const difficultyRank: Record<Difficulty, number> = {
       easy: 0,
       medium: 1,
@@ -54,7 +57,7 @@ export function ConceptsCatalogClient({ concepts }: Props) {
     };
 
     let list = concepts.filter((c) => {
-      if (difficultyFilter !== "all" && c.difficulty !== difficultyFilter)
+      if (deferredDifficultyFilter !== "all" && c.difficulty !== deferredDifficultyFilter)
         return false;
       if (!query) return true;
       return (
@@ -79,7 +82,7 @@ export function ConceptsCatalogClient({ concepts }: Props) {
         break;
     }
     return list;
-  }, [concepts, q, difficultyFilter, sortMode]);
+  }, [concepts, deferredQ, deferredDifficultyFilter, sortMode]);
 
   return (
     <>

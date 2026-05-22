@@ -2,7 +2,7 @@
 
 import { Clock } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useDeferredValue } from "react";
 
 import { CatalogReviewSection } from "@/components/catalog/catalog-review-section";
 import { DifficultyBadge } from "@/components/catalog/difficulty-badge";
@@ -50,10 +50,14 @@ export function ProblemsCatalogClient({ problems }: Props) {
   const [categoryFilter, setCategoryFilter] = useState<CategoryFilter>("all");
   const [sortMode, setSortMode] = useState<SortMode>("recommended");
 
+  const deferredQ = useDeferredValue(q);
+  const deferredDifficultyFilter = useDeferredValue(difficultyFilter);
+  const deferredCategoryFilter = useDeferredValue(categoryFilter);
+
   const filteredSorted = useMemo(() => {
-    const f = filterProblems(problems, q, difficultyFilter, categoryFilter);
+    const f = filterProblems(problems, deferredQ, deferredDifficultyFilter, deferredCategoryFilter);
     return sortCatalogProblems(f, sortMode);
-  }, [problems, q, difficultyFilter, categoryFilter, sortMode]);
+  }, [problems, deferredQ, deferredDifficultyFilter, deferredCategoryFilter, sortMode]);
 
   return (
     <div className="relative bg-grid-pattern min-h-screen flex flex-col">

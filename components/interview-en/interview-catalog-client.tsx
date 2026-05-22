@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useDeferredValue } from 'react';
 import Link from 'next/link';
 import { Clock } from 'lucide-react';
 
@@ -43,13 +43,17 @@ export function InterviewCatalogClient({ topics }: Props) {
   const [trackFilter, setTrackFilter] = useState<InterviewEnglishTrack | 'all'>('all');
   const [sortMode, setSortMode] = useState<SortMode>('title_az');
 
+  const deferredQ = useDeferredValue(q);
+  const deferredDifficultyFilter = useDeferredValue(difficultyFilter);
+  const deferredTrackFilter = useDeferredValue(trackFilter);
+
   const filteredSorted = useMemo(() => {
-    const query = q.trim().toLowerCase();
+    const query = deferredQ.trim().toLowerCase();
     const difficultyRank: Record<Difficulty, number> = { easy: 0, medium: 1, hard: 2 };
 
     let list = topics.filter((t) => {
-      if (difficultyFilter !== 'all' && t.difficulty !== difficultyFilter) return false;
-      if (trackFilter !== 'all' && t.track !== trackFilter) return false;
+      if (deferredDifficultyFilter !== 'all' && t.difficulty !== deferredDifficultyFilter) return false;
+      if (deferredTrackFilter !== 'all' && t.track !== deferredTrackFilter) return false;
       if (!query) return true;
       return (
         t.title.toLowerCase().includes(query) ||
@@ -72,7 +76,7 @@ export function InterviewCatalogClient({ topics }: Props) {
         break;
     }
     return list;
-  }, [topics, q, difficultyFilter, trackFilter, sortMode]);
+  }, [topics, deferredQ, deferredDifficultyFilter, deferredTrackFilter, sortMode]);
 
   return (
     <>
