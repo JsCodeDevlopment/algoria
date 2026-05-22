@@ -239,3 +239,17 @@ export const pricingInventory = pgTable('pricing_inventory', {
   pricingCategory: text('pricingCategory').notNull(),
   createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
 });
+
+export const userFollower = pgTable('user_follower', {
+  id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+  followerId: text('followerId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  followingId: text('followingId')
+    .notNull()
+    .references(() => user.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('createdAt', { mode: 'date', withTimezone: true }).notNull().defaultNow(),
+}, (table) => [
+  uniqueIndex('user_follower_follower_following_idx').on(table.followerId, table.followingId)
+]);
+

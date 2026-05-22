@@ -1,7 +1,8 @@
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, count } from "drizzle-orm";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 
 import type {
   Experience,
@@ -12,13 +13,16 @@ import { ExperienceSection } from "@/components/profile/public/experience-sectio
 import { ProfileDashboard } from "@/components/profile/public/profile-dashboard";
 import { ProfileHeader } from "@/components/profile/public/profile-header";
 import { ProjectsSection } from "@/components/profile/public/projects-section";
+import { FollowButton } from "@/components/profile/public/follow-button";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import {
   technicalAssessmentResults,
   user,
   userProfile,
   userProgress,
+  userFollower,
 } from "@/lib/db/schema";
 import {
   calculateTotalExperienceMonths,
@@ -57,26 +61,42 @@ export default async function PublicProfilePage({
 }: PublicProfileProps) {
   const { id } = await params;
 
-  const [userRows, profileRows, progressRows, assessmentRows] =
-    await Promise.all([
-      db.select().from(user).where(eq(user.id, id)).limit(1),
-      db.select().from(userProfile).where(eq(userProfile.userId, id)).limit(1),
-      db
-        .select()
-        .from(userProgress)
-        .where(eq(userProgress.userId, id))
-        .limit(1),
-      db
-        .select()
-        .from(technicalAssessmentResults)
-        .where(
-          and(
-            eq(technicalAssessmentResults.userId, id),
-            eq(technicalAssessmentResults.isPublic, true),
-          ),
-        )
-        .orderBy(desc(technicalAssessmentResults.completedAt)),
-    ]);
+  const session = await auth.api.getSession({ headers: await headers() });
+
+  const [
+    userRows,
+    profileRows,
+    progressRows,
+    assessmentRows,
+    [followersCountRow],
+    [followingCountRow],
+  ] = await Promise.all([
+    db.select().from(user).where(eq(user.id, id)).limit(1),
+    db.select().from(userProfile).where(eq(userProfile.userId, id)).limit(1),
+    db
+      .select()
+      .from(userProgress)
+      .where(eq(userProgress.userId, id))
+      .limit(1),
+    db
+      .select()
+      .from(technicalAssessmentResults)
+      .where(
+        and(
+          eq(technicalAssessmentResults.userId, id),
+          eq(technicalAssessmentResults.isPublic, true),
+        ),
+      )
+      .orderBy(desc(technicalAssessmentResults.completedAt)),
+    db
+      .select({ count: count() })
+      .from(userFollower)
+      .where(eq(userFollower.followingId, id)),
+    db
+      .select({ count: count() })
+      .from(userFollower)
+      .where(eq(userFollower.followerId, id)),
+  ]);
 
   const userData = userRows[0];
   if (!userData) {
@@ -103,6 +123,33 @@ export default async function PublicProfilePage({
     userData.name?.substring(0, 2).toUpperCase() ||
     userData.email?.substring(0, 2).toUpperCase() ||
     "U";
+
+  let isFollowing = false;
+  if (session?.user) {
+    const [followRow] = await db
+      .select()
+      .from(userFollower)
+      .where(
+        and(
+          eq(userFollower.followerId, session.user.id),
+          eq(userFollower.followingId, id)
+        )
+      )
+      .limit(1);
+    isFollowing = !!followRow;
+  }
+
+  const followersCount = followersCountRow?.count ?? 0;
+  const followingCount = followingCountRow?.count ?? 0;
+  const isOwnProfile = session?.user?.id === id;
+
+  const followButton = !isOwnProfile ? (
+    <FollowButton
+      targetUserId={id}
+      initialIsFollowing={isFollowing}
+      isLoggedIn={!!session?.user}
+    />
+  ) : null;
 
   return (
     <div className="relative flex-1 bg-grid-pattern pb-20">
@@ -136,6 +183,9 @@ export default async function PublicProfilePage({
           githubUrl={profile?.githubUrl || null}
           linkedinUrl={profile?.linkedinUrl || null}
           initials={initials}
+          followersCount={followersCount}
+          followingCount={followingCount}
+          followButton={followButton}
         />
 
         <ProfileDashboard

@@ -8,6 +8,7 @@ import {
   session,
   subscription,
   user,
+  userFollower,
   userProfile,
   userProgress,
   verification,
@@ -33,6 +34,7 @@ export const db = drizzle(pool, {
     userProfile,
     contents,
     contentReviewComments,
+    userFollower,
   },
 });
 export { pool };

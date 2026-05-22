@@ -37,6 +37,8 @@ import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import { getContentRepository } from "@/lib/content/content-repository";
 import Image from "next/image";
+import { NetworkSection } from "@/components/profile/network-section";
+import { getFollowers, getFollowing } from "@/lib/actions/follow";
 
 export async function generateMetadata(): Promise<Metadata> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -62,37 +64,49 @@ export default async function ProfilePage() {
   const { user: sessionUser } = session;
 
   // Buscar progressos, subscrição e dados do user (role/status pedido)
-  const [progressRows, subRows, profileRows, assessmentRows, dbUserRows] =
-    await Promise.all([
-      db
-        .select()
-        .from(userProgress)
-        .where(eq(userProgress.userId, sessionUser.id))
-        .limit(1),
-      db
-        .select()
-        .from(subscription)
-        .where(eq(subscription.userId, sessionUser.id))
-        .limit(1),
-      db
-        .select()
-        .from(userProfile)
-        .where(eq(userProfile.userId, sessionUser.id))
-        .limit(1),
-      db
-        .select()
-        .from(technicalAssessmentResults)
-        .where(eq(technicalAssessmentResults.userId, sessionUser.id))
-        .orderBy(desc(technicalAssessmentResults.completedAt)),
-      db
-        .select({ 
-          role: user.role, 
-          creatorRequestStatus: user.creatorRequestStatus 
-        })
-        .from(user)
-        .where(eq(user.id, sessionUser.id))
-        .limit(1),
-    ]);
+  const [
+    progressRows,
+    subRows,
+    profileRows,
+    assessmentRows,
+    dbUserRows,
+    followersResult,
+    followingResult,
+  ] = await Promise.all([
+    db
+      .select()
+      .from(userProgress)
+      .where(eq(userProgress.userId, sessionUser.id))
+      .limit(1),
+    db
+      .select()
+      .from(subscription)
+      .where(eq(subscription.userId, sessionUser.id))
+      .limit(1),
+    db
+      .select()
+      .from(userProfile)
+      .where(eq(userProfile.userId, sessionUser.id))
+      .limit(1),
+    db
+      .select()
+      .from(technicalAssessmentResults)
+      .where(eq(technicalAssessmentResults.userId, sessionUser.id))
+      .orderBy(desc(technicalAssessmentResults.completedAt)),
+    db
+      .select({ 
+        role: user.role, 
+        creatorRequestStatus: user.creatorRequestStatus 
+      })
+      .from(user)
+      .where(eq(user.id, sessionUser.id))
+      .limit(1),
+    getFollowers(sessionUser.id),
+    getFollowing(sessionUser.id),
+  ]);
+
+  const followers = followersResult.data || [];
+  const following = followingResult.data || [];
 
   const dbUser = dbUserRows[0];
   const activeSub = subRows[0];
@@ -345,6 +359,11 @@ export default async function ProfilePage() {
               </Button>
             </div>
           )}
+        </section>
+
+        {/* NETWORK SECTION */}
+        <section className="mb-12">
+          <NetworkSection followers={followers} following={following} />
         </section>
 
         {/* MAIN PROFILE FORM */}
