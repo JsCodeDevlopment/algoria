@@ -54,6 +54,8 @@ export function AlgoriaPostHogProvider({ children }: { children: React.ReactNode
       capture_pageview: false, // Desativado aqui para usar o PostHogPageView (evita duplicados no Next.js)
       capture_performance: true,
       opt_out_capturing_by_default: true, // LGPD Compliance: inicia bloqueado por padrão (opt-out por default)
+      disable_surveys: true, // Reduz tamanho de JS no mobile e desktop desativando o script de pesquisas
+      disable_session_recording: true, // Desativa gravação de sessão economizando CPU e requests
     });
 
     if (isAccepted) {

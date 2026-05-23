@@ -93,6 +93,24 @@
     }
   }
   --animate-spotlight: spotlight 2s ease .75s 1 forwards;
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(16px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  --animate-fade-in-up: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+  --animate-marquee: marquee 40s linear infinite;
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
 }
 
 @media (prefers-color-scheme: dark) {
@@ -135,6 +153,14 @@ body {
   animation: fadeIn 0.5s ease-out forwards;
 }
 
+.animate-fade-in-up {
+  animation: fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-spotlight {
+  animation: spotlight 2s ease 0.75s 1 both;
+}
+
 /* Custom Gradients - more technical/industrial */
 .bg-brand-gradient {
   background: linear-gradient(to right, var(--primary) 0%, #06b6d4 100%);
@@ -164,16 +190,6 @@ body {
   font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 0.7rem;
   background: color-mix(in oklab, currentColor 4%, transparent);
-}
-
-@theme inline {
-  /* ... existing animations ... */
-  --animate-marquee: marquee 40s linear infinite;
-  
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
 }
 
 :root {

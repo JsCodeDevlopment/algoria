@@ -79,6 +79,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
+      <head>
+        <link rel="preconnect" href="https://us.posthog.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://us-assets.i.posthog.com" crossOrigin="anonymous" />
+      </head>
       <body className="flex min-h-full flex-col">
         <JsonLdScript data={structuredData} />
         <ThemeProvider
