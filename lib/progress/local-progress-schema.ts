@@ -27,6 +27,18 @@ export const ProgressBlobSchema = z.object({
     .refine((p) => Object.keys(p).length <= 600, {
       message: 'Demasiados problemas no progresso.',
     }),
+
+  /* ── Gamificação ──────────────────────────────────────────── */
+  /** Pontos de experiência acumulados. */
+  xp: z.number().int().nonnegative().default(0),
+  /** Dias consecutivos com actividade na plataforma. */
+  streakCount: z.number().int().nonnegative().default(0),
+  /** Maior streak já atingida. */
+  longestStreak: z.number().int().nonnegative().default(0),
+  /** Data ISO (YYYY-MM-DD) do último dia de actividade. */
+  lastActiveDate: z.string().optional(),
+  /** Datas (YYYY-MM-DD) em que completou o desafio diário. */
+  dailyChallengesCompleted: z.array(z.string()).max(400).default([]),
 });
 
 export type ProgressBlob = z.infer<typeof ProgressBlobSchema>;

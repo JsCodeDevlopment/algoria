@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     .where(eq(userProgress.userId, session.user.id))
     .limit(1);
 
-  let server: ProgressBlob = { version: 1, problems: {} };
+  let server: ProgressBlob = ProgressBlobSchema.parse({ version: 1, problems: {} });
   if (rows[0]) {
     server = ProgressBlobSchema.parse(JSON.parse(rows[0].data));
   }

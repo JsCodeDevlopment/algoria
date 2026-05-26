@@ -1,9 +1,10 @@
 import { ProgressBlobSchema, type ProgressBlob, type StudyStatus } from './local-progress-schema';
+import { awardXP, updateStreak } from '@/lib/gamification/xp-engine';
 
 export const PROGRESS_STORAGE_KEY = 'algoria:progress:v1';
 
 function emptyBlob(): ProgressBlob {
-  return { version: 1, problems: {} };
+  return ProgressBlobSchema.parse({ version: 1, problems: {} });
 }
 
 export function loadProgressBlob(): ProgressBlob {
@@ -40,9 +41,10 @@ export function touchProblemVisited(problemSlug: string): ProgressBlob {
 
 /** Regista abertura de uma página de solução. */
 export function touchSolutionVisited(problemSlug: string, solutionSlug: string): ProgressBlob {
-  const blob = loadProgressBlob();
+  let blob = loadProgressBlob();
   const cur = blob.problems[problemSlug] ?? { openedSolutions: [] };
   const set = new Set(cur.openedSolutions ?? []);
+  const isFirstVisit = !set.has(solutionSlug);
   set.add(solutionSlug);
   blob.problems[problemSlug] = {
     ...cur,
@@ -50,6 +52,13 @@ export function touchSolutionVisited(problemSlug: string, solutionSlug: string):
     markedCompleteAt: cur.markedCompleteAt,
     openedSolutions: [...set],
   };
+
+  // Gamificação: streak + XP na primeira visita à solução
+  blob = updateStreak(blob);
+  if (isFirstVisit) {
+    blob = awardXP(blob, 'solution_read');
+  }
+
   saveProgressBlob(blob);
   return blob;
 }
@@ -99,7 +108,7 @@ export function importProgressReplace(jsonText: string): { ok: true } | { ok: fa
 }
 
 export function toggleProblemMarkedComplete(problemSlug: string): ProgressBlob {
-  const blob = loadProgressBlob();
+  let blob = loadProgressBlob();
   const cur = blob.problems[problemSlug] ?? { openedSolutions: [] };
   if (cur.markedCompleteAt) {
     blob.problems[problemSlug] = { ...cur, markedCompleteAt: undefined };
@@ -109,6 +118,9 @@ export function toggleProblemMarkedComplete(problemSlug: string): ProgressBlob {
       markedCompleteAt: new Date().toISOString(),
       visitedAt: cur.visitedAt ?? new Date().toISOString(),
     };
+    // Gamificação: XP ao marcar como completo
+    blob = updateStreak(blob);
+    blob = awardXP(blob, 'problem_complete');
   }
   saveProgressBlob(blob);
   return blob;

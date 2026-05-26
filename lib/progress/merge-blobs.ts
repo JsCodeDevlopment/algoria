@@ -1,4 +1,4 @@
-import type { ProblemStudyState, ProgressBlob } from './local-progress-schema';
+import { type ProblemStudyState, type ProgressBlob, ProgressBlobSchema } from './local-progress-schema';
 
 function latestIso(a?: string, b?: string): string | undefined {
   if (!a) return b;
@@ -35,5 +35,23 @@ export function mergeProgressBlobs(local: ProgressBlob, server: ProgressBlob): P
     const srv = problems[slug];
     problems[slug] = srv ? mergeStudy(localState, srv) : localState;
   }
-  return { version: 1, problems };
+  
+  // Gamificação — Usa o maior XP, streak, etc.
+  const xp = Math.max(local.xp ?? 0, server.xp ?? 0);
+  const streakCount = Math.max(local.streakCount ?? 0, server.streakCount ?? 0);
+  const longestStreak = Math.max(local.longestStreak ?? 0, server.longestStreak ?? 0);
+  const lastActiveDate = latestIso(local.lastActiveDate, server.lastActiveDate);
+  const dailyChallengesCompleted = Array.from(
+    new Set([...(local.dailyChallengesCompleted ?? []), ...(server.dailyChallengesCompleted ?? [])])
+  );
+
+  return ProgressBlobSchema.parse({ 
+    version: 1, 
+    problems,
+    xp,
+    streakCount,
+    longestStreak,
+    lastActiveDate,
+    dailyChallengesCompleted
+  });
 }

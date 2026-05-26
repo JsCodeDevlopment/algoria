@@ -8,8 +8,8 @@ import { redirect } from "next/navigation";
 import { EditProfileForm } from "@/components/profile/edit-profile-form";
 
 import { DeleteAccountForm } from "@/components/auth/delete-account-form";
-import { BecomeCreatorButton } from "@/components/profile/become-creator-button";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { BecomeCreatorButton } from "@/components/profile/become-creator-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -30,15 +30,17 @@ import {
 } from "@/lib/db/schema";
 import { desc } from "drizzle-orm";
 
+import { ReviewQueueWidget } from "@/components/gamification/review-queue-widget";
+import { NetworkSection } from "@/components/profile/network-section";
 import { ProfileActionsClient } from "@/components/profile/profile-actions-client";
 import { ProfileAssessmentVisibilityToggle } from "@/components/profile/profile-assessment-visibility-toggle";
 import { AssessmentCard } from "@/components/profile/public/assessment-card";
+import { getFollowers, getFollowing } from "@/lib/actions/follow";
+import { getContentRepository } from "@/lib/content/content-repository";
+import { getAllProblems } from "@/lib/content/loader";
 import { ProgressBlobSchema } from "@/lib/progress/local-progress-schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
-import { getContentRepository } from "@/lib/content/content-repository";
 import Image from "next/image";
-import { NetworkSection } from "@/components/profile/network-section";
-import { getFollowers, getFollowing } from "@/lib/actions/follow";
 
 export async function generateMetadata(): Promise<Metadata> {
   const session = await auth.api.getSession({ headers: await headers() });
@@ -63,7 +65,6 @@ export default async function ProfilePage() {
 
   const { user: sessionUser } = session;
 
-  // Buscar progressos, subscrição e dados do user (role/status pedido)
   const [
     progressRows,
     subRows,
@@ -112,7 +113,6 @@ export default async function ProfilePage() {
   const activeSub = subRows[0];
   const isPro = activeSub?.status === "active";
 
-  // Processar o progresso
   let completedProblems = 0;
   let inProgressProblems = 0;
   let solutionsOpened = 0;
@@ -136,6 +136,12 @@ export default async function ProfilePage() {
 
   const allTests = await getContentRepository().getAllTechnicalTests();
   const testMap = new Map(allTests.map(t => [t.slug, t]));
+
+  const allProblems = await getAllProblems();
+  const problemTitles: Record<string, string> = {};
+  for (const p of allProblems) {
+    problemTitles[p.meta.slug] = p.meta.title;
+  }
 
   const initials =
     sessionUser.name?.substring(0, 2).toUpperCase() ||
@@ -233,7 +239,6 @@ export default async function ProfilePage() {
           </div>
         </header>
 
-        {/* METRICS DASHBOARD */}
         <section className="mb-12 grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="border-2 border-border p-6 bg-muted/5 flex flex-col gap-1">
             <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -301,7 +306,8 @@ export default async function ProfilePage() {
           </div>
         </section>
 
-        {/* TECHNICAL ASSESSMENTS SECTION */}
+        <ReviewQueueWidget problemTitles={problemTitles} />
+
         <section className="mb-12">
           <div className="flex items-center gap-3 mb-6">
             <div className="h-6 w-2 bg-primary" />
@@ -361,12 +367,9 @@ export default async function ProfilePage() {
           )}
         </section>
 
-        {/* NETWORK SECTION */}
         <section className="mb-12">
           <NetworkSection followers={followers} following={following} />
         </section>
-
-        {/* MAIN PROFILE FORM */}
 
         <div className="space-y-12">
           <Card className="border-2 border-border bg-background/60 backdrop-blur-sm overflow-hidden rounded-none shadow-[12px_12px_0_0_rgba(0,0,0,0.05)]">
@@ -393,7 +396,6 @@ export default async function ProfilePage() {
             </CardContent>
           </Card>
 
-          {/* Danger Zone */}
           <Card className="border-2 border-destructive/20 bg-destructive/5 shadow-none">
             <CardHeader className="pb-2">
               <CardTitle className="text-sm uppercase tracking-widest text-destructive flex items-center gap-2">

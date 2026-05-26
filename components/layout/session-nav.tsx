@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { StreakFlame } from "@/components/gamification/streak-flame";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
@@ -17,8 +18,6 @@ export function SessionNav() {
   const router = useRouter();
 
   useEffect(() => {
-    // Usamos setTimeout para evitar o aviso de 'cascading renders' síncrono.
-    // Isto move a atualização para a próxima iteração do event loop.
     const timer = setTimeout(() => {
       setMounted(true);
     }, 0);
@@ -74,7 +73,9 @@ export function SessionNav() {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="flex items-center gap-2">
+      <StreakFlame />
+      <div className="relative" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -146,6 +147,7 @@ export function SessionNav() {
           </div>
         </div>
       )}
+      </div>
     </div>
   );
 }
