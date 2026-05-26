@@ -1,4 +1,4 @@
-import { ArrowLeft, Cookie, HelpCircle, Settings } from "lucide-react";
+import { ArrowLeft, Cookie, Settings } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 

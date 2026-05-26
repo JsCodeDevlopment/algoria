@@ -21,10 +21,7 @@ export async function GET(request: Request) {
     // Extrai XP do JSON armazenado em userProgress.data
     const xpExtract = sql<number>`COALESCE((${userProgress.data}::jsonb ->> 'xp')::int, 0)`;
     const streakExtract = sql<number>`COALESCE((${userProgress.data}::jsonb ->> 'streakCount')::int, 0)`;
-    const completedExtract = sql<number>`COALESCE(
-      jsonb_object_keys_count((${userProgress.data}::jsonb -> 'problems')),
-      0
-    )`;
+
 
     let query;
 

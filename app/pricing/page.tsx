@@ -30,7 +30,7 @@ export default async function PricingPage() {
   const session = await auth.api.getSession({ headers: await headers() });
   const hasPro = await userHasPro(session?.user?.id);
 
-  const repo = getContentRepository();
+
   const plans = await getPricingPlans();
   const proPlan = plans.find((p) => p.id === "pro");
 
@@ -38,11 +38,7 @@ export default async function PricingPage() {
   const proFeatures = await getPricingFeatures("pro");
   const inventory = await getPricingInventory();
 
-  // Agrupar inventário por categoria de pricing
-  const inventoryGroups = inventory.reduce((acc, item) => {
-    acc[item.pricingCategory] = (acc[item.pricingCategory] || 0) + 1;
-    return acc;
-  }, {} as Record<string, number>);
+
 
   const title = proPlan?.title || "Planos e Preços";
   const description =

@@ -31,15 +31,18 @@ export function DailyChallengeBanner({
   const [completed, setCompleted] = useState(false);
 
   useEffect(() => {
-    const blob = loadProgressBlob();
-    setCompleted(isDailyChallengeCompleted(blob));
-
     const sync = () => {
       const b = loadProgressBlob();
       setCompleted(isDailyChallengeCompleted(b));
     };
+
+    const timer = setTimeout(sync, 0);
+    
     window.addEventListener("algoria-progress", sync);
-    return () => window.removeEventListener("algoria-progress", sync);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("algoria-progress", sync);
+    };
   }, []);
 
   const handleComplete = () => {
