@@ -16,7 +16,7 @@ interface HubSelectionGridProps {
 export function HubSelectionGrid({ guidesCount }: HubSelectionGridProps) {
   return (
     <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-      {ENGINEERING_WORK_PILLARS.map((pillar, idx) => {
+      {ENGINEERING_WORK_PILLARS.map((pillar) => {
         const count = guidesCount[pillar] || 0;
 
         return (

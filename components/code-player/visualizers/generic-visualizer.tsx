@@ -11,7 +11,7 @@ interface Props {
   solutionSlug?: string;
 }
 
-export function GenericVisualizer({ steps, solutionSlug }: Props) {
+export function GenericVisualizer({ steps }: Props) {
   const currentLine = usePlayerStore((s) => s.currentLine);
   const currentStepIndex = usePlayerStore((s) => s.currentStepIndex);
 

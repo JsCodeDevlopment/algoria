@@ -7,6 +7,7 @@ import {
   Languages,
   Map,
   Sparkles,
+  Trophy,
   Users,
 } from "lucide-react";
 
@@ -54,6 +55,12 @@ export const NAVIGATION_ITEMS = [
     Icon: Users,
   },
   {
+    href: "/leaderboard",
+    label: "Leaderboard",
+    description: "Ranking semanal de XP",
+    Icon: Trophy,
+  },
+  {
     href: "/tests",
     label: "Testes técnicos",
     description: "Preparação para vagas",
@@ -72,3 +79,4 @@ export const NAVIGATION_ITEMS = [
     Icon: Sparkles,
   },
 ] as const;
+

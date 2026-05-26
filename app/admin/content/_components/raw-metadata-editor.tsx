@@ -40,7 +40,7 @@ export function RawMetadataEditor({ meta, setMeta }: RawMetadataEditorProps) {
             setTimeout(() => setIsSuccess(false), 2000);
           }
         }
-      } catch (e) {
+      } catch {
         // Não mostramos erro no auto-apply para não incomodar enquanto digita
       }
     }, 1000);

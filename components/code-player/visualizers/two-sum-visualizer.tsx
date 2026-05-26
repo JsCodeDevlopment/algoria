@@ -11,7 +11,7 @@ interface Props {
   solutionSlug?: string;
 }
 
-export function TwoSumVisualizer({ steps, solutionSlug }: Props) {
+export function TwoSumVisualizer({ steps }: Props) {
   const currentLine = usePlayerStore((s) => s.currentLine);
   const currentStepIndex = usePlayerStore((s) => s.currentStepIndex);
 
