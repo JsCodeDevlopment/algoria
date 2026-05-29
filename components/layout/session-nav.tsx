@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
+import { useAuthDialog } from "@/components/auth/auth-dialog-context";
 import { StreakFlame } from "@/components/gamification/streak-flame";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -16,6 +17,7 @@ export function SessionNav() {
   const [mounted, setMounted] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { openAuthDialog } = useAuthDialog();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -49,12 +51,12 @@ export function SessionNav() {
   if (!data?.user) {
     return (
       <Button
-        asChild
         variant="default"
         size="sm"
-        className="h-9 shrink-0 rounded-none px-3 text-[9px] font-black uppercase tracking-wide shadow-none sm:px-4"
+        className="h-9 shrink-0 rounded-none px-3 text-[9px] font-black uppercase tracking-wide shadow-none cursor-pointer sm:px-4"
+        onClick={() => openAuthDialog()}
       >
-        <Link href="/auth/sign-in">Entrar</Link>
+        Entrar
       </Button>
     );
   }
@@ -68,7 +70,7 @@ export function SessionNav() {
   const handleSignOut = async () => {
     setIsOpen(false);
     await authClient.signOut();
-    router.push("/auth/sign-in");
+    router.push('/');
     router.refresh();
   };
 

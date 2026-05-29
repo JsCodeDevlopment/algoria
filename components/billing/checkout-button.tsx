@@ -21,7 +21,7 @@ export function CheckoutButton({ disabled }: { disabled?: boolean }) {
       });
 
       if (res.status === 401) {
-        window.location.href = "/auth/sign-in?callbackUrl=/pricing";
+        window.location.href = "/";
         return;
       }
 

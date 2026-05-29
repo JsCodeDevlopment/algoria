@@ -5,10 +5,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 
+import { RequireAuth } from "@/components/auth/require-auth";
 import { UpgradePrompt } from "@/components/billing/upgrade-prompt";
 import { DifficultyBadge } from "@/components/catalog/difficulty-badge";
 import { DynamicPlayerWrapper } from "@/components/code-player/dynamic-player-wrapper";
 import { ComplexityBadge } from "@/components/complexity/complexity-badge";
+import { DailyChallengeTabVisit } from "@/components/gamification/daily-challenge-tab-visit";
 import { JsonLdScript } from "@/components/seo/json-ld";
 import { SolutionLanguageSelect } from "@/components/solution/solution-language-select";
 import { SolutionVisitTracker } from "@/components/solution/solution-visit-tracker";
@@ -155,28 +157,32 @@ export default async function SolutionPage({
 
   if (!unlocked) {
     return (
-      <div className="mx-auto max-w-7xl px-6 py-16">
-        <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
-        >
-          <Link href={`/problems/${problem.meta.slug}`}>
-            <ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}
-          </Link>
-        </Button>
-        <UpgradePrompt
-          context="Player e soluções Pro"
-          problemSlug={problem.meta.slug}
-          hideLogin={!!session}
-        />
-      </div>
+      <RequireAuth>
+        <div className="mx-auto max-w-7xl px-6 py-16">
+          <Button
+            asChild
+            variant="outline"
+            size="sm"
+            className="mb-8 rounded-none gap-2 text-xs font-bold uppercase tracking-wide"
+          >
+            <Link href={`/problems/${problem.meta.slug}`}>
+              <ArrowLeft className="h-3.5 w-3.5" /> {problem.meta.title}
+            </Link>
+          </Button>
+          <UpgradePrompt
+            context="Player e soluções Pro"
+            problemSlug={problem.meta.slug}
+            hideLogin={!!session}
+          />
+        </div>
+      </RequireAuth>
     );
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-8">
+    <RequireAuth>
+      <DailyChallengeTabVisit tab={`solution:${solutionSlug}`} />
+      <div className="mx-auto max-w-7xl px-6 py-8">
       <JsonLdScript
         data={learningResourceJsonLd({
           name: `${problem.meta.title}: ${solution.meta.name}`,
@@ -328,6 +334,7 @@ export default async function SolutionPage({
         </Button>
       </div>
     </div>
+    </RequireAuth>
   );
 }
 

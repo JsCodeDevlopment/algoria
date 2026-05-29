@@ -1,16 +1,28 @@
 'use client';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { useState } from 'react';
 
 interface Props {
   statement: React.ReactNode;
   strategies: React.ReactNode;
+  onTabVisited?: (tab: string) => void;
 }
 
-/** Enunciado + soluções em separadores (fluxo §7 do plano de produto). */
-export function ProblemStudyTabs({ statement, strategies }: Props) {
+export function ProblemStudyTabs({ statement, strategies, onTabVisited }: Props) {
+  const [, setVisited] = useState<Set<string>>(new Set(['statement']));
+
+  const handleValueChange = (value: string) => {
+    setVisited((prev) => {
+      const next = new Set(prev);
+      next.add(value);
+      return next;
+    });
+    onTabVisited?.(value);
+  };
+
   return (
-    <Tabs defaultValue="statement" className="w-full">
+    <Tabs defaultValue="statement" className="w-full" onValueChange={handleValueChange}>
       <TabsList className="flex w-full flex-wrap h-auto gap-1 p-1">
         <TabsTrigger value="statement" className="flex-1 min-w-[8rem]">
           Enunciado

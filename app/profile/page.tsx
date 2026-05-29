@@ -9,6 +9,7 @@ import { EditProfileForm } from "@/components/profile/edit-profile-form";
 
 import { DeleteAccountForm } from "@/components/auth/delete-account-form";
 import { SignOutButton } from "@/components/auth/sign-out-button";
+import { RequireAuth } from "@/components/auth/require-auth";
 import { BecomeCreatorButton } from "@/components/profile/become-creator-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -60,7 +61,11 @@ export default async function ProfilePage() {
   const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session?.user) {
-    redirect("/auth/sign-in");
+    return (
+      <RequireAuth>
+        <div className="flex-1" />
+      </RequireAuth>
+    );
   }
 
   const { user: sessionUser } = session;

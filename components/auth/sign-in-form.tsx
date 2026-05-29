@@ -1,14 +1,19 @@
 'use client';
 
+import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2 } from 'lucide-react';
 
-import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
+
+interface SignInFormProps {
+  onSuccess?: () => void;
+  onSwitchToSignUp?: () => void;
+}
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -33,7 +38,7 @@ function GoogleIcon({ className }: { className?: string }) {
   );
 }
 
-export function SignInForm() {
+export function SignInForm({ onSuccess, onSwitchToSignUp }: SignInFormProps = {}) {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -52,8 +57,12 @@ export function SignInForm() {
         setError(res.error.message ?? 'Não foi possível iniciar sessão.');
         return;
       }
-      router.push('/problems');
-      router.refresh();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/problems');
+        router.refresh();
+      }
     } finally {
       setLoading(false);
     }
@@ -75,7 +84,6 @@ export function SignInForm() {
 
   return (
     <div className="space-y-6">
-      {/* Google Sign-In */}
       <Button
         type="button"
         variant="outline"
@@ -94,7 +102,6 @@ export function SignInForm() {
         Continuar com Google
       </Button>
 
-      {/* Divider */}
       <div className="relative flex items-center py-2">
         <div className="flex-1 border-t border-border" />
         <span className="mx-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -103,14 +110,12 @@ export function SignInForm() {
         <div className="flex-1 border-t border-border" />
       </div>
 
-      {/* Error */}
       {error && (
         <div className="border-2 border-destructive/30 bg-destructive/5 px-4 py-3">
           <p className="text-sm font-medium text-destructive">{error}</p>
         </div>
       )}
 
-      {/* Email Form */}
       <form onSubmit={(e) => void onSubmit(e)} className="space-y-5">
         <div>
           <label htmlFor="signin-email" className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -173,12 +178,21 @@ export function SignInForm() {
         </Button>
       </form>
 
-      {/* Footer link */}
       <p className="text-center text-xs text-muted-foreground">
         Ainda sem conta?{' '}
-        <Link href="/auth/sign-up" className="font-bold text-primary underline-offset-4 transition-colors hover:underline">
-          Criar conta gratuitamente
-        </Link>
+        {onSwitchToSignUp ? (
+          <button
+            type="button"
+            onClick={onSwitchToSignUp}
+            className="font-bold text-primary underline-offset-4 transition-colors hover:underline cursor-pointer"
+          >
+            Criar conta gratuitamente
+          </button>
+        ) : (
+          <Link href="/auth/sign-up" className="font-bold text-primary underline-offset-4 transition-colors hover:underline">
+            Criar conta gratuitamente
+          </Link>
+        )}
       </p>
     </div>
   );

@@ -41,7 +41,7 @@ export async function deleteAccount() {
   await db.delete(user).where(eq(user.id, userId));
 
   revalidatePath('/', 'layout');
-  redirect('/');
+  return { success: true };
 }
 
 export async function updateProfile(formData: FormData) {

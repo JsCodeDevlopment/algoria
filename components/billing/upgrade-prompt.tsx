@@ -1,6 +1,7 @@
 import { Check, Lock, Zap } from "lucide-react";
 import Link from "next/link";
 
+import { AuthDialogTriggerButton } from "@/components/auth/auth-dialog-trigger";
 import { PaywallAnalytics } from "@/components/billing/paywall-analytics";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,7 +35,6 @@ export function UpgradePrompt({
 
   return (
     <div className="mx-auto max-w-3xl border-2 border-primary bg-background p-0 overflow-hidden">
-      {/* Industrial Header Bar - Mirroring Technical Section in Homepage */}
       <div className="border-b-2 border-primary bg-primary/[0.06] px-8 py-5 flex items-center justify-between">
         <div>
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.35em] text-primary">
@@ -49,7 +49,6 @@ export function UpgradePrompt({
         </div>
       </div>
 
-      {/* Grid Pattern Body */}
       <div className="p-8 md:p-12 bg-grid-pattern relative">
         {problemSlug || conceptSlug ? (
           <PaywallAnalytics
@@ -90,7 +89,6 @@ export function UpgradePrompt({
             )}
           </p>
 
-          {/* Perks Grid - Mirroring Platform Features Pattern */}
           <div className="grid gap-0 border border-border md:grid-cols-2 mb-12 bg-background shadow-sm">
             {perks.map((perk, i) => (
               <div
@@ -121,14 +119,13 @@ export function UpgradePrompt({
               </Link>
             </Button>
             {!hideLogin && (
-              <Button
-                asChild
+              <AuthDialogTriggerButton
                 variant="outline"
                 size="xl"
-                className="rounded-none border-2 border-foreground px-8 font-black uppercase tracking-[0.2em] text-xs flex-1"
+                className="rounded-none border-2 border-foreground px-8 font-black uppercase tracking-[0.2em] text-xs flex-1 cursor-pointer"
               >
-                <Link href="/auth/sign-in">Entrar na conta</Link>
-              </Button>
+                Entrar na conta
+              </AuthDialogTriggerButton>
             )}
           </div>
         </div>

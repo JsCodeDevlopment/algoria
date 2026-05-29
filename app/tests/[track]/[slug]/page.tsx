@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
+import { RequireAuth } from "@/components/auth/require-auth";
 import { UpgradePrompt } from "@/components/billing/upgrade-prompt";
 import { TestClient } from "@/components/tests/test-client";
 import { auth } from "@/lib/auth";
@@ -50,12 +51,14 @@ export default async function TestExecutionPage({
   const isLocked = !isContentUnlockedForUser(test.access || 'pro', hasPro);
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6">
-      {isLocked ? (
-        <UpgradePrompt hideLogin={!!session} />
-      ) : (
-        <TestClient test={test} />
-      )}
-    </div>
+    <RequireAuth>
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center p-6">
+        {isLocked ? (
+          <UpgradePrompt hideLogin={!!session} />
+        ) : (
+          <TestClient test={test} />
+        )}
+      </div>
+    </RequireAuth>
   );
 }
