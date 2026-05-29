@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { RequireAuth } from '@/components/auth/require-auth';
 import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic, getAdjacentInterviewEnglish } from '@/lib/content/loader';
 import type { InterviewEnglishTrack } from '@/lib/content/schemas';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
@@ -77,8 +78,9 @@ export default async function InterviewEnglishTopicPage({
   const adjacent = await getAdjacentInterviewEnglish(slug);
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <JsonLdScript
+    <RequireAuth>
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <JsonLdScript
         data={learningResourceJsonLd({
           name: topic.meta.title,
           description: topic.meta.summary,
@@ -156,6 +158,7 @@ export default async function InterviewEnglishTopicPage({
         next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/interview-en/${adjacent.next.slug}` } : null}
       />
     </div>
+    </RequireAuth>
   );
 }
 

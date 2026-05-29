@@ -1,14 +1,19 @@
 'use client';
 
+import { ArrowRight, Eye, EyeOff, Loader2, Lock, Mail, User } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Mail, Lock, Eye, EyeOff, ArrowRight, Loader2, User } from 'lucide-react';
 
-import { authClient } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { authClient } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
+
+interface SignUpFormProps {
+  onSuccess?: () => void;
+  onSwitchToSignIn?: () => void;
+}
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -33,7 +38,7 @@ function GoogleIcon({ className }: { className?: string }) {
   );
 }
 
-export function SignUpForm() {
+export function SignUpForm({ onSuccess, onSwitchToSignIn }: SignUpFormProps = {}) {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -57,8 +62,12 @@ export function SignUpForm() {
         setError(res.error.message ?? 'Não foi possível criar a conta.');
         return;
       }
-      router.push('/problems');
-      router.refresh();
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        router.push('/problems');
+        router.refresh();
+      }
     } finally {
       setLoading(false);
     }
@@ -80,7 +89,6 @@ export function SignUpForm() {
 
   return (
     <div className="space-y-6">
-      {/* Google Sign-Up */}
       <Button
         type="button"
         variant="outline"
@@ -99,7 +107,6 @@ export function SignUpForm() {
         Registar com Google
       </Button>
 
-      {/* Divider */}
       <div className="relative flex items-center py-2">
         <div className="flex-1 border-t border-border" />
         <span className="mx-4 text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -108,14 +115,12 @@ export function SignUpForm() {
         <div className="flex-1 border-t border-border" />
       </div>
 
-      {/* Error */}
       {error && (
         <div className="border-2 border-destructive/30 bg-destructive/5 px-4 py-3">
           <p className="text-sm font-medium text-destructive">{error}</p>
         </div>
       )}
 
-      {/* Email Form */}
       <form onSubmit={(e) => void onSubmit(e)} className="space-y-5">
         <div>
           <label htmlFor="signup-name" className="mb-2 flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -197,13 +202,22 @@ export function SignUpForm() {
         </Button>
       </form>
 
-      {/* Footer link */}
       <div className="space-y-3 text-center">
         <p className="text-xs text-muted-foreground">
           Já tens conta?{' '}
-          <Link href="/auth/sign-in" className="font-bold text-primary underline-offset-4 transition-colors hover:underline">
-            Entrar agora
-          </Link>
+          {onSwitchToSignIn ? (
+            <button
+              type="button"
+              onClick={onSwitchToSignIn}
+              className="font-bold text-primary underline-offset-4 transition-colors hover:underline cursor-pointer"
+            >
+              Entrar agora
+            </button>
+          ) : (
+            <Link href="/auth/sign-in" className="font-bold text-primary underline-offset-4 transition-colors hover:underline">
+              Entrar agora
+            </Link>
+          )}
         </p>
         <p className="text-[10px] leading-relaxed text-muted-foreground/60">
           Ao criar conta, concordas com os{' '}

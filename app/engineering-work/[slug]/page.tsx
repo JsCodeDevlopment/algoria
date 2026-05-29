@@ -3,28 +3,29 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import { RequireAuth } from "@/components/auth/require-auth";
+import { UpgradePrompt } from "@/components/billing/upgrade-prompt";
 import { AuthorInfo } from "@/components/engenharia-trabalho/author-info";
 import { EngineeringGuideArticle } from "@/components/engenharia-trabalho/engineering-guide-article";
 import { ContentNavigation } from "@/components/layout/content-navigation";
 import { JsonLdScript } from "@/components/seo/json-ld";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { auth } from "@/lib/auth";
+import { userHasPro } from "@/lib/billing/entitlements";
+import { isContentUnlockedForUser } from "@/lib/billing/tiering";
 import {
   getAdjacentEngineeringWork,
   getAllEngineeringWorkSlugs,
   getEngineeringWorkGuide,
 } from "@/lib/content/loader";
-import { auth } from "@/lib/auth";
-import { userHasPro } from "@/lib/billing/entitlements";
-import { isContentUnlockedForUser } from "@/lib/billing/tiering";
-import { UpgradePrompt } from "@/components/billing/upgrade-prompt";
-import { headers } from "next/headers";
 import type { EngineeringWorkPillar } from "@/lib/content/schemas";
 import { db } from "@/lib/db";
 import { user } from "@/lib/db/schema";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import { articleJsonLd } from "@/lib/seo/structured-data";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 
 interface Params {
   slug: string;
@@ -83,7 +84,6 @@ export default async function EngineeringWorkGuidePage({
 
   const adjacent = await getAdjacentEngineeringWork(slug);
 
-  // Busca o ID do Jonatas para o link do perfil
   let authorData = null;
   try {
     authorData = (await db.query.user.findFirst({
@@ -94,8 +94,9 @@ export default async function EngineeringWorkGuidePage({
   }
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <JsonLdScript
+    <RequireAuth>
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <JsonLdScript
         data={articleJsonLd({
           headline: guide.meta.title,
           description: guide.meta.summary,
@@ -167,6 +168,7 @@ export default async function EngineeringWorkGuidePage({
         }
       />
     </div>
+    </RequireAuth>
   );
 }
 

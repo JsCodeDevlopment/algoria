@@ -5,6 +5,7 @@ import Link from "next/link";
 import { CheckoutButton } from "@/components/billing/checkout-button";
 import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
 import { PricingPageAnalytics } from "@/components/billing/pricing-analytics";
+import { AuthDialogTriggerButton } from "@/components/auth/auth-dialog-trigger";
 import { getPricingPlans, getPricingFeatures, getPricingInventory } from "@/lib/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -180,14 +181,11 @@ export default async function PricingPage() {
                   {session ? (
                     <CheckoutButton />
                   ) : (
-                    <Button
-                      asChild
-                      className="h-14 w-full rounded-none font-black uppercase tracking-widest"
+                    <AuthDialogTriggerButton
+                      className="h-14 w-full rounded-none font-black uppercase tracking-widest cursor-pointer"
                     >
-                      <Link href="/auth/sign-in?callbackUrl=/pricing">
-                        Subscrever Agora
-                      </Link>
-                    </Button>
+                      Subscrever Agora
+                    </AuthDialogTriggerButton>
                   )}
                   <p className="text-center font-mono text-[9px] uppercase tracking-tighter text-muted-foreground">
                     Pagamento processado de forma segura e encriptada

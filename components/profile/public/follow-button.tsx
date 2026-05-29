@@ -1,9 +1,9 @@
 'use client';
 
+import { useAuthDialog } from '@/components/auth/auth-dialog-context';
 import { Button } from '@/components/ui/button';
 import { toggleFollowUser } from '@/lib/actions/follow';
 import { Loader2, UserCheck, UserPlus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 
 interface FollowButtonProps {
@@ -17,13 +17,13 @@ export function FollowButton({
   initialIsFollowing,
   isLoggedIn,
 }: FollowButtonProps) {
-  const router = useRouter();
   const [isFollowing, setIsFollowing] = useState(initialIsFollowing);
   const [isPending, startTransition] = useTransition();
+  const { openAuthDialog } = useAuthDialog();
 
   const handleFollowClick = () => {
     if (!isLoggedIn) {
-      router.push('/auth/sign-in');
+      openAuthDialog();
       return;
     }
 

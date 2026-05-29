@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { RequireAuth } from "@/components/auth/require-auth";
 import { ModuleCertificatePageContent } from "@/components/course/module-certificate-page-content";
 import {
   buildCertificateMetadata,
@@ -25,5 +26,9 @@ export default async function ModuleCertificatePage({
   params: Promise<CertificateParams>;
 }) {
   const { slug, moduleId } = await params;
-  return <ModuleCertificatePageContent slug={slug} moduleId={moduleId} />;
+  return (
+    <RequireAuth>
+      <ModuleCertificatePageContent slug={slug} moduleId={moduleId} />
+    </RequireAuth>
+  );
 }

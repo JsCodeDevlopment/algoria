@@ -4,6 +4,7 @@ import { Globe, Users } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
+import { useAuthDialog } from "@/components/auth/auth-dialog-context";
 import { LeaderboardTable } from "@/components/gamification/leaderboard-table";
 import { Button } from "@/components/ui/button";
 
@@ -30,6 +31,7 @@ export function LeaderboardClient({
   isLoggedIn,
 }: LeaderboardClientProps) {
   const [scope, setScope] = useState<"global" | "following">("global");
+  const { openAuthDialog } = useAuthDialog();
 
   const entries = scope === "global" ? globalEntries : followingEntries;
 
@@ -69,11 +71,11 @@ export function LeaderboardClient({
             Faz login para veres o ranking dos teus amigos.
           </p>
           <Button
-            asChild
             variant="outline"
-            className="rounded-none font-black uppercase tracking-widest text-[10px]"
+            className="rounded-none font-black uppercase tracking-widest text-[10px] cursor-pointer"
+            onClick={() => openAuthDialog()}
           >
-            <Link href="/auth/sign-in">Entrar</Link>
+            Entrar
           </Button>
         </div>
       )}

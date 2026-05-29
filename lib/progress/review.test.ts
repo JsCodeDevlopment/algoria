@@ -8,6 +8,10 @@ describe('getProblemSlugsDueForReview', () => {
     const now = Date.parse('2026-05-20T12:00:00.000Z');
     const blob: ProgressBlob = {
       version: 1,
+      xp: 0,
+      streakCount: 0,
+      longestStreak: 0,
+      dailyChallengesCompleted: [],
       problems: {
         fresh: {
           openedSolutions: [],
@@ -28,7 +32,7 @@ describe('getProblemSlugsDueForReview', () => {
   });
 
   it('devolve vazio quando minDays é zero ou negativo', () => {
-    const blob: ProgressBlob = { version: 1, problems: {} };
+    const blob: ProgressBlob = { version: 1, problems: {}, xp: 0, streakCount: 0, longestStreak: 0, dailyChallengesCompleted: [] };
     expect(getProblemSlugsDueForReview(blob, 0)).toEqual([]);
     expect(getProblemSlugsDueForReview(blob, -5)).toEqual([]);
   });

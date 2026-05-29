@@ -1,20 +1,21 @@
-import Link from 'next/link';
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import { headers } from 'next/headers';
 import { ArrowLeft, Clock } from 'lucide-react';
+import type { Metadata } from 'next';
+import { headers } from 'next/headers';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
+import { RequireAuth } from '@/components/auth/require-auth';
 import { UpgradePrompt } from '@/components/billing/upgrade-prompt';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/auth';
 import { userHasPro } from '@/lib/billing/entitlements';
 import { getConceptAccess, isContentUnlockedForUser } from '@/lib/billing/tiering';
-import { getAllConceptSlugs, getConcept, getAdjacentConcepts } from '@/lib/content/loader';
+import { getAdjacentConcepts, getAllConceptSlugs, getConcept } from '@/lib/content/loader';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
 
@@ -71,8 +72,9 @@ export default async function ConceptPage({
   const adjacent = await getAdjacentConcepts(slug);
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <JsonLdScript
+    <RequireAuth>
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <JsonLdScript
         data={learningResourceJsonLd({
           name: concept.meta.title,
           description: concept.meta.summary,
@@ -150,6 +152,7 @@ export default async function ConceptPage({
         next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/concepts/${adjacent.next.slug}` } : null}
       />
     </div>
+    </RequireAuth>
   );
 }
 

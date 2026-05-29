@@ -12,8 +12,10 @@ import { Separator } from '@/components/ui/separator';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
+import { RequireAuth } from '@/components/auth/require-auth';
 import { ProblemStudyCompletionBar } from '@/components/problem/problem-study-completion-bar';
 import { ProblemStudyTabs } from '@/components/problem/problem-study-tabs';
+import { DailyChallengeTabVisit } from '@/components/gamification/daily-challenge-tab-visit';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { ProblemVisitTracker } from '@/components/problem/problem-visit-tracker';
 import { auth } from '@/lib/auth';
@@ -187,8 +189,9 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
   );
 
   return (
-    <div className="mx-auto max-w-7xl px-6 py-12">
-      <JsonLdScript
+    <RequireAuth>
+      <div className="mx-auto max-w-7xl px-6 py-12">
+        <JsonLdScript
         data={learningResourceJsonLd({
           name: problem.meta.title,
           description: stripHtmlLoose(problem.descriptionHtml) || problem.meta.title,
@@ -223,10 +226,13 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
           />
         </div>
       ) : (
-        <ProblemStudyTabs
-          statement={statement}
-          strategies={strategies}
-        />
+        <>
+          <DailyChallengeTabVisit tab="statement" />
+          <ProblemStudyTabs
+            statement={statement}
+            strategies={strategies}
+          />
+        </>
       )}
 
       <ProblemStudyCompletionBar problemSlug={slug} solutionCount={problem.solutions.length} />
@@ -237,6 +243,7 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
         next={adjacent.next ? { slug: adjacent.next.slug, title: adjacent.next.title, href: `/problems/${adjacent.next.slug}` } : null}
       />
     </div>
+    </RequireAuth>
   );
 }
 

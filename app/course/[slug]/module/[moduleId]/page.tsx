@@ -6,6 +6,7 @@ import { ArrowLeft } from 'lucide-react';
 import { CourseModuleRunner } from '@/components/course/course-module-runner';
 import { Button } from '@/components/ui/button';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { RequireAuth } from '@/components/auth/require-auth';
 import { getCoursePackHydrated, listCourseSlugs } from '@/lib/courses/hydrate-course-pack';
 import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 import { learningResourceJsonLd } from '@/lib/seo/structured-data';
@@ -63,8 +64,9 @@ export default async function CourseModulePage({ params }: { params: Promise<Par
     pack.subtitle;
 
   return (
-    <div className="pb-16">
-      <JsonLdScript
+    <RequireAuth>
+      <div className="pb-16">
+        <JsonLdScript
         data={learningResourceJsonLd({
           name: `${tabTitle} · ${pack.title}`,
           description: ldDescription,
@@ -76,7 +78,8 @@ export default async function CourseModulePage({ params }: { params: Promise<Par
           <Link href={`/course/${encodeURIComponent(slug)}`}><ArrowLeft className="h-3.5 w-3.5" /> Índice do programa</Link>
         </Button>
       </div>
-      <CourseModuleRunner pack={pack} module={moduleHydrated} previousModuleCertificateTitle={prevCert} />
-    </div>
+        <CourseModuleRunner pack={pack} module={moduleHydrated} previousModuleCertificateTitle={prevCert} />
+      </div>
+    </RequireAuth>
   );
 }

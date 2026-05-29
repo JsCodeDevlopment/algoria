@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 import { Badge } from "@/components/ui/badge";
-import { completeDailyChallenge, isDailyChallengeCompleted } from "@/lib/gamification/xp-engine";
-import { loadProgressBlob, saveProgressBlob } from "@/lib/progress/local-progress";
+import { isDailyChallengeCompleted } from "@/lib/gamification/xp-engine";
+import { loadProgressBlob } from "@/lib/progress/local-progress";
 
 interface DailyChallengeBannerProps {
   slug: string;
@@ -21,6 +21,18 @@ const DIFFICULTY_COLORS: Record<string, string> = {
   medium: "text-yellow-500 border-yellow-500/30 bg-yellow-500/10",
   hard: "text-red-500 border-red-500/30 bg-red-500/10",
 };
+
+/**
+ * Guarda o slug do desafio diário activo no sessionStorage para que a
+ * página do problema saiba que é um desafio em andamento.
+ */
+function setActiveDailyChallenge(slug: string, dateKey: string) {
+  if (typeof window === 'undefined') return;
+  sessionStorage.setItem(
+    'algoria:daily-challenge-active',
+    JSON.stringify({ slug, dateKey }),
+  );
+}
 
 export function DailyChallengeBanner({
   slug,
@@ -44,14 +56,6 @@ export function DailyChallengeBanner({
       window.removeEventListener("algoria-progress", sync);
     };
   }, []);
-
-  const handleComplete = () => {
-    if (completed) return;
-    let blob = loadProgressBlob();
-    blob = completeDailyChallenge(blob);
-    saveProgressBlob(blob);
-    setCompleted(true);
-  };
 
   return (
     <motion.div
@@ -89,6 +93,7 @@ export function DailyChallengeBanner({
             </div>
             <Link
               href={`/problems/${slug}`}
+              onClick={() => setActiveDailyChallenge(slug, dateKey)}
               className="group flex items-center gap-2 text-lg font-black uppercase tracking-tight transition-colors hover:text-primary"
             >
               {title}
@@ -123,7 +128,7 @@ export function DailyChallengeBanner({
           ) : (
             <Link
               href={`/problems/${slug}`}
-              onClick={handleComplete}
+              onClick={() => setActiveDailyChallenge(slug, dateKey)}
               className="flex items-center gap-2 border-2 border-orange-500 bg-orange-500 px-5 py-2.5 text-[10px] font-black uppercase tracking-[0.2em] text-white transition-all hover:bg-orange-600 active:scale-95"
             >
               Aceitar Desafio

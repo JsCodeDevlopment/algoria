@@ -5,6 +5,8 @@ import "./globals.css";
 
 import { AlgoriaPostHogProvider } from "@/components/analytics/posthog-provider";
 import { CookieBanner } from "@/components/analytics/cookie-banner";
+import { AuthDialogProvider } from "@/components/auth/auth-dialog-context";
+import { AuthDialog } from "@/components/auth/auth-dialog";
 import { ProgressSyncOnLogin } from "@/components/billing/progress-sync";
 import { Sidebar } from "@/components/layout/sidebar";
 import { SidebarProvider } from "@/components/layout/sidebar-context";
@@ -92,17 +94,20 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AlgoriaPostHogProvider>
-            <ProgressSyncOnLogin />
-            <SiteHeader />
-            <SidebarProvider>
-              <Sidebar />
-              <main className="flex flex-1 flex-col xl:ml-[var(--sidebar-width,48px)] transition-[margin-left] duration-300">
-                {children}
-              </main>
-            </SidebarProvider>
-            <SiteFooter />
-            <ToastContainer />
-            <CookieBanner />
+            <AuthDialogProvider>
+              <ProgressSyncOnLogin />
+              <SiteHeader />
+              <SidebarProvider>
+                <Sidebar />
+                <main className="flex flex-1 flex-col xl:ml-[var(--sidebar-width,48px)] transition-[margin-left] duration-300">
+                  {children}
+                </main>
+              </SidebarProvider>
+              <SiteFooter />
+              <AuthDialog />
+              <ToastContainer />
+              <CookieBanner />
+            </AuthDialogProvider>
           </AlgoriaPostHogProvider>
         </ThemeProvider>
       </body>
