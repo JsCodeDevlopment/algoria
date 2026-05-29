@@ -7,7 +7,6 @@ import { getStripe } from '@/lib/billing/stripe';
 import { eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
 
 export async function deleteAccount() {
   const session = await auth.api.getSession({ headers: await headers() });

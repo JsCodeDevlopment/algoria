@@ -3,7 +3,6 @@ import { ArrowLeft, Trash2, User } from "lucide-react";
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 
 import { EditProfileForm } from "@/components/profile/edit-profile-form";
 

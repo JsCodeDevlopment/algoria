@@ -1,5 +1,4 @@
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
 
 import { DailyChallengeTracker } from "@/components/gamification/daily-challenge-tracker";
 import { auth } from "@/lib/auth";

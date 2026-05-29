@@ -17,7 +17,7 @@ import { authClient } from '@/lib/auth-client';
  */
 export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { data, isPending } = authClient.useSession();
-  const { openAuthDialog, isOpen } = useAuthDialog();
+  const { openAuthDialog } = useAuthDialog();
   const pathname = usePathname();
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
     if (!data?.user) {
       openAuthDialog({ redirectTo: pathname });
     }
-  }, [data?.user, isPending, pathname]);
+  }, [data?.user, isPending, pathname, openAuthDialog]);
 
   if (isPending) {
     return (
