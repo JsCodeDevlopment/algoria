@@ -1,7 +1,7 @@
 'use client';
 
 import { useTheme } from 'next-themes';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 interface MermaidRendererProps {
   containerRef: React.RefObject<HTMLElement | null>;
@@ -10,14 +10,8 @@ interface MermaidRendererProps {
 
 export function MermaidRenderer({ containerRef, html }: MermaidRendererProps) {
   const { resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!mounted) return;
 
     const container = containerRef.current;
     if (!container) return;
@@ -138,7 +132,7 @@ export function MermaidRenderer({ containerRef, html }: MermaidRendererProps) {
         }
       });
     };
-  }, [html, resolvedTheme, mounted, containerRef]);
+  }, [html, resolvedTheme, containerRef]);
 
   return null;
 }

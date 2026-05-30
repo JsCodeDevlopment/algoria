@@ -51,6 +51,13 @@ This document outlines the design system, architecture rules, and coding standar
   - Move storage keys, static constants, formatting helpers, and pure functions to **utility files** (e.g., `daily-challenge-utils.ts`).
   - Keep `.tsx` UI files focused purely on layout, styling, and rendering.
 
+### React Hooks & ESLint Rules
+- **Avoid setState in useEffect**: DO NOT call React state setters (`setState`) synchronously inside `useEffect` bodies to avoid cascading/redundant renders and trigger ESLint errors (`react-hooks/set-state-in-effect`).
+  - For client-only setups (like hydration guards), check if state is actually required. If a component returns `null` or static markup on SSR and then executes DOM manipulations inside `useEffect`, it will not trigger hydration mismatches, eliminating the need for a `mounted` state wrapper.
+
+### TypeScript Typings
+- **No any type**: **DO NOT use the `any` type in TypeScript files.** Always define explicit types, interfaces, or generics. If the shape is truly dynamic or uncertain, use `unknown` instead to ensure full compiler type safety and comply with strict ESLint rules (like `@typescript-eslint/no-explicit-any`).
+
 ---
 
 ## 3. Product Rules & Features
