@@ -19,6 +19,7 @@
 
 # production
 /build
+/content-labs
 
 # misc
 .DS_Store

@@ -4,6 +4,7 @@ import { nextCookies } from 'better-auth/next-js';
 
 import { db } from '@/lib/db';
 import { authSchema } from '@/lib/db/schema';
+import { sendWelcomeEmail } from '@/lib/email';
 
 const baseURL =
   process.env.BETTER_AUTH_URL?.replace(/\/$/, '') ||
@@ -20,6 +21,19 @@ export const auth = betterAuth({
     provider: 'pg',
     schema: authSchema,
   }),
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          try {
+            await sendWelcomeEmail(user.email, user.name);
+          } catch (err) {
+            console.error('[auth databaseHooks user.create.after] Welcome email failed:', err);
+          }
+        },
+      },
+    },
+  },
   emailAndPassword: { enabled: true },
   socialProviders: {
     ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
