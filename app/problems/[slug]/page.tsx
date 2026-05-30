@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { MarkdownArticle } from '@/components/markdown/markdown-article';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { RequireAuth } from '@/components/auth/require-auth';
@@ -102,12 +103,12 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
         </Card>
       ) : null}
 
-      <article
+      <MarkdownArticle
+        html={problem.descriptionHtml}
         className="prose prose-zinc dark:prose-invert max-w-none mb-10
                    prose-h2:text-xl prose-h2:font-semibold prose-h2:tracking-tight
                    prose-code:text-blue-600 dark:prose-code:text-blue-400
                    prose-code:before:content-none prose-code:after:content-none"
-        dangerouslySetInnerHTML={{ __html: problem.descriptionHtml }}
       />
 
       {problem.meta.examples.length > 0 ? (

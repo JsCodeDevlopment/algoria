@@ -10,6 +10,7 @@ import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { MarkdownArticle } from '@/components/markdown/markdown-article';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { auth } from '@/lib/auth';
@@ -120,14 +121,14 @@ export default async function ConceptPage({
           <UpgradePrompt conceptSlug={slug} hideLogin={!!session} />
         </div>
       ) : (
-        <article
+        <MarkdownArticle
+          html={concept.bodyHtml}
           className="prose prose-zinc dark:prose-invert max-w-none
                      prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight prose-h2:mt-10
                      prose-h3:text-lg prose-h3:font-semibold
                      prose-code:text-blue-600 dark:prose-code:text-blue-400
                      prose-code:before:content-none prose-code:after:content-none
                      prose-pre:bg-zinc-900 prose-pre:text-zinc-100"
-          dangerouslySetInnerHTML={{ __html: concept.bodyHtml }}
         />
       )}
 

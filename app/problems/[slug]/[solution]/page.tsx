@@ -12,6 +12,7 @@ import { DynamicPlayerWrapper } from "@/components/code-player/dynamic-player-wr
 import { ComplexityBadge } from "@/components/complexity/complexity-badge";
 import { DailyChallengeTabVisit } from "@/components/gamification/daily-challenge-tab-visit";
 import { JsonLdScript } from "@/components/seo/json-ld";
+import { MarkdownArticle } from "@/components/markdown/markdown-article";
 import { SolutionLanguageSelect } from "@/components/solution/solution-language-select";
 import { SolutionVisitTracker } from "@/components/solution/solution-visit-tracker";
 import { Badge } from "@/components/ui/badge";
@@ -243,12 +244,12 @@ export default async function SolutionPage({
       </div>
 
       {solution.introHtml ? (
-        <article
+        <MarkdownArticle
+          html={solution.introHtml}
           className="prose prose-zinc dark:prose-invert max-w-3xl mb-8
                      prose-h2:text-lg prose-h2:font-semibold prose-h2:tracking-tight
                      prose-code:text-blue-600 dark:prose-code:text-blue-400
                      prose-code:before:content-none prose-code:after:content-none"
-          dangerouslySetInnerHTML={{ __html: solution.introHtml }}
         />
       ) : null}
 

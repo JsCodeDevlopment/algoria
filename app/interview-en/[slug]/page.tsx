@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { MarkdownArticle } from '@/components/markdown/markdown-article';
 import { RequireAuth } from '@/components/auth/require-auth';
 import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic, getAdjacentInterviewEnglish } from '@/lib/content/loader';
 import type { InterviewEnglishTrack } from '@/lib/content/schemas';
@@ -125,7 +126,8 @@ export default async function InterviewEnglishTopicPage({
           <UpgradePrompt hideLogin={!!session} />
         </div>
       ) : (
-        <article
+        <MarkdownArticle
+          html={topic.bodyHtml}
           className="prose prose-zinc max-w-none dark:prose-invert
                      prose-h2:mt-10 prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight
                      prose-h3:text-lg prose-h3:font-semibold
@@ -133,7 +135,6 @@ export default async function InterviewEnglishTopicPage({
                      prose-code:before:content-none prose-code:after:content-none
                      prose-pre:bg-zinc-900 prose-pre:text-zinc-100
                      prose-table:text-sm"
-          dangerouslySetInnerHTML={{ __html: topic.bodyHtml }}
         />
       )}
 

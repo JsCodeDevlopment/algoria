@@ -21,6 +21,7 @@ import {
   ArticleImageLightbox,
   attachArticleImageLightboxDelegates,
 } from './article-image-lightbox';
+import { MermaidRenderer } from '@/components/markdown/mermaid-renderer';
 
 const rootsMap = new WeakMap<HTMLElement, Root>();
 const pendingUnmounts = new WeakMap<Root, number>();
@@ -141,6 +142,7 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
       <ArticleImageLightbox />
       <div ref={shellRef}>
         <article className={articleClassName} dangerouslySetInnerHTML={{ __html: html }} />
+        <MermaidRenderer containerRef={shellRef} html={html} />
       </div>
     </>
   );
