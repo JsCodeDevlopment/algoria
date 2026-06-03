@@ -46,8 +46,8 @@ const CONFIG = {
     estimatedMinutes: 5,
 
     // Pilar do conteúdo (OBRIGATÓRIO apenas para type "engineering-work"):
-    // Opções: 'frontend' | 'backend' | 'devops' | 'softskills' | 'ia'
-    pillar: 'frontend',
+    // Opções: 'frontend' | 'backend' | 'devops' | 'softskills' | 'ia' | 'web3'
+    pillar: 'web3',
     
     // Caminho da imagem de destaque (opcional)
     image: '/default-cover.png'
