@@ -80,7 +80,7 @@ export function MermaidRenderer({
           let svgWrapper = preNode.nextElementSibling as HTMLElement;
           if (!svgWrapper || !svgWrapper.classList.contains('mermaid-wrapper')) {
             svgWrapper = document.createElement('div');
-            svgWrapper.className = 'mermaid-wrapper flex justify-center my-8 p-4 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800';
+            svgWrapper.className = 'mermaid-wrapper flex justify-center my-8 p-4 bg-zinc-50 dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 overflow-x-auto';
             // zero rounding rule
             svgWrapper.style.borderRadius = '0px'; 
             preNode.parentNode?.insertBefore(svgWrapper, preNode.nextSibling);

@@ -99,7 +99,7 @@ export default function RootLayout({
               <SiteHeader />
               <SidebarProvider>
                 <Sidebar />
-                <main className="flex flex-1 flex-col xl:ml-[var(--sidebar-width,48px)] transition-[margin-left] duration-300">
+                <main className="flex flex-1 flex-col min-w-0 xl:ml-[var(--sidebar-width,48px)] transition-[margin-left] duration-300">
                   {children}
                 </main>
               </SidebarProvider>

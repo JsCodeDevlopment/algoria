@@ -86,12 +86,13 @@ function renderIntoPlaceholder(el: HTMLDivElement): Root | null {
 }
 
 const articleClassName =
-  'prose prose-zinc max-w-none dark:prose-invert ' +
+  'prose prose-zinc max-w-none break-words dark:prose-invert ' +
   'prose-h2:mt-10 prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight ' +
   'prose-h3:text-lg prose-h3:font-semibold ' +
   'prose-code:text-blue-600 dark:prose-code:text-blue-400 ' +
+  'prose-code:break-words prose-code:whitespace-pre-wrap ' +
   'prose-code:before:content-none prose-code:after:content-none ' +
-  'prose-ul:my-4 prose-li:my-1 prose-table:text-sm ' +
+  'prose-ul:my-4 prose-li:my-1 prose-table:text-sm prose-table:block prose-table:overflow-x-auto ' +
   'prose-img:rounded-lg prose-img:border prose-img:border-border prose-img:shadow-xs';
 
 export function EngineeringGuideArticle({ html }: { html: string }) {
