@@ -1,11 +1,11 @@
-# Algoria
+# Acite
 
-![](https://img.shields.io/badge/Versão-1.6.0-black?style=for-the-badge)
+![](https://img.shields.io/badge/Versão-2.0.0-black?style=for-the-badge)
 
 Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps, SoftSkills e IA).
 
 <h1 align="center">
-  <img alt="Algoria Preview" title="Algoria" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="public/gallery/image1.png" />
+  <img alt="Acite Preview" title="Acite" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="public/gallery/image1.png" />
 </h1>
 
 ## Funcionalidades
@@ -30,7 +30,7 @@ Plataforma em português para estudar **algoritmos e decisões em código** atra
 ## Estrutura do Projeto
 
 ```txt
-algoria/
+acite/
 ├── app/                              # Next.js App Router
 │   ├── page.tsx                      # Landing
 │   ├── layout.tsx                    # Layout global + providers
@@ -86,7 +86,7 @@ algoria/
 
 ### Visão Geral
 
-O Algoria evoluiu para uma arquitetura centrada em **dados dinâmicos via PostgreSQL**. Embora o conteúdo possa ser importado de pastas em `content/` para bootstrapping, a fonte canônica agora reside no banco de dados, permitindo edição em tempo real através do **CMS integrado**. O servidor valida as submissões com **Zod**, gera HTML (Markdown via `marked`) e o **code player** mantém-se como uma ilha interativa no cliente com estado sincronizado via **Zustand**.
+O Acite evoluiu para uma arquitetura centrada em **dados dinâmicos via PostgreSQL**. Embora o conteúdo possa ser importado de pastas em `content/` para bootstrapping, a fonte canônica agora reside no banco de dados, permitindo edição em tempo real através do **CMS integrado**. O servidor valida as submissões com **Zod**, gera HTML (Markdown via `marked`) e o **code player** mantém-se como uma ilha interativa no cliente com estado sincronizado via **Zustand**.
 
 ### Fluxo de conteúdo → página
 

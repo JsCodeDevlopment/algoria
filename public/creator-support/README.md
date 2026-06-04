@@ -1,6 +1,6 @@
-# 📦 Kit do Criador de Conteúdo — Algoria
+# 📦 Kit do Criador de Conteúdo — Acite
 
-Bem-vindo ao material de apoio para criação de conteúdo na plataforma Algoria.  
+Bem-vindo ao material de apoio para criação de conteúdo na plataforma Acite.  
 Este kit contém tudo que você precisa para criar e importar artigos pelo painel admin.
 
 ---

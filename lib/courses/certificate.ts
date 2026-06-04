@@ -44,7 +44,7 @@ export async function buildCertificateMetadata(
       ctx.moduleHydrated.certificateTitle,
       ctx.pack.title,
       "certificado curso",
-      "Algoria",
+      "Acite",
     ],
     openGraphType: "article",
   });

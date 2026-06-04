@@ -1,6 +1,11 @@
 {
-  "name": "algoria",
-  "version": "0.1.0",
+  "name": "acite",
+  "version": "2.0.0",
+  "author": {
+    "name": "Jonatas Silva - Founder",
+    "email": "jonatasilva118@gmail.com"
+  },
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",
