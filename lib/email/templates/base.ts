@@ -27,7 +27,7 @@ export function getBaseEmailLayout({ title, previewText, contentHtml }: BaseEmai
       <!-- Header (Centered logo, sharp borders) -->
       <tr>
         <td align="center" style="padding: 40px 0 20px 0; border-bottom: 1px solid #1e293b;">
-          <img src="${appUrl}/Algoria-logo-dark.webp" alt="Algoria" style="height: 32px; max-height: 32px; display: block; margin: 0 auto; border: 0; outline: none; text-decoration: none;" />
+          <img src="${appUrl}/ae-complete-logo.png" alt="Acite" style="height: 32px; max-height: 32px; display: block; margin: 0 auto; border: 0; outline: none; text-decoration: none;" />
           <p style="margin: 10px 0 0 0; font-size: 12px; color: #f97316; letter-spacing: 0.15em; text-transform: uppercase;">Aprenda lendo código</p>
         </td>
       </tr>
@@ -40,8 +40,8 @@ export function getBaseEmailLayout({ title, previewText, contentHtml }: BaseEmai
       <!-- Footer -->
       <tr>
         <td style="padding: 30px; background-color: #020617; border-top: 1px solid #1e293b; text-align: center; font-size: 12px; color: #64748b;">
-          <p style="margin: 0 0 10px 0;">Algoria — Domine algoritmos de verdade</p>
-          <p style="margin: 0;">Você recebeu este e-mail porque criou uma conta no Algoria. Se você não fez essa solicitação, por favor ignore este e-mail.</p>
+          <p style="margin: 0 0 10px 0;">Acite — Domine algoritmos de verdade</p>
+          <p style="margin: 0;">Você recebeu este e-mail porque criou uma conta no Acite. Se você não fez essa solicitação, por favor ignore este e-mail.</p>
         </td>
       </tr>
     </table>

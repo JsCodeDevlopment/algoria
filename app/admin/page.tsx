@@ -68,7 +68,7 @@ export default async function AdminDashboardPage() {
           Dashboard
         </h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          Visão geral do estado da plataforma Algoria.
+          Visão geral do estado da plataforma Acite.
         </p>
       </div>
 

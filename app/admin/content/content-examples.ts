@@ -1,5 +1,5 @@
 /**
- * Real examples from the Algoria platform for each content type.
+ * Real examples from the Acite platform for each content type.
  * These are used by the content editor to show creators how to structure their content.
  */
 

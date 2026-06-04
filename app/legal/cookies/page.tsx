@@ -7,9 +7,9 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 
 export const metadata: Metadata = buildPublicMetadata({
   title: "Cookies",
-  description: "Declaração e Política de Cookies transparente da Algoria em conformidade com as diretrizes da LGPD.",
+  description: "Declaração e Política de Cookies transparente da Acite em conformidade com as diretrizes da LGPD.",
   pathname: "/legal/cookies",
-  keywords: ["cookies", "privacidade", "transparência", "gerenciamento de cookies", "Algoria"],
+  keywords: ["cookies", "privacidade", "transparência", "gerenciamento de cookies", "Acite"],
 });
 
 export default function CookiesPage() {
@@ -79,7 +79,7 @@ export default function CookiesPage() {
                   <tbody>
                     <tr className="border-b border-border/50">
                       <td className="py-2 font-mono">better-auth.session_token</td>
-                      <td className="py-2">Algoria (Interno)</td>
+                      <td className="py-2">Acite (Interno)</td>
                       <td className="py-2">Armazena o token criptografado da sessão do usuário autenticado.</td>
                       <td className="py-2">30 dias</td>
                     </tr>
@@ -120,8 +120,8 @@ export default function CookiesPage() {
                       <td className="py-2">1 ano</td>
                     </tr>
                     <tr className="border-b border-border/50">
-                      <td className="py-2 font-mono">algoria-cookie-consent</td>
-                      <td className="py-2">Algoria (Local)</td>
+                      <td className="py-2 font-mono">acite-cookie-consent</td>
+                      <td className="py-2">Acite (Local)</td>
                       <td className="py-2">Registra no navegador a escolha do usuário de aceitar ou rejeitar cookies analíticos.</td>
                       <td className="py-2">Permanente</td>
                     </tr>
@@ -137,7 +137,7 @@ export default function CookiesPage() {
             <span className="text-primary text-lg">03.</span> Cookies de Terceiros e Salvaguardas
           </h2>
           <p className="leading-relaxed">
-            Algumas páginas da Algoria carregam componentes de parceiros certificados. A integração com o **Stripe** assegura a segurança transacional indispensável nas compras da assinatura Pro. O **PostHog** atua como ferramenta de telemetria interna sob estritas regras de mitigação de dados pessoais identificáveis.
+            Algumas páginas da Acite carregam componentes de parceiros certificados. A integração com o **Stripe** assegura a segurança transacional indispensável nas compras da assinatura Pro. O **PostHog** atua como ferramenta de telemetria interna sob estritas regras de mitigação de dados pessoais identificáveis.
           </p>
         </section>
 
@@ -150,7 +150,7 @@ export default function CookiesPage() {
           </p>
           <ol className="list-decimal pl-6 mt-4 space-y-3">
             <li>
-              Você pode **limpar os cookies e o armazenamento local do seu navegador** (especificamente a chave `algoria-cookie-consent`).
+              Você pode **limpar os cookies e o armazenamento local do seu navegador** (especificamente a chave `acite-cookie-consent`).
             </li>
             <li>
               Ao recarregar a página, o banner de consentimento reaparecerá imediatamente no rodapé, permitindo que você clique em **&quot;Rejeitar&quot;** para desativar a coleta do PostHog de forma definitiva.
@@ -213,8 +213,8 @@ export default function CookiesPage() {
                 Política de Privacidade
               </Link>{" "}
               ou acione nosso DPO diretamente no e-mail{" "}
-              <a href="mailto:privacidade@algoria.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
-                privacidade@algoria.com.br
+              <a href="mailto:privacidade@acite.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
+                privacidade@acite.com.br
               </a>.
             </p>
           </div>

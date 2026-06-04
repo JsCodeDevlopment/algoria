@@ -36,8 +36,8 @@ export function AuthDialog() {
 
         <div className="px-8 pb-8 pt-6">
           <DialogHeader className="mb-6">
-            <div className="flex items-center justify-center -mb-10">
-              <AlgoriaMark className="size-52" />
+            <div className="flex items-center justify-center py-4">
+              <AlgoriaMark className="h-14 w-56" />
             </div>
             <DialogTitle className="text-xl">
               {mode === 'sign-in' ? 'Iniciar sessão' : 'Criar conta'}

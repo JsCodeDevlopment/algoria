@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import { getSiteOrigin } from './site';
 
 export type BuildPublicMetadataInput = {
-  /** Com template do layout: `%s · Algoria` */
+  /** Com template do layout: `%s · Acite` */
   title?: string;
   /** Sem sufixo automático (ex.: página inicial) */
   titleAbsolute?: string;
@@ -18,7 +18,7 @@ export type BuildPublicMetadataInput = {
 
 /**
  * Metadados consistentes: canonical, Open Graph, Twitter, robots.
- * O layout define `title.template` como `%s · Algoria` (exceto quando `titleAbsolute`).
+ * O layout define `title.template` como `%s · Acite` (exceto quando `titleAbsolute`).
  */
 export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
   const origin = getSiteOrigin();
@@ -31,13 +31,13 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
   const uniqueKw = kw ? [...new Set(kw.map((k) => k.trim()).filter(Boolean))].slice(0, 24) : undefined;
 
   const titleMeta: Metadata['title'] =
-    opts.titleAbsolute !== undefined ? { absolute: opts.titleAbsolute } : (opts.title ?? 'Algoria');
+    opts.titleAbsolute !== undefined ? { absolute: opts.titleAbsolute } : (opts.title ?? 'Acite');
 
   const ogTitle =
     opts.titleAbsolute ??
-    (typeof opts.title === 'string' ? opts.title : 'Algoria');
+    (typeof opts.title === 'string' ? opts.title : 'Acite');
 
-  const defaultImage = `${origin}/algoria-logo.png`;
+  const defaultImage = `${origin}/ae-complete-logo.png`;
   const shareImage = opts.image ? (opts.image.startsWith('http') ? opts.image : `${origin}${opts.image.startsWith('/') ? '' : '/'}${opts.image}`) : defaultImage;
 
   const isSquare = opts.imageIsSquare || !opts.image;
@@ -60,7 +60,7 @@ export function buildPublicMetadata(opts: BuildPublicMetadataInput): Metadata {
       title: ogTitle,
       description,
       url: canonical,
-      siteName: 'Algoria',
+      siteName: 'Acite',
       locale: opts.openGraphLocale ?? 'pt_BR',
       type: opts.openGraphType ?? 'website',
       images: [

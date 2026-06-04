@@ -62,7 +62,7 @@ export async function generateMetadata({
       pillar,
       "engenharia software",
       "boas práticas produção",
-      "Algoria guia",
+      "Acite guia",
     ],
     image: guide.meta.image,
     openGraphType: "article",

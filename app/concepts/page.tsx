@@ -18,7 +18,7 @@ export const metadata: Metadata = buildPublicMetadata({
     "two pointers",
     "sliding window",
     "fundamentos algoritmos",
-    "Algoria conceitos",
+    "Acite conceitos",
   ],
 });
 

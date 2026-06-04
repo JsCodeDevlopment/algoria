@@ -49,7 +49,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       'technical English',
       'coding interview',
       'software interview',
-      'Algoria',
+      'Acite',
     ],
     openGraphLocale: 'en_US',
     openGraphType: 'article',

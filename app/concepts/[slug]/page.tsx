@@ -44,7 +44,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
       difficultyPt,
       'conceitos algoritmos',
       'fundamentos',
-      'Algoria',
+      'Acite',
     ],
     openGraphType: 'article',
   });

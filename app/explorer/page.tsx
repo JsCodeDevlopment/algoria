@@ -20,7 +20,7 @@ interface ExplorerPageProps {
 export const metadata = buildPublicMetadata({
   title: "Explorar Desenvolvedores",
   description:
-    "Encontra outros desenvolvedores na Algoria, filtra por tecnologias e descobre perfis profissionais.",
+    "Encontra outros desenvolvedores na Acite, filtra por tecnologias e descobre perfis profissionais.",
   pathname: "/explorer",
 });
 
@@ -86,7 +86,7 @@ export default async function ExplorerPage({
             variant="secondary"
             className="mb-4 rounded-none bg-primary/10 px-1.5 py-0 font-mono text-[10px] uppercase text-primary"
           >
-            Comunidade Algoria
+            Comunidade Acite
           </Badge>
           <h1 className="mb-4 text-4xl font-black uppercase tracking-tighter md:text-6xl">
             Explorar Talentos

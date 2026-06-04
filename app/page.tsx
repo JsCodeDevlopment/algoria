@@ -15,13 +15,13 @@ import { TechnicalJobTests } from "@/components/landing-page/technical-job-tests
 
 export const metadata: Metadata = buildPublicMetadata({
   titleAbsolute:
-    "Algoria — Aprenda Algoritmos com Code Player Linha-a-Linha e Preparação Técnica para Elite",
+    "Acite — Aprenda Algoritmos com Code Player Linha-a-Linha e Preparação Técnica para Elite",
   description:
     "Domine algoritmos, estruturas de dados e sistemas complexos. Explore soluções explicadas linha-a-linha com nosso Code Player, prepare-se para entrevistas em Big Techs e acesse guias práticos de Engenharia (Frontend, Backend, DevOps e IA).",
   pathname: "/",
   image: "/preview.webp",
   keywords: [
-    "Algoria",
+    "Acite",
     "algoritmos e estruturas de dados",
     "preparação para entrevistas técnicas",
     "estudar algoritmos linha a linha",

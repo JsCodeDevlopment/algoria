@@ -12,7 +12,7 @@ export const metadata: Metadata = buildPublicMetadata({
   description:
     'Percursos com leitura curada, exercícios no browser e certificado modular ao concluir cada avaliação — progresso guardado localmente.',
   pathname: '/course',
-  keywords: ['curso algoritmos', 'fundamentos programação', 'certificado módulo', 'Algoria curso', 'trilha guiada'],
+  keywords: ['curso algoritmos', 'fundamentos programação', 'certificado módulo', 'Acite curso', 'trilha guiada'],
 });
 
 export default async function CoursesIndexPage() {

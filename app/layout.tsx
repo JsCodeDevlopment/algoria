@@ -25,8 +25,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Algoria — aprende algoritmos lendo código, não escrevendo",
-    template: "%s · Algoria",
+    default: "Acite — aprende algoritmos lendo código, não escrevendo",
+    template: "%s · Acite",
   },
   description:
     "Plataforma onde aprendes problemas clássicos de algoritmos linha-a-linha, com explicações em três níveis de profundidade, comparação brute-force vs óptima, e mini-cursos de Big O.",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
   ],
   metadataBase: getMetadataBase(),
   openGraph: {
-    title: "Algoria — aprende algoritmos lendo código",
+    title: "Acite — aprende algoritmos lendo código",
     description:
       "Linha por linha, com 3 níveis de profundidade. Foco em entender, não em decorar.",
     type: "website",
@@ -59,7 +59,7 @@ export default function RootLayout({
       {
         "@type": "EducationalOrganization",
         "@id": `${origin}/#organization`,
-        name: "Algoria",
+        name: "Acite",
         url: origin,
         description:
           "Plataforma para aprender algoritmos e estruturas de dados com leitura guiada de código, preparação para entrevistas e guias de engenharia aplicada.",
@@ -68,7 +68,7 @@ export default function RootLayout({
         "@type": "WebSite",
         "@id": `${origin}/#website`,
         url: origin,
-        name: "Algoria",
+        name: "Acite",
         inLanguage: "pt-BR",
         publisher: { "@id": `${origin}/#organization` },
       },

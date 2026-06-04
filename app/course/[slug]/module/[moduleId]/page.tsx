@@ -43,7 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: `${tabTitle} · ${pack.title}`,
     description,
     pathname: `/course/${slug}/module/${moduleId}`,
-    keywords: [tabTitle, pack.title, mod.linkedConceptSlug, 'módulo curso Algoria', 'exercícios fundamentos'],
+    keywords: [tabTitle, pack.title, mod.linkedConceptSlug, 'módulo curso Acite', 'exercícios fundamentos'],
     openGraphType: 'article',
   });
 }

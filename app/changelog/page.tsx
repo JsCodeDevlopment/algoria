@@ -11,9 +11,9 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 export const metadata: Metadata = buildPublicMetadata({
   title: "Novidades",
   description:
-    "Alterações recentes na Algoria: novas funcionalidades, conteúdo e melhorias para quem estuda algoritmos e preparação técnica.",
+    "Alterações recentes na Acite: novas funcionalidades, conteúdo e melhorias para quem estuda algoritmos e preparação técnica.",
   pathname: "/changelog",
-  keywords: ["changelog", "novidades", "Algoria", "actualizações"],
+  keywords: ["changelog", "novidades", "Acite", "actualizações"],
 });
 
 export const dynamic = "force-dynamic";

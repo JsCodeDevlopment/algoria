@@ -5,9 +5,9 @@ import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
 export const metadata: Metadata = buildPublicMetadata({
   title: 'Iniciar sessão',
-  description: 'Entra na tua conta Algoria para sincronizar progresso e gerir a subscrição Pro.',
+  description: 'Entra na tua conta Acite para sincronizar progresso e gerir a subscrição Pro.',
   pathname: '/auth/sign-in',
-  keywords: ['login', 'conta', 'Algoria'],
+  keywords: ['login', 'conta', 'Acite'],
 });
 
 export default function SignInPage() {

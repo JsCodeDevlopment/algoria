@@ -10,18 +10,18 @@ export interface WelcomeEmailData {
  */
 export function getWelcomeEmailTemplate({ name }: WelcomeEmailData): { subject: string; html: string } {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const subject = 'Boas-vindas ao Algoria! Sua jornada dev começa aqui 🚀';
+  const subject = 'Boas-vindas ao Acite! Sua jornada dev começa aqui 🚀';
 
   const contentHtml = `
     <!-- Greeting -->
     <h2 style="margin: 0 0 16px 0; font-size: 22px; font-weight: 600; color: #f8fafc; letter-spacing: -0.02em;">
-      Olá, ${name}! Seu acesso ao Algoria está liberado.
+      Olá, ${name}! Seu acesso ao Acite está liberado.
     </h2>
     <p style="margin: 0 0 24px 0; font-size: 15px; line-height: 1.6; color: #cbd5e1;">
       Ficamos muito empolgados em ter você aqui. A maioria das pessoas tenta aprender algoritmos e estruturas de dados decorando fórmulas e batendo a cabeça no teclado escrevendo código do zero sem entender o básico. 
     </p>
     <p style="margin: 0 0 30px 0; font-size: 15px; line-height: 1.6; color: #cbd5e1; border-left: 3px solid #f97316; padding-left: 16px; font-style: italic;">
-      No Algoria, nós fazemos o oposto. Acreditamos que a melhor forma de se tornar um programador de elite é <strong>lendo e analisando código de alta qualidade, linha por linha</strong>.
+      No Acite, nós fazemos o oposto. Acreditamos que a melhor forma de se tornar um programador de elite é <strong>lendo e analisando código de alta qualidade, linha por linha</strong>.
     </p>
 
     <!-- Main Call to Action -->

@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: `${track.title} · Trilho`,
     description: track.summary,
     pathname: `/tracks/${slug}`,
-    keywords: ['trilho', track.title, 'Algoria'],
+    keywords: ['trilho', track.title, 'Acite'],
     openGraphType: 'article',
   });
 }

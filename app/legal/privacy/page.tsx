@@ -7,9 +7,9 @@ import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
 export const metadata: Metadata = buildPublicMetadata({
   title: 'Política de Privacidade',
-  description: 'Declaração oficial de transparência e Política de Privacidade da Algoria em conformidade com a LGPD e o RGPD.',
+  description: 'Declaração oficial de transparência e Política de Privacidade da Acite em conformidade com a LGPD e o RGPD.',
   pathname: '/legal/privacy',
-  keywords: ['privacidade', 'proteção de dados', 'LGPD', 'direitos do titular', 'Algoria'],
+  keywords: ['privacidade', 'proteção de dados', 'LGPD', 'direitos do titular', 'Acite'],
 });
 
 export default function PrivacyPage() {
@@ -35,7 +35,7 @@ export default function PrivacyPage() {
             <span className="text-primary text-lg">01.</span> Introdução e Escopo
           </h2>
           <p className="leading-relaxed">
-            A <strong>Algoria</strong> preza pela segurança, privacidade e transparência no tratamento dos dados pessoais de seus alunos e visitantes. 
+            A <strong>Acite</strong> preza pela segurança, privacidade e transparência no tratamento dos dados pessoais de seus alunos e visitantes. 
             Esta Política de Privacidade descreve, de forma clara e objetiva, como coletamos, armazenamos, utilizamos e protegemos seus dados pessoais em total conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais (Lei nº 13.709/2018 - LGPD)</strong> no Brasil, e de forma subsidiária com o <strong>Regulamento Geral sobre a Proteção de Dados (GDPR - Regulamento UE 2016/679)</strong> na União Europeia.
           </p>
           <p className="mt-4">
@@ -86,7 +86,7 @@ export default function PrivacyPage() {
               <p className="text-sm mt-2">
                 <strong>Base Legal:</strong> <em>Execução de Contrato ou Procedimentos Preliminares (Art. 7º, V, LGPD)</em>. 
                 <br />
-                <span className="font-semibold text-xs text-amber-500">IMPORTANTE:</span> A Algoria <strong>não coleta nem armazena</strong> dados de cartões de crédito em servidores próprios. Todo o checkout e custódia de dados de faturamento são feitos de forma segura e direta no ambiente certificado PCI-DSS do <strong>Stripe Inc.</strong>
+                <span className="font-semibold text-xs text-amber-500">IMPORTANTE:</span> A Acite <strong>não coleta nem armazena</strong> dados de cartões de crédito em servidores próprios. Todo o checkout e custódia de dados de faturamento são feitos de forma segura e direta no ambiente certificado PCI-DSS do <strong>Stripe Inc.</strong>
               </p>
             </div>
 
@@ -159,12 +159,12 @@ export default function PrivacyPage() {
             <FileText className="h-5 w-5 text-primary" /> Encarregado pelo Tratamento de Dados (DPO)
           </h2>
           <p className="text-sm leading-relaxed mb-4">
-            Em cumprimento ao Artigo 41 da LGPD, o Encarregado pelo Tratamento de Dados Pessoais da Algoria responde a todas as dúvidas, solicitações ou requisições de titulares de dados e autoridades de fiscalização (ANPD).
+            Em cumprimento ao Artigo 41 da LGPD, o Encarregado pelo Tratamento de Dados Pessoais da Acite responde a todas as dúvidas, solicitações ou requisições de titulares de dados e autoridades de fiscalização (ANPD).
           </p>
           <p className="text-sm font-semibold mb-0">
             Contato do DPO / Canal de Suporte Legal:{" "}
-            <a href="mailto:privacidade@algoria.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
-              privacidade@algoria.com.br
+            <a href="mailto:privacidade@acite.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
+              privacidade@acite.com.br
             </a>
           </p>
         </section>
