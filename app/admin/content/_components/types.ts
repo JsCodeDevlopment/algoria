@@ -93,6 +93,7 @@ export const ENGINEERING_PILLARS = [
   { value: "devops", label: "DevOps" },
   { value: "softskills", label: "Soft Skills / Carreira" },
   { value: "ia", label: "Inteligência Artificial" },
+  { value: "web3", label: "Web3 e Blockchain" },
 ];
 
 export const CATEGORIES = [
