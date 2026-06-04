@@ -10,7 +10,7 @@ interface Props {
 
 export function ProfileActionsClient({ userId }: Props) {
   const [copied, setCopied] = useState(false);
-  const profileUrl = `${window.location.origin}/user/${userId}`;
+  const profileUrl = typeof window !== "undefined" ? `${window.location.origin}/user/${userId}` : "";
 
   const copyToClipboard = async () => {
     try {
