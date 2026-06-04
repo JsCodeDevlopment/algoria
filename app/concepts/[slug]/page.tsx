@@ -10,6 +10,7 @@ import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ConceptVisitTracker } from '@/components/concepts/concept-visit-tracker';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { MarkdownArticle } from '@/components/markdown/markdown-article';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { MermaidRenderer } from '@/components/markdown/mermaid-renderer';

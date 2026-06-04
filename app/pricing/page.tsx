@@ -6,13 +6,12 @@ import { CheckoutButton } from "@/components/billing/checkout-button";
 import { ManageSubscriptionButton } from "@/components/billing/manage-subscription-button";
 import { PricingPageAnalytics } from "@/components/billing/pricing-analytics";
 import { AuthDialogTriggerButton } from "@/components/auth/auth-dialog-trigger";
-import { getPricingPlans, getPricingFeatures, getPricingInventory } from "@/lib/actions/admin";
+import { getPricingPlans, getPricingFeatures } from "@/lib/actions/admin";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { auth } from "@/lib/auth";
 import { userHasPro } from "@/lib/billing/entitlements";
 import { checkoutAvailable, formatFreeTierPrice, formatPricingDisplay } from "@/lib/billing/pricing-env";
-import { getContentRepository } from "@/lib/content/content-repository";
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 import { headers } from "next/headers";
 import { CheckoutSuccessAnalytics } from "./checkout-success-analytics";
@@ -37,7 +36,6 @@ export default async function PricingPage() {
 
   const freeFeatures = await getPricingFeatures("free");
   const proFeatures = await getPricingFeatures("pro");
-  const inventory = await getPricingInventory();
 
 
 

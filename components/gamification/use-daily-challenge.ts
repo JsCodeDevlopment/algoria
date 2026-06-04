@@ -35,24 +35,28 @@ export function useDailyChallenge({
   }, [elapsedMs]);
 
   useEffect(() => {
-    const active = getActiveDailyChallenge();
-    if (!active || active.slug !== problemSlug) {
-      setIsActive(false);
-      return;
-    }
+    const timer = setTimeout(() => {
+      const active = getActiveDailyChallenge();
+      if (!active || active.slug !== problemSlug) {
+        setIsActive(false);
+        return;
+      }
 
-    const blob = loadProgressBlob();
-    if (isDailyChallengeCompleted(blob)) {
-      setCompleted(true);
-      completedRef.current = true;
+      const blob = loadProgressBlob();
+      if (isDailyChallengeCompleted(blob)) {
+        setCompleted(true);
+        completedRef.current = true;
+        setIsActive(true);
+        return;
+      }
+
       setIsActive(true);
-      return;
-    }
+      const secs = getAccumulatedTime(problemSlug);
+      setElapsedMs(secs * 1000);
+      elapsedMsRef.current = secs * 1000;
+    }, 0);
 
-    setIsActive(true);
-    const secs = getAccumulatedTime(problemSlug);
-    setElapsedMs(secs * 1000);
-    elapsedMsRef.current = secs * 1000;
+    return () => clearTimeout(timer);
   }, [problemSlug]);
 
   useEffect(() => {

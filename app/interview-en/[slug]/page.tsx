@@ -7,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
+import { MarkdownArticle } from '@/components/markdown/markdown-article';
 import { RequireAuth } from '@/components/auth/require-auth';
 import { MermaidRenderer } from '@/components/markdown/mermaid-renderer';
 import { getAllInterviewEnglishSlugs, getInterviewEnglishTopic, getAdjacentInterviewEnglish } from '@/lib/content/loader';

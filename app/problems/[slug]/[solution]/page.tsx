@@ -12,6 +12,7 @@ import { DynamicPlayerWrapper } from "@/components/code-player/dynamic-player-wr
 import { ComplexityBadge } from "@/components/complexity/complexity-badge";
 import { DailyChallengeTabVisit } from "@/components/gamification/daily-challenge-tab-visit";
 import { JsonLdScript } from "@/components/seo/json-ld";
+import { MarkdownArticle } from "@/components/markdown/markdown-article";
 import { SolutionLanguageSelect } from "@/components/solution/solution-language-select";
 import { SolutionVisitTracker } from "@/components/solution/solution-visit-tracker";
 import { MermaidRenderer } from "@/components/markdown/mermaid-renderer";

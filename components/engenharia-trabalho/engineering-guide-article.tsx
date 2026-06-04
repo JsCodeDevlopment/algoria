@@ -143,6 +143,7 @@ export function EngineeringGuideArticle({ html }: { html: string }) {
       <MermaidRenderer containerRef={shellRef} />
       <div ref={shellRef}>
         <article className={articleClassName} dangerouslySetInnerHTML={{ __html: html }} />
+        <MermaidRenderer containerRef={shellRef} html={html} />
       </div>
     </>
   );
