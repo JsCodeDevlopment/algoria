@@ -12,6 +12,7 @@ import { ContentNavigation } from '@/components/layout/content-navigation';
 import { JsonLdScript } from '@/components/seo/json-ld';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { MermaidRenderer } from '@/components/markdown/mermaid-renderer';
 import { auth } from '@/lib/auth';
 import { userHasPro } from '@/lib/billing/entitlements';
 import { getConceptAccess, isContentUnlockedForUser } from '@/lib/billing/tiering';
@@ -120,15 +121,19 @@ export default async function ConceptPage({
           <UpgradePrompt conceptSlug={slug} hideLogin={!!session} />
         </div>
       ) : (
-        <article
-          className="prose prose-zinc dark:prose-invert max-w-none
-                     prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight prose-h2:mt-10
-                     prose-h3:text-lg prose-h3:font-semibold
-                     prose-code:text-blue-600 dark:prose-code:text-blue-400
-                     prose-code:before:content-none prose-code:after:content-none
-                     prose-pre:bg-zinc-900 prose-pre:text-zinc-100"
-          dangerouslySetInnerHTML={{ __html: concept.bodyHtml }}
-        />
+        <>
+          <MermaidRenderer containerId={`concept-article-${slug}`} />
+          <article
+            id={`concept-article-${slug}`}
+            className="prose prose-zinc dark:prose-invert max-w-none
+                       prose-h2:text-2xl prose-h2:font-semibold prose-h2:tracking-tight prose-h2:mt-10
+                       prose-h3:text-lg prose-h3:font-semibold
+                       prose-code:text-blue-600 dark:prose-code:text-blue-400
+                       prose-code:before:content-none prose-code:after:content-none
+                       prose-pre:bg-zinc-900 prose-pre:text-zinc-100"
+            dangerouslySetInnerHTML={{ __html: concept.bodyHtml }}
+          />
+        </>
       )}
 
       {courseSlug && moduleId ? (
