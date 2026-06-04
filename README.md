@@ -5,7 +5,7 @@
 Plataforma em português para estudar **algoritmos e decisões em código** através de leitura guiada: catálogo de problemas com várias soluções (brute-force, óptima, alternativa), **code player** linha-a-linha com três níveis de explicação, mini-guias em **Conceitos**, **curso modular** com avaliações locais, hub de **inglês técnico para entrevistas** (conteúdo em inglês) e guias de **engenharia aplicada** (front, back, DevOps, SoftSkills e IA).
 
 <h1 align="center">
-  <img alt="Acite Preview" title="Acite" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="public/gallery/image1.png" />
+  <img alt="Acite Preview" title="Acite" style="border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.3);" src="/public/preview.webp" />
 </h1>
 
 ## Funcionalidades
