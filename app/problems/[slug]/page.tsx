@@ -14,6 +14,7 @@ import { MarkdownArticle } from '@/components/markdown/markdown-article';
 import { DifficultyBadge } from '@/components/catalog/difficulty-badge';
 import { ComplexityBadge } from '@/components/complexity/complexity-badge';
 import { RequireAuth } from '@/components/auth/require-auth';
+import { MermaidRenderer } from '@/components/markdown/mermaid-renderer';
 import { ProblemStudyCompletionBar } from '@/components/problem/problem-study-completion-bar';
 import { ProblemStudyTabs } from '@/components/problem/problem-study-tabs';
 import { DailyChallengeTabVisit } from '@/components/gamification/daily-challenge-tab-visit';
@@ -103,8 +104,9 @@ export default async function ProblemPage({ params }: { params: Promise<Params> 
         </Card>
       ) : null}
 
-      <MarkdownArticle
-        html={problem.descriptionHtml}
+      <MermaidRenderer containerId={`problem-statement-${slug}`} />
+      <article
+        id={`problem-statement-${slug}`}
         className="prose prose-zinc dark:prose-invert max-w-none mb-10
                    prose-h2:text-xl prose-h2:font-semibold prose-h2:tracking-tight
                    prose-code:text-blue-600 dark:prose-code:text-blue-400

@@ -111,7 +111,7 @@ export function SiteHeader() {
               Navegar
             </p>
             <p className="mt-1.5 text-sm font-semibold tracking-tight text-foreground">
-              Explora a Algoria
+              Explora a Acite
             </p>
             <p className="mt-1 max-w-[20rem] text-xs leading-relaxed text-muted-foreground">
               Atalhos para estudo, curso e conteúdo de carreira — o mesmo visual

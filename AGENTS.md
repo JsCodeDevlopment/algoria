@@ -4,9 +4,9 @@
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
 <!-- END:nextjs-agent-rules -->
 
-# Algoria Project Rules & Design System
+# Acite Project Rules & Design System
 
-This document outlines the design system, architecture rules, and coding standards for the Algoria project. All AI agents working on this codebase must adhere strictly to these guidelines.
+This document outlines the design system, architecture rules, and coding standards for the Acite project. All AI agents working on this codebase must adhere strictly to these guidelines.
 
 ## 1. Design System & Aesthetics
 

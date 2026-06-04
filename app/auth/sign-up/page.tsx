@@ -5,9 +5,9 @@ import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
 export const metadata: Metadata = buildPublicMetadata({
   title: 'Criar conta',
-  description: 'Cria uma conta Algoria para guardar o progresso na nuvem e subscrever o catálogo Pro.',
+  description: 'Cria uma conta Acite para guardar o progresso na nuvem e subscrever o catálogo Pro.',
   pathname: '/auth/sign-up',
-  keywords: ['registo', 'conta', 'Algoria'],
+  keywords: ['registo', 'conta', 'Acite'],
 });
 
 export default function SignUpPage() {

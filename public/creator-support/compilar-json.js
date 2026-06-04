@@ -1,6 +1,6 @@
 /* eslint-disable */
 /**
- * Script de Criação do JSON para Importação na Algoria
+ * Script de Criação do JSON para Importação na Acite
  * 
  * Como usar:
  * 1. Edite as configurações abaixo (CONFIGURAÇÃO DO CONTEÚDO).
@@ -46,8 +46,8 @@ const CONFIG = {
     estimatedMinutes: 5,
 
     // Pilar do conteúdo (OBRIGATÓRIO apenas para type "engineering-work"):
-    // Opções: 'frontend' | 'backend' | 'devops' | 'softskills' | 'ia'
-    pillar: 'frontend',
+    // Opções: 'frontend' | 'backend' | 'devops' | 'softskills' | 'ia' | 'web3'
+    pillar: 'web3',
     
     // Caminho da imagem de destaque (opcional)
     image: '/default-cover.png'
@@ -64,7 +64,7 @@ function compilar() {
   const mdPath = path.join(__dirname, markdownFileName);
   const outputPath = path.join(__dirname, outputFileName);
 
-  console.log('--- Compilador de Conteúdo Algoria ---');
+  console.log('--- Compilador de Conteúdo Acite ---');
   
   // Verifica se o arquivo markdown existe
   if (!fs.existsSync(mdPath)) {
@@ -118,7 +118,7 @@ function compilar() {
     console.log(`${outputPath}\n`);
     console.log('Agora você pode:');
     console.log('1. Abrir esse arquivo e copiar o conteúdo JSON.');
-    console.log('2. Acessar o Painel Administrativo da Algoria (/admin/content).');
+    console.log('2. Acessar o Painel Administrativo da Acite (/admin/content).');
     console.log('3. Clicar em "Importar" e colar ou fazer o upload do arquivo para salvar na plataforma!');
     console.log('\n----------------------------------------\n');
 

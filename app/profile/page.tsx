@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return buildPublicMetadata({
     title: "Meu Perfil",
     description:
-      "Gerencia o teu perfil, progresso de estudo e subscrições na Algoria.",
+      "Gerencia o teu perfil, progresso de estudo e subscrições na Acite.",
     pathname: "/profile",
     image: user?.image || undefined,
     imageIsSquare: !!user?.image,
@@ -210,7 +210,7 @@ export default async function ProfilePage() {
                   variant={isPro ? "default" : "secondary"}
                   className="rounded-none uppercase font-black tracking-[0.2em] px-4 py-1 text-[9px]"
                 >
-                  {isPro ? "ALGORIA PRO" : "ALGORIA FREE"}
+                  {isPro ? "ACITE PRO" : "ACITE FREE"}
                 </Badge>
                 <Button
                   asChild
@@ -387,7 +387,7 @@ export default async function ProfilePage() {
                     Personalizar Perfil Profissional
                   </CardTitle>
                   <CardDescription className="text-[11px] font-bold uppercase tracking-widest text-muted-foreground mt-1">
-                    Este formulário controla como o mundo te vê na Algoria.
+                    Este formulário controla como o mundo te vê na Acite.
                   </CardDescription>
                 </div>
               </div>

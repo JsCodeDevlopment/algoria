@@ -43,7 +43,7 @@ export function articleJsonLd(input: {
     description: truncateMetaDescription(input.description),
     url: absoluteUrl(input.pathname),
     inLanguage: input.inLanguage ?? 'pt-BR',
-    author: { '@type': 'Organization', name: 'Algoria' },
+    author: { '@type': 'Organization', name: 'Acite' },
     publisher: { '@id': `${origin}/#organization` },
   };
 }

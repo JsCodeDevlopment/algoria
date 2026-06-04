@@ -13,9 +13,9 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 export const metadata: Metadata = buildPublicMetadata({
   title: "Leaderboard — Ranking da Comunidade",
   description:
-    "Vê quem está a liderar em XP na Algoria. Compara o teu progresso com o da comunidade e com os teus amigos.",
+    "Vê quem está a liderar em XP na Acite. Compara o teu progresso com o da comunidade e com os teus amigos.",
   pathname: "/leaderboard",
-  keywords: ["leaderboard", "ranking", "xp", "gamificação", "Algoria"],
+  keywords: ["leaderboard", "ranking", "xp", "gamificação", "Acite"],
 });
 
 async function getLeaderboardData(scope: string, userId?: string) {

@@ -10,7 +10,7 @@ import {
 import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 
 export const metadata: Metadata = buildPublicMetadata({
-  title: "Technical English for interviews — hub Algoria",
+  title: "Technical English for interviews — hub Acite",
   description:
     "English-only hub: vocabulary for data structures & algorithms, live coding talk tracks, behavioral STAR answers and system design phrases for hiring loops.",
   pathname: "/interview-en",
@@ -21,7 +21,7 @@ export const metadata: Metadata = buildPublicMetadata({
     "STAR method behavioral",
     "system design vocabulary",
     "FAANG interview English",
-    "Algoria",
+    "Acite",
   ],
   openGraphLocale: "en_US",
 });

@@ -7,9 +7,9 @@ import { buildPublicMetadata } from '@/lib/seo/build-metadata';
 
 export const metadata: Metadata = buildPublicMetadata({
   title: 'Reembolsos',
-  description: 'Política de cancelamento e reembolso da Algoria.',
+  description: 'Política de cancelamento e reembolso da Acite.',
   pathname: '/legal/refunds',
-  keywords: ['reembolso', 'estorno', 'cancelamento', 'Stripe', 'Algoria'],
+  keywords: ['reembolso', 'estorno', 'cancelamento', 'Stripe', 'Acite'],
 });
 
 export default function RefundsPage() {
@@ -37,7 +37,7 @@ export default function RefundsPage() {
         <section>
           <h2 className="text-2xl font-bold">2. Cancelamento de Assinatura</h2>
           <p>
-            As assinaturas da Algoria Pro podem ser canceladas a qualquer momento através do painel de controle do usuário (gerenciado via Stripe Customer Portal).
+            As assinaturas da Acite Pro podem ser canceladas a qualquer momento através do painel de controle do usuário (gerenciado via Stripe Customer Portal).
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
             <li>Ao cancelar, você continuará tendo acesso ao conteúdo Pro até o final do período de faturamento atual.</li>
@@ -58,7 +58,7 @@ export default function RefundsPage() {
             Para solicitar um reembolso dentro das condições acima, você deve enviar um e-mail para o suporte oficial informando:
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-2">
-            <li>O endereço de e-mail associado à sua conta Algoria.</li>
+            <li>O endereço de e-mail associado à sua conta Acite.</li>
             <li>O ID da transação ou número da fatura enviada pelo Stripe.</li>
             <li>O motivo detalhado da solicitação.</li>
           </ul>

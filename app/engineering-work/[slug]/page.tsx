@@ -37,6 +37,7 @@ const PILLAR_LABEL: Record<EngineeringWorkPillar, string> = {
   devops: "DevOps e sistema",
   softskills: "Carreira e Soft Skills",
   ia: "Inteligência Artificial",
+  web3: "Web3 e Blockchain",
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
@@ -62,7 +63,7 @@ export async function generateMetadata({
       pillar,
       "engenharia software",
       "boas práticas produção",
-      "Algoria guia",
+      "Acite guia",
     ],
     image: guide.meta.image,
     openGraphType: "article",

@@ -48,8 +48,8 @@ export async function generateMetadata({ params }: PublicProfileProps) {
   }
 
   return buildPublicMetadata({
-    title: `${userData[0].name} | Perfil Algoria`,
-    description: `Vê o perfil público, tecnologias e progresso de ${userData[0].name} na Algoria.`,
+    title: `${userData[0].name} | Perfil Acite`,
+    description: `Vê o perfil público, tecnologias e progresso de ${userData[0].name} na Acite.`,
     pathname: `/user/${id}`,
     image: userData[0].image || undefined,
     imageIsSquare: !!userData[0].image,

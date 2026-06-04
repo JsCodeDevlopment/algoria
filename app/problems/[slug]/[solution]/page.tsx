@@ -15,6 +15,7 @@ import { JsonLdScript } from "@/components/seo/json-ld";
 import { MarkdownArticle } from "@/components/markdown/markdown-article";
 import { SolutionLanguageSelect } from "@/components/solution/solution-language-select";
 import { SolutionVisitTracker } from "@/components/solution/solution-visit-tracker";
+import { MermaidRenderer } from "@/components/markdown/mermaid-renderer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -244,13 +245,17 @@ export default async function SolutionPage({
       </div>
 
       {solution.introHtml ? (
-        <MarkdownArticle
-          html={solution.introHtml}
-          className="prose prose-zinc dark:prose-invert max-w-3xl mb-8
-                     prose-h2:text-lg prose-h2:font-semibold prose-h2:tracking-tight
-                     prose-code:text-blue-600 dark:prose-code:text-blue-400
-                     prose-code:before:content-none prose-code:after:content-none"
-        />
+        <>
+          <MermaidRenderer containerId={`solution-intro-${solutionSlug}`} />
+          <article
+            id={`solution-intro-${solutionSlug}`}
+            className="prose prose-zinc dark:prose-invert max-w-3xl mb-8
+                       prose-h2:text-lg prose-h2:font-semibold prose-h2:tracking-tight
+                       prose-code:text-blue-600 dark:prose-code:text-blue-400
+                       prose-code:before:content-none prose-code:after:content-none"
+            dangerouslySetInnerHTML={{ __html: solution.introHtml }}
+          />
+        </>
       ) : null}
 
       <DynamicPlayerWrapper

@@ -1,6 +1,6 @@
-# Guia de Referência de Formatação — Algoria Creator Kit
+# Guia de Referência de Formatação — Acite Creator Kit
 
-Este é o **arquivo de referência completo** de todos os recursos de formatação disponíveis para criadores de conteúdo na plataforma Algoria.  
+Este é o **arquivo de referência completo** de todos os recursos de formatação disponíveis para criadores de conteúdo na plataforma Acite.  
 Use-o como modelo ou consulta rápida ao escrever seus artigos.
 
 ---
@@ -24,7 +24,7 @@ Você pode usar toda a formatação padrão do CommonMark/GitHub Flavored Markdo
 - *Itálico* → `*texto*`
 - ~~Tachado~~ → `~~texto~~`
 - `Código em linha` → `` `código` ``
-- [Link externo](https://algoria.dev) → `[texto](url)`
+- [Link externo](https://acite.dev) → `[texto](url)`
 - > Citação em bloco → `> texto`
 
 ### 1.2 Listas
@@ -83,7 +83,7 @@ Use alertas para enfatizar informações específicas. Não use mais de um alert
 
 ## 3. Componentes Didáticos Customizados
 
-A plataforma Algoria suporta componentes interativos embutidos no Markdown usando a sintaxe `:::tipo { ... } :::`.
+A plataforma Acite suporta componentes interativos embutidos no Markdown usando a sintaxe `:::tipo { ... } :::`.
 
 ### 3.1 Figuras com Legenda (`:::didactic-figure`)
 

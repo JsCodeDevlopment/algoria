@@ -17,11 +17,11 @@ import { headers } from "next/headers";
 import { CheckoutSuccessAnalytics } from "./checkout-success-analytics";
 
 export const metadata: Metadata = buildPublicMetadata({
-  title: "Preços e Algoria Pro",
+  title: "Preços e Acite Pro",
   description:
     "Compara o plano gratuito com a subscrição Pro: catálogo completo, sync de progresso e traces de execução.",
   pathname: "/pricing",
-  keywords: ["preços", "Pro", "subscrição", "Algoria"],
+  keywords: ["preços", "Pro", "subscrição", "Acite"],
 });
 
 export default async function PricingPage() {
@@ -96,7 +96,7 @@ export default async function PricingPage() {
 
             <div className="mb-12 flex-1 space-y-5">
               <p className="text-sm leading-relaxed text-muted-foreground">
-                Ideal para experimentares o método Algoria e dominares os
+                Ideal para experimentares o método Acite e dominares os
                 fundamentos.
               </p>
               <ul className="space-y-4">

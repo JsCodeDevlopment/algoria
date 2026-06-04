@@ -101,7 +101,7 @@ export function SiteFooter() {
           <div className="flex flex-col gap-8 lg:flex-row lg:items-start lg:justify-between lg:gap-10">
             <div className="min-w-0 space-y-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-muted-foreground/70">
-                &copy; {new Date().getFullYear()} Algoria. Conteúdo educativo.
+                &copy; {new Date().getFullYear()} Acite. Conteúdo educativo.
               </p>
               <nav
                 className="flex max-w-full flex-nowrap gap-x-5 overflow-x-auto pb-1 text-[10px] font-bold uppercase tracking-widest [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"

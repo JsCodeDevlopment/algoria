@@ -17,7 +17,7 @@ export function MarkdownArticle({ html, className }: MarkdownArticleProps) {
         className={className} 
         dangerouslySetInnerHTML={{ __html: html }} 
       />
-      <MermaidRenderer containerRef={containerRef} html={html} />
+      <MermaidRenderer containerRef={containerRef} />
     </div>
   );
 }

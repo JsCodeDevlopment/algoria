@@ -73,7 +73,7 @@ export default async function AdminLayout({
               </svg>
             </div>
             <div className="hidden sm:block">
-              <p className="text-sm font-bold text-foreground">Algoria Admin</p>
+              <p className="text-sm font-bold text-foreground">Acite Admin</p>
               <p className="text-[10px] tracking-widest text-muted-foreground">
                 Management Panel
               </p>

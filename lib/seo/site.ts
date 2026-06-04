@@ -1,6 +1,6 @@
 /**
  * Origem canónica do site para SEO (sem barra final).
- * Preferir `NEXT_PUBLIC_APP_URL` (ex.: https://algoria.app ou http://localhost:3000).
+ * Preferir `NEXT_PUBLIC_APP_URL` (ex.: https://acite.app ou http://localhost:3000).
  * Fallback: https://`NEXT_PUBLIC_APP_DOMAIN`
  */
 export function getSiteOrigin(): string {
@@ -13,7 +13,7 @@ export function getSiteOrigin(): string {
       /* continua */
     }
   }
-  let domain = process.env.NEXT_PUBLIC_APP_DOMAIN?.trim() || 'algoria.app';
+  let domain = process.env.NEXT_PUBLIC_APP_DOMAIN?.trim() || 'acite.app';
   domain = domain.replace(/^https?:\/\//, '').replace(/\/$/, '');
   return `https://${domain}`;
 }

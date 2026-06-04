@@ -7,9 +7,9 @@ import { buildPublicMetadata } from "@/lib/seo/build-metadata";
 
 export const metadata: Metadata = buildPublicMetadata({
   title: "Termos de Uso",
-  description: "Termos de Uso e condições gerais de contratação da plataforma Algoria em conformidade com o CDC e a LGPD.",
+  description: "Termos de Uso e condições gerais de contratação da plataforma Acite em conformidade com o CDC e a LGPD.",
   pathname: "/legal/terms",
-  keywords: ["termos de uso", "condições gerais", "reembolso", "CDC", "Algoria"],
+  keywords: ["termos de uso", "condições gerais", "reembolso", "CDC", "Acite"],
 });
 
 export default function TermsPage() {
@@ -44,7 +44,7 @@ export default function TermsPage() {
             <span className="text-primary text-lg">01.</span> Vinculação Contratual
           </h2>
           <p className="leading-relaxed">
-            Bem-vindo à <strong>Algoria</strong>. Ao criar uma conta, navegar ou contratar os planos pagos da plataforma (&quot;Serviço&quot;), você celebra um contrato de prestação de serviços educacionais juridicamente vinculativo e concorda integralmente com estes Termos de Uso.
+            Bem-vindo à <strong>Acite</strong>. Ao criar uma conta, navegar ou contratar os planos pagos da plataforma (&quot;Serviço&quot;), você celebra um contrato de prestação de serviços educacionais juridicamente vinculativo e concorda integralmente com estes Termos de Uso.
           </p>
           <p className="mt-4">
             Caso discorde de qualquer cláusula ou regra estabelecida neste documento, você deve abster-se imediatamente de utilizar os serviços e funcionalidades da plataforma.
@@ -69,7 +69,7 @@ export default function TermsPage() {
             <ShieldAlert className="h-4 w-4" /> REGRAS DE COMPARTILHAMENTO:
           </p>
           <p className="text-xs leading-relaxed text-muted-foreground mt-1">
-            Cada conta na Algoria é de natureza **individual e intransferível**. O compartilhamento de credenciais de login para acesso simultâneo de terceiros configura infração contratual de pirataria e quebra de propriedade intelectual, resultando no **bloqueio imediato e definitivo da conta**, sem qualquer direito a estorno ou reembolso das mensalidades pagas.
+            Cada conta na Acite é de natureza **individual e intransferível**. O compartilhamento de credenciais de login para acesso simultâneo de terceiros configura infração contratual de pirataria e quebra de propriedade intelectual, resultando no **bloqueio imediato e definitivo da conta**, sem qualquer direito a estorno ou reembolso das mensalidades pagas.
           </p>
         </section>
 
@@ -78,7 +78,7 @@ export default function TermsPage() {
             <span className="text-primary text-lg">03.</span> Assinatura Pro, Pagamentos e Renovação
           </h2>
           <p className="leading-relaxed">
-            O plano **Algoria Pro** garante acesso integral ao catálogo premium de problemas resolvidos, trilhas de backend/frontend, testes técnicos simulados e explicações de código avançadas.
+            O plano **Acite Pro** garante acesso integral ao catálogo premium de problemas resolvidos, trilhas de backend/frontend, testes técnicos simulados e explicações de código avançadas.
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-3">
             <li>
@@ -98,7 +98,7 @@ export default function TermsPage() {
             <Award className="h-5 w-5" /> 04. Direito de Arrependimento e Reembolso (Artigo 49 do CDC)
           </h2>
           <p className="text-sm leading-relaxed mb-3">
-            Em pleno respeito ao **Código de Defesa do Consumidor (Lei nº 8.078/1990 - CDC, Artigo 49)**, a Algoria assegura ao aluno o prazo de **7 (sete) dias corridos**, contados a partir da data de assinatura/compra inicial do plano Pro, para exercer seu direito de arrependimento.
+            Em pleno respeito ao **Código de Defesa do Consumidor (Lei nº 8.078/1990 - CDC, Artigo 49)**, a Acite assegura ao aluno o prazo de **7 (sete) dias corridos**, contados a partir da data de assinatura/compra inicial do plano Pro, para exercer seu direito de arrependimento.
           </p>
           <p className="text-sm leading-relaxed">
             Caso opte por desistir do plano Pro dentro deste prazo de reflexão de 7 dias, você receberá o **reembolso integral e incondicional** de todo o valor pago, sem qualquer cobrança de taxas administrativas ou burocracias. Para solicitar, basta formalizar o pedido diretamente pelo nosso e-mail oficial de suporte legal.
@@ -128,7 +128,7 @@ export default function TermsPage() {
             <span className="text-primary text-lg">06.</span> Propriedade Intelectual e Proteção Antiscraping
           </h2>
           <p className="leading-relaxed">
-            Todo o código-fonte, didática textual explicativa em três níveis de profundidade, ilustrações técnicas e arquitetura lógica exposta na plataforma constituem propriedade intelectual exclusiva da Algoria ou de seus licenciadores. 
+            Todo o código-fonte, didática textual explicativa em três níveis de profundidade, ilustrações técnicas e arquitetura lógica exposta na plataforma constituem propriedade intelectual exclusiva da Acite ou de seus licenciadores. 
             É **expressamente proibido**:
           </p>
           <ul className="list-disc pl-6 mt-4 space-y-3">
@@ -143,7 +143,7 @@ export default function TermsPage() {
             <span className="text-primary text-lg">07.</span> Limitação de Responsabilidade
           </h2>
           <p className="leading-relaxed">
-            Os conteúdos didáticos da Algoria servem como suporte e aprimoramento pedagógico profissional para engenharia de software. Não asseguramos aprovação garantida em processos seletivos ou entrevistas específicas de mercado, dependendo o aproveitamento exclusivamente do engajamento individual do estudante nas práticas recomendadas.
+            Os conteúdos didáticos da Acite servem como suporte e aprimoramento pedagógico profissional para engenharia de software. Não asseguramos aprovação garantida em processos seletivos ou entrevistas específicas de mercado, dependendo o aproveitamento exclusivamente do engajamento individual do estudante nas práticas recomendadas.
           </p>
         </section>
 
@@ -161,8 +161,8 @@ export default function TermsPage() {
           <h2 className="text-xl font-bold mt-0">Canal de Suporte e Ouvidoria</h2>
           <p className="text-sm leading-relaxed mb-0">
             Dúvidas acerca destes termos de contratação, pedidos de cancelamento, direito de arrependimento (7 dias) ou problemas com acesso Pro devem ser encaminhados ao suporte central em:{" "}
-            <a href="mailto:suporte@algoria.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
-              suporte@algoria.com.br
+            <a href="mailto:suporte@acite.com.br" className="text-primary underline hover:text-primary/80 transition-colors">
+              suporte@acite.com.br
             </a>.
           </p>
         </section>

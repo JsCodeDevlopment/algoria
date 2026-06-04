@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Brain, CloudCog, MonitorSmartphone, Server, Users } from "lucide-react";
+import { Brain, CloudCog, MonitorSmartphone, Server, Users, Hexagon } from "lucide-react";
 import { EngineeringWorkPillar } from "@/lib/content/schemas";
 
 export const PILLAR_ICON: Record<EngineeringWorkPillar, ReactNode> = {
@@ -8,6 +8,7 @@ export const PILLAR_ICON: Record<EngineeringWorkPillar, ReactNode> = {
   devops: <CloudCog className="h-8 w-8" aria-hidden />,
   softskills: <Users className="h-8 w-8" aria-hidden />,
   ia: <Brain className="h-8 w-8" aria-hidden />,
+  web3: <Hexagon className="h-8 w-8" aria-hidden />,
 };
 
 export const PILLAR_TITLE: Record<EngineeringWorkPillar, string> = {
@@ -16,6 +17,7 @@ export const PILLAR_TITLE: Record<EngineeringWorkPillar, string> = {
   devops: "DevOps e sistema",
   softskills: "Carreira e Soft Skills",
   ia: "Inteligência Artificial",
+  web3: "Web3 e Blockchain",
 };
 
 export const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
@@ -24,6 +26,7 @@ export const PILLAR_TAGLINE: Record<EngineeringWorkPillar, string> = {
   devops: "Entrega contínua, observabilidade e segurança operacional.",
   softskills: "Liderança, comunicação e produtividade profissional.",
   ia: "LLMs, treinamento de modelos e infraestrutura para IA.",
+  web3: "Smart Contracts, Ethereum, DAOs e finanças descentralizadas.",
 };
 
 export const PILLAR_COLOR: Record<EngineeringWorkPillar, string> = {
@@ -32,4 +35,5 @@ export const PILLAR_COLOR: Record<EngineeringWorkPillar, string> = {
   devops: "from-orange-500/10 to-amber-500/10",
   softskills: "from-purple-500/10 to-pink-500/10",
   ia: "from-fuchsia-500/10 to-violet-500/10",
+  web3: "from-cyan-500/10 to-blue-600/10",
 };

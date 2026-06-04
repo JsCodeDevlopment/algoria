@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: { params: Promise<Params> }):
     title: pack.title,
     description: pack.subtitle,
     pathname: `/course/${slug}`,
-    keywords: [pack.title, 'curso guiado algoritmos', 'certificado módulo', 'Algoria curso', ...pack.modules.map((m) => m.certificateTitle)],
+    keywords: [pack.title, 'curso guiado algoritmos', 'certificado módulo', 'Acite curso', ...pack.modules.map((m) => m.certificateTitle)],
     openGraphType: 'article',
   });
 }
