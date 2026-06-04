@@ -37,6 +37,7 @@ const PILLAR_LABEL: Record<EngineeringWorkPillar, string> = {
   devops: "DevOps e sistema",
   softskills: "Carreira e Soft Skills",
   ia: "Inteligência Artificial",
+  web3: "Web3 e Blockchain",
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
